@@ -1,5 +1,5 @@
 const
-crypto  = require('crypto')
+crypto  = require('crypto'),
 outAs   = 'base64',
 keyAlgo = 'secp256k1',
 encAlgo = 'aes-256-ctr';
