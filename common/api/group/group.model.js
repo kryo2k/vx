@@ -2,15 +2,12 @@
 'use strict';
 
 var
+Q = require('q'),
+_ = require('lodash'),
 mongoose = require('mongoose'),
 Schema = mongoose.Schema,
-compare = require('../../components/compare');
-
-var
-ROLE_CREATOR = 'creator',
-ROLE_MANAGER = 'manager',
-ROLE_MEMBER  = 'member',
-ROLES_ALL    = [ROLE_MEMBER, ROLE_MANAGER, ROLE_CREATOR];
+compare = require('../../components/compare'),
+mongoUtil = require('../../components/mongo-util');
 
 var
 GroupSchema = new Schema({
@@ -25,46 +22,50 @@ GroupSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now
-  },
-  members: [{
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      require: true
-    },
-    role: {
-      type: String,
-      required: true
-      enum: ROLES_ALL,
-      default: ROLE_MEMBER
-    },
-    joined: {
-      type: Date,
-      required: true,
-      default: Date.now
-    }
-  }]
+  }
 });
 
 GroupSchema.statics = {
-  roleComparer: function (reverse) {
-    return compare.number(!reverse, ROLES_ALL.indexOf.bind(ROLES_ALL));
-  },
-  roleCompare: function (a, b) {
-    return this.roleComparer().call(compare, a, b);
-  }
 };
 
 GroupSchema.methods = {
-  addMember: function (member, cb) {
-    var promise = new mongoose.Promise(cb);
-    promise.error(new Error('coming soon'));
+
+  memberCount: function (cb) {
+    var
+    promise = new mongoose.Promise(cb);
+
+    this.model('GroupMember')
+      .count({ group: this }, function (err, count) {
+        if(err) return promise.error(err);
+        promise.complete(count);
+      });
+
     return promise;
   },
-  removeMember: function (memberId, cb) {
-    var promise = new mongoose.Promise(cb);
-    promise.error(new Error('coming soon'));
+
+  allMembers: function (descendingRole, decendingName, cb) {
+    var
+    promise = new mongoose.Promise(cb),
+    GroupMember = this.model('GroupMember'),
+    cmp = GroupMember.comparer(descendingRole, decendingName);
+
+    GroupMember
+      .find({ group: this })
+      .populate('user', '_id name')
+      .exec(function (err, docs) {
+        if(err) return promise.error(err);
+        promise.complete(docs.sort(cmp));
+      });
+
     return promise;
+  },
+
+  addMember: function (user, role, joined, cb) {
+    return this.model('GroupMember').addMember(this, user, role, joined, cb);
+  },
+
+  removeMember: function (user, cb) {
+    return this.model('GroupMember').removeMember(this, user, cb);
   }
 };
 

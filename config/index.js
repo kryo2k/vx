@@ -23,5 +23,9 @@ module.exports = {
   },
   secret: {
     token: envVar.CX_SECRET_TOKEN || '-- something random --',
+  },
+  session: {
+    durationShortLived: 3600000,    // 1 hr
+    durationLongLived: 7 * 86400000 // 7 days
   }
 };

@@ -2,10 +2,10 @@ var
 _ = require('lodash'),
 ident = function(v) { return v; };
 
-exports.native = function (reverse, identity) {
+exports.native = function (descending, identity) {
   var
-  asc   = reverse ? -1 :  1,
-  desc  = reverse ?  1 : -1,
+  asc   = descending ? -1 :  1,
+  desc  = descending ?  1 : -1,
   eq    = 0;
 
   identity = _.isFunction(identity) ? identity : ident;
@@ -19,9 +19,21 @@ exports.native = function (reverse, identity) {
   };
 }
 
-exports.number = function (reverse, identity) {
+exports.enum = function (descending, enumeration, identity) {
   identity = _.isFunction(identity) ? identity : ident;
-  return exports.native(reverse, function (v) {
+
+  if(!_.isArray(enumeration)) {
+    throw new Error('Enumeration must be an array.');
+  }
+
+  return exports.native(descending, function (v) {
+    return enumeration.indexOf(identity(v));
+  });
+};
+
+exports.number = function (descending, identity) {
+  identity = _.isFunction(identity) ? identity : ident;
+  return exports.native(descending, function (v) {
     v = identity(v);
 
     if(_.isString(v)) {
@@ -32,9 +44,9 @@ exports.number = function (reverse, identity) {
   });
 };
 
-exports.string = function (reverse, identity) {
+exports.string = function (descending, identity) {
   identity = _.isFunction(identity) ? identity : ident;
-  return exports.native(reverse, function (v) {
+  return exports.native(descending, function (v) {
     v = identity(v);
     return _.isString(v) ? v : '';
   });
