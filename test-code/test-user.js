@@ -55,6 +55,10 @@ seeding.qFlushModels(User)
   d2 = users[1],
   d3 = users[2];
 
+  for(var i = 0; i < 10; i++) {
+    console.log('%d): %j', i, d1.tokenSign());
+  }
+
 
   // var
   // d1token = d1.tokenSign(Date.now() + 8.64e7);

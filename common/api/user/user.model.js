@@ -19,7 +19,7 @@ owasp.config({
 
 const
 keySerializeAs  = 'hex',
-cipSerializeAs  = 'base64',
+cipSerializeAs  = 'hex',
 keyAlgorithm    = 'secp256k1',
 cipherAlgorithm = 'aes-256-ctr';
 
@@ -152,7 +152,7 @@ UserSchema.pre('save', function(next) {
   next();
 });
 
-var ML = 24;
+var ML = 24, NONCE = Date.now();
 
 UserSchema.statics = {
   checkUniqueEmail: function (email, existingUser, cb) {
@@ -350,6 +350,8 @@ UserSchema.methods = {
 
       payload.eAt = isNaN(ms) ? undefined : ms;
     }
+
+    payload.nonce = (++NONCE);
 
     return this.constructor.tokenJoin(this._id, this.encrypt(this.publicKey, JSON.stringify(payload)));
   },
