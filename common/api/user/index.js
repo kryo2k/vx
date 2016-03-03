@@ -8,7 +8,8 @@ auth = require('../../middleware/authentication');
 var
 router = express.Router();
 
-router.get('/profile', auth(), controller.profile);
+router.get('/profile',          auth(), controller.profile);
+router.post('/change-password', auth(), controller.changePassword);
 router.post('/signup', controller.signup);
 router.post('/login',  controller.login);
 
