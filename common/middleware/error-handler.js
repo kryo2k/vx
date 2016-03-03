@@ -3,7 +3,8 @@
 var
 util = require('util'),
 log = require('../components/log'),
-ValidationError = require('../components/error-validation');
+ValidationError = require('../components/error-validation'),
+AuthenticationError = require('../components/error-authentication');
 
 module.exports = function (config) {
   return function (err, req, res, next) { // cant be a composable, signature doesn't match.
@@ -17,6 +18,10 @@ module.exports = function (config) {
     if(err instanceof ValidationError) { // no need to log these
       payload.message = err.message;
       payload.errors  = err.errors;
+    }
+    else if(err instanceof AuthenticationError) { // high-light these guys
+      log.warn('auth error: %s', err.message, err.meta);
+      payload.message = err.message;
     }
     else if(util.isError(err)) {
       log.error('%s', err.stack);

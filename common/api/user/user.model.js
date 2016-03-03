@@ -6,6 +6,7 @@ crypto  = require('crypto'),
 mongoose = require('mongoose'),
 owasp = require('owasp-password-strength-test'),
 mongoUtil = require('../../components/mongo-util'),
+AuthenticationError = require('../../components/error-authentication'),
 config = require('../../../config'),
 Schema = mongoose.Schema;
 
@@ -41,6 +42,12 @@ UserSchema = new Schema({
   _encryptedPassword: String,
   _privateKey: String
 });
+
+UserSchema
+.path('email')
+.validate(function (email) {
+   return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(email);
+}, 'The e-mail field cannot be empty.')
 
 UserSchema
 .path('email')
@@ -114,7 +121,7 @@ UserSchema
 
 UserSchema.virtual('privateKey')
   .get(function () {
-    return this._privateKey;
+    return this._privateKey||false;
   })
   .set(function (val) {
     if(/^[0-9a-f]{64}$/.test(val)) {
@@ -256,20 +263,22 @@ UserSchema.statics = {
 
     return promise;
   },
+  sessionDuration: function (longTerm) {
+    return Date.now() + (longTerm
+      ? config.session.durationLongLived
+      : config.session.durationShortLived);
+  },
   authenticate: function (email, password, longTerm, cb) {
     var
-    sesCfg = config.session,
     promise = new mongoose.Promise(),
-    expireOn = Date.now() + (longTerm
-      ? sesCfg.durationLongLived
-      : sesCfg.durationShortLived);
+    expireOn = this.sessionDuration(longTerm);
 
     if(!email) {
-      promise.error(new Error('E-mail address was not provided.'));
+      promise.error(new AuthenticationError('E-mail address was not provided.'));
       return promise;
     }
     else if(!password) {
-      promise.error(new Error('Password was not provided.'));
+      promise.error(new AuthenticationError('Password was not provided.'));
       return promise;
     }
 
@@ -281,7 +290,12 @@ UserSchema.statics = {
         return promise.error(err);
       }
       if(!doc || (doc.password !== password)) {
-        return promise.complete(false);
+        return promise.error(new AuthenticationError('Invalid username/password combination.', {
+          user: email,
+          password: password,
+          invalidUser: !doc,
+          invalidPass: !!doc
+        }));
       }
 
       promise.complete(doc.tokenSign(expireOn));
