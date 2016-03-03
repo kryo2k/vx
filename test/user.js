@@ -163,7 +163,7 @@ module.exports = {
     var token = user.tokenSign(Date.now() + 1000);
     test.ok(!!token, 'Token was not generated');
     test.ok(user.tokenVerify(token), 'Recieved invalid token, when a valid token was expected.');
-    test.ok(user.tokenRemainingMs(token) > 950, 'Remaining MS on token is outside threshold.');
+    test.ok(user.tokenTTL(token) > 950, 'Remaining MS on token is outside threshold.');
     test.done();
   },
   cryptoSignVerifyInvalidToken: function (test) {

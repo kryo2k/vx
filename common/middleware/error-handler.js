@@ -20,8 +20,13 @@ module.exports = function (config) {
       payload.errors  = err.errors;
     }
     else if(err instanceof AuthenticationError) { // high-light these guys
-      log.warn('auth error: %s', err.message, err.meta);
+      var meta = err.meta;
+      log.warn('auth error: %s', err.message, meta);
       payload.message = err.message;
+
+      if(meta.statusCode) {
+        res.status(meta.statusCode);
+      }
     }
     else if(util.isError(err)) {
       log.error('%s', err.stack);
@@ -33,7 +38,11 @@ module.exports = function (config) {
       return next();
     }
     else {
-      res.status(500).send(payload);
+      if(res.statusCode === 200) { // set to 500 if unchanged
+        res.status(500);
+      }
+
+      res.send(payload);
     }
   };
 };

@@ -243,7 +243,7 @@ UserSchema.statics = {
   findUserByToken: function (token, cb) {
     var
     uid = this.tokenId(token),
-    promise = new mongoose.Promise();
+    promise = new mongoose.Promise(cb);
 
     if(!uid) { // save cycles
       promise.complete(false);
@@ -270,7 +270,7 @@ UserSchema.statics = {
   },
   authenticate: function (email, password, longTerm, cb) {
     var
-    promise = new mongoose.Promise(),
+    promise = new mongoose.Promise(cb),
     expireOn = this.sessionDuration(longTerm);
 
     if(!email) {
@@ -331,11 +331,27 @@ UserSchema.methods = {
     var cipher = this.createCipher(publicKey);
     return cipher.update(message, inputAs||'utf8', cipSerializeAs) + cipher.final(cipSerializeAs);
   },
+  encryptObj: function (publicKey, v) {
+    return this.encrypt(publicKey, JSON.stringify(v));
+  },
   decrypt: function (publicKey, message, outputAs) {
     var decipher = this.createDecipher(publicKey);
     outputAs = outputAs || 'utf8';
     return decipher.update(message, cipSerializeAs, outputAs) + decipher.final(outputAs);
   },
+  decryptObj: function (publicKey, v) {
+    var
+    decrypted = this.decrypt(publicKey, v),
+    decoded = false;
+
+    try {
+      decoded = JSON.parse(decrypted);
+    }
+    catch(e) {}
+
+    return decoded;
+  },
+
   resetPrivateKey: function () { // unsaved!!
     this._privateKey = this.constructor.createPrivateKey();
     return this;
@@ -367,22 +383,17 @@ UserSchema.methods = {
 
     payload.nonce = (++NONCE);
 
-    return this.constructor.tokenJoin(this._id, this.encrypt(this.publicKey, JSON.stringify(payload)));
+    return this.constructor.tokenJoin(this._id, this.encryptObj(this.publicKey, payload));
   },
   tokenParse: function (token) {
     var
-    parsed = false,
-    spl    = this.constructor.tokenSplit(token);
+    parsed, spl = this.constructor.tokenSplit(token);
 
     if(!spl || !this._id.equals(spl.id)) { // ensure decoded and belongs to this user (before starting)
       return parsed;
     }
 
-    try {
-      parsed = JSON.parse(this.decrypt(this.publicKey, spl.payload));
-    }
-    catch(e) {
-    }
+    parsed = this.decryptObj(this.publicKey, spl.payload);
 
     if(parsed) { // further validate the token
       if(!this._id.equals(parsed.uID)) { // encrypted uID must belong to this user
@@ -398,7 +409,7 @@ UserSchema.methods = {
   tokenVerify: function (token) {
     return this.tokenParse(token) !== false;
   },
-  tokenRemainingMs: function (token) {
+  tokenTTL: function (token) {
     var parsed = this.tokenParse(token);
     if(!parsed) return false;
     if(!parsed.eAt) return Infinity;
