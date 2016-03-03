@@ -14,24 +14,30 @@ module.exports = function (config) {
       req._startedAt = new Date();
 
       var
-      logString = format('(%s) %s %s', req.id, req.method, req.originalUrl);
+      output = [
+        format('(%s)', req.id),
+        format('%s', req.method),
+        format('%s', req.originalUrl),
+      ];
 
       switch(req.method) {
         case 'GET':
         break;
-        case 'POST':
-        logString += format(' %j', req.body);
+        case 'DELETE':
         break;
         case 'PUT':
-        logString += format(' %j', req.body);
-        break;
-        case 'DELETE':
+        case 'POST':
+        output.push(format(' %j', req.body));
         break;
       }
 
       var
       pend  = res.end.bind(res);
       res.end = function (data) { // overload end function
+
+        if(req.user) {
+          output.splice(1, 0, format('[%s]', req.user.name));
+        }
 
         var
         dur = Date.now() - req._startedAt.getTime(),
@@ -42,7 +48,14 @@ module.exports = function (config) {
           ? (!!data ? data.length : 0)
           : len;
 
-        log.info(logString + format(' => %s [%s] [%d ms]', status, bytes(len), dur));
+        output.push(
+          '=>',
+          status,
+          format('[%s]', bytes(len)),
+          format('[%d ms]', dur)
+        );
+
+        log.info(output.join(' '));
 
         return pend.apply(this, arguments);
       };

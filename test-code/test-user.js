@@ -81,7 +81,7 @@ seeding.qFlushModels(User)
           console.log('user:', user);
 
           if(user) {
-            console.log('user time remaining:', user.tokenRemainingMs(token));
+            console.log('user time remaining:', user.tokenTTL(token));
           }
         });;
     });
