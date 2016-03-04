@@ -27,6 +27,12 @@ cipherAlgorithm = 'aes-256-ctr';
 var
 UserSchema = new Schema({
   name: String,
+  bio: String,
+  phone: {
+    home: String,
+    mobile: String,
+    work: String
+  },
   email: {
     type: String,
     required: true,
@@ -306,6 +312,15 @@ UserSchema.statics = {
 };
 
 UserSchema.methods = {
+  applyUpdate: function (data) {
+    data = data || {};
+    return ['name', 'phone', 'bio'].reduce(function (p, c) {
+      if(data.hasOwnProperty(c)) {
+        p[c] = data[c];
+      }
+      return p;
+    }, this);
+  },
   checkUniqueEmail: function (email, cb) {
     return this.constructor.checkUniqueEmail(email, this, cb);
   },

@@ -7,4 +7,4 @@ export CX_COMPONENT="app"
 export CX_MONGO_URI="mongodb://192.168.250.3:27017/coordinate-vX-test"
 export CX_SECRET_TOKEN="-- something secret goes here --"
 
-nodeunit test
+nodeunit $@

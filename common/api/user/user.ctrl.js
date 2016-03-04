@@ -2,6 +2,7 @@
 
 var
 AuthenticationError = require('../../components/error-authentication'),
+InputError = require('../../components/error-input'),
 ValidationError = require('../../components/error-validation'),
 ModelUser = require('./user.model'),
 config = require('../../../config');
@@ -10,7 +11,18 @@ var
 useLongTermToken = false;
 
 // @auth
-// @method GET
+// @method POST
+exports.updateProfile = function (req, res, next) {
+  req.user.applyUpdate(req.body).save(function (err) {
+    if(err) {
+      return next(new ValidationError(err));
+    }
+    res.respondOk();
+  });
+};
+
+// @auth
+// @method POST
 exports.changePassword = function (req, res, next) {
 
   var
@@ -18,7 +30,13 @@ exports.changePassword = function (req, res, next) {
   data = req.body;
 
   if(data.oldPassword !== existingPw) {
-    return next(new AuthenticationError('Invalid original password. Password change unsuccessful.'));
+    return next(new AuthenticationError('Invalid original password. Password change unsuccessful.', { attempted: data.oldPassword }));
+  }
+  if(!data.newPassword) {
+    return next(new InputError('New password was not provided.'));
+  }
+  if(!data.newPasswordConfirm) {
+    return next(new InputError('New password confirmation was not provided.'));
   }
 
   req.user.password        = data.newPassword;
@@ -29,7 +47,7 @@ exports.changePassword = function (req, res, next) {
       return next(new ValidationError(err));
     }
 
-    res.respondOk(req.user.profile);
+    res.respondOk();
   });
 };
 

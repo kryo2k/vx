@@ -3,6 +3,7 @@
 var
 util = require('util'),
 log = require('../components/log'),
+InputError = require('../components/error-input'),
 ValidationError = require('../components/error-validation'),
 AuthenticationError = require('../components/error-authentication');
 
@@ -18,6 +19,13 @@ module.exports = function (config) {
     if(err instanceof ValidationError) { // no need to log these
       payload.message = err.message;
       payload.errors  = err.errors;
+    }
+    else if(err instanceof InputError) { // no need to log these
+      payload.message = err.message;
+
+      if(res.statusCode === 200) { // set to 400 if unchanged
+        res.status(400);
+      }
     }
     else if(err instanceof AuthenticationError) { // high-light these guys
       var meta = err.meta;

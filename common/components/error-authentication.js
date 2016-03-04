@@ -6,6 +6,7 @@ util = require('util');
 function AuthenticationError (err, meta) {
   this.name = 'AuthenticationError';
   this.message = 'An unknown authentication error occurred.';
+  this.meta = {};
 
   if(err) {
     this.message = err;

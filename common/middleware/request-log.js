@@ -27,7 +27,7 @@ module.exports = function (config) {
         break;
         case 'PUT':
         case 'POST':
-        output.push(format(' %j', req.body));
+        output.push(format('%j', req.body));
         break;
       }
 
