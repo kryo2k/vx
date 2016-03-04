@@ -6,7 +6,7 @@ _ = require('lodash'),
 ObjectId = mongoose.Types.ObjectId;
 
 function isObjectId(n) {
-  return ObjectId.isValid(n);
+  return (ObjectId.isValid(n) || n instanceof ObjectId) && !(typeof n ==='number' && isNaN(n));
 }
 
 function getObjectId(n) {

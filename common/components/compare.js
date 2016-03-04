@@ -52,6 +52,25 @@ exports.string = function (descending, identity) {
   });
 };
 
+exports.stringNoCase = function (descending, useLocale, identity) {
+  identity = _.isFunction(identity) ? identity : ident;
+
+  var
+  stringFilter = !!useLocale
+    ? String.prototype.toLocaleLowerCase
+    : String.prototype.toLowerCase;
+
+  return exports.string(descending, function (v) {
+    v = identity(v);
+
+    if(/^(number|boolean)$/i.test(typeof v)) {
+      v = String(v);
+    }
+
+    return _.isString(v) ? stringFilter.call(v) : '';
+  });
+};
+
 exports.multiCompare = function (sorters) {
   sorters = ((_.isArray(sorters) && sorters.length)
     ? sorters : [exports.string()])
