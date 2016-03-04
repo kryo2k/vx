@@ -48,6 +48,11 @@ exports.string = function (descending, identity) {
   identity = _.isFunction(identity) ? identity : ident;
   return exports.native(descending, function (v) {
     v = identity(v);
+
+    if(_.isNumber(v)) { // transform to string
+      v = String(v);
+    }
+
     return _.isString(v) ? v : '';
   });
 };

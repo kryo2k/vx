@@ -53,6 +53,7 @@ exports.testString = function (test) {
   [
     ['apple',  'cucumber', -1],
     ['carrot', 'zuquini',  -1],
+    [       5, '5',         0],
     ['tomato', 'beet',      1],
     ['beef',   'beef',      0]
   ].forEach(testSort(test, compare.string(false)));
