@@ -168,6 +168,10 @@ UserSchema.pre('save', function(next) {
 var ML = 24, NONCE = Date.now();
 
 UserSchema.statics = {
+  findByIdAuthorized: function (user, id, projection, options, cb) {
+    console.log('Using user authorized function');
+    return this.findById(id, projection, options, cb);
+  },
   checkUniqueEmail: function (email, existingUser, cb) {
     var
     promise = new mongoose.Promise(cb),

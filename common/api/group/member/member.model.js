@@ -48,6 +48,10 @@ GroupMemberSchema.statics = {
   MANAGER: ROLE_MANAGER,
   MEMBER: ROLE_MEMBER,
 
+  findByIdAuthorized: function (user, id, projection, options, cb) {
+    console.log('Using group member authorized function');
+    return this.findById(id, projection, options, cb);
+  },
   comparer: function (descendingRole, decendingName) {
     return compare.multiCompare([
       compare.enum(descendingRole, ROLES_ALL, function (o) { // sort by role order

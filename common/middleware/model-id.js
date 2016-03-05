@@ -37,25 +37,38 @@ module.exports = function (opts) {
   }
 
   return compose()
-    .use(function (req, res, next) {
+    .use(function (req, res, next) { // resolve document id
       Q.when(param(req)).then(function (id) {
+        req[property] = id;
+        next();
+      }).catch(next);
+    })
+    .use(function (req, res, next) {
+      var id = req[property];
 
-        if(!mongoUtil.isObjectId(id)) {
-          return next(new InputError(format('Identifier (%s) for %s is an invalid format.', id, modelName)));
+      if(!mongoUtil.isObjectId(id)) {
+        return next(new InputError(format('Identifier (%s) for %s is an invalid format.', id, modelName)));
+      }
+
+      var modelFn = model.findById.bind(model);
+
+      if(req.user && _.isFunction(model.findByIdAuthorized)) { // assume that we need to select docs that only belong to user.
+        modelFn = function (id, projection, options, callback) {
+          return model.findByIdAuthorized(req.user, id, projection, options, callback);
+        };
+      }
+
+      modelFn(id, select, opts.options, function (err, doc) {
+        if(err) {
+          return next(err);
         }
 
-        model.findById(id, select, function (err, doc) {
-          if(err) {
-            return next(err);
-          }
+        if(!doc) {
+          return next(new InputError(format('Could not find requested %s (%s).', modelName, id)));
+        }
 
-          if(!doc) {
-            return next(new InputError(format('Could not find requested %s (%s).', modelName, id)));
-          }
-
-          req[property] = doc;
-          next();
-        });
-      }, next);
+        req[property] = doc;
+        next();
+      });
     });
 };

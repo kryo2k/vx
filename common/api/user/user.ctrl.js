@@ -8,7 +8,7 @@ ModelUser = require('./user.model'),
 config = require('../../../config');
 
 var
-useLongTermToken = false;
+useLongTermToken = true;
 
 // @auth
 // @method POST

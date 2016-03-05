@@ -13,16 +13,22 @@ groupId = modelId({
   property: 'group',
   modelName: 'group',
   model: require('./group.model')
+}),
+groupUserId = modelId({
+  param: 'groupUserId',
+  property: 'groupUser',
+  modelName: 'group user',
+  model: require('./member/member.model')
 });
 
-router.get('/',                         auth(),          controller.index);
-router.get('/:groupId',                 auth(), groupId, controller.detail);
-router.get('/:groupId/members',         auth(), groupId, controller.members);
-router.get('/:groupId/count',           auth(), groupId, controller.count);
-router.post('/',                        auth(),          controller.create);
-router.post('/:groupId',                auth(), groupId, controller.update);
-router.post('/:groupId/add',            auth(), groupId, controller.addMember);
-router.delete('/:groupId',              auth(), groupId, controller.remove);
-router.delete('/:groupId/:groupUserId', auth(), groupId, controller.removeMember);
+router.get('/',                         auth(),                       controller.index);
+router.get('/:groupId',                 auth(), groupId,              controller.detail);
+router.get('/:groupId/members',         auth(), groupId,              controller.members);
+router.get('/:groupId/count',           auth(), groupId,              controller.count);
+router.post('/',                        auth(),                       controller.create);
+router.post('/:groupId',                auth(), groupId,              controller.update);
+router.post('/:groupId/add',            auth(), groupId,              controller.addMember);
+router.delete('/:groupId',              auth(), groupId,              controller.remove);
+router.delete('/:groupId/:groupUserId', auth(), groupId, groupUserId, controller.removeMember);
 
 module.exports = router;

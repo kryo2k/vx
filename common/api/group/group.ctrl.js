@@ -37,7 +37,16 @@ exports.detail = function (req, res, next) {
       return next(err);
     }
 
-    res.respondOk(req.group.profileDetail);
+    var detail = req.group.profileDetail;
+
+    req.group.memberCount(function (err, count) {
+      if(err) {
+        return next(err);
+      }
+
+      detail.memberCount = count;
+      res.respondOk(detail);
+    });
   });
 };
 
@@ -96,6 +105,11 @@ exports.create = function (req, res, next) {
 // @auth
 // @method POST
 exports.update = function (req, res, next) {
+
+  //
+  // TODO: See if user can update this group
+  //
+
   req.group.applyUpdate(req.body).save(function (err) {
     if(err) {
       return next(new ValidationError(err));
@@ -115,9 +129,17 @@ exports.addMember = function () {
     select: '_id name'
   }).use(function (req, res, next) {
 
-    if(req.user._id.equals(req.addUser._id)) { // prevent user adding himself
-      return next(new InputError('You created this group, and are a member by default.'));
+    if(req.group.createdBy.equals(req.addUser._id)) { // prevent adding creator as member
+      if(req.user._id.equals(req.addUser._id)) {
+        return next(new InputError('You cant add yourself to your own group.'));
+      }
+
+      return next(new InputError('The one who created this group is automatically a member of it.'));
     }
+
+    //
+    // TODO: See if user can add member to this group
+    //
 
     req.group.addMember(req.addUser, req.body.role)
       .then(res.respondOk.bind(res))
@@ -129,5 +151,12 @@ exports.addMember = function () {
 // @auth
 // @method DELETE
 exports.removeMember = function (req, res, next) {
-  res.respondOk({});
+
+    //
+    // TODO: See if user can remove member from this group
+    //
+
+  req.group.removeMember(req.groupUser)
+    .then(res.respondOk.bind(this))
+    .catch(next);
 };

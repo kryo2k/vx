@@ -46,7 +46,10 @@ GroupSchema.statics = {
 };
 
 GroupSchema.methods = {
-
+  findByIdAuthorized: function (user, id, projection, options, cb) {
+    console.log('Using group authorized function');
+    return this.findById(id, projection, options, cb);
+  },
   applyUpdate: function (data) {
     data = data || {};
     return ['name', 'description'].reduce(function (p, c) {
