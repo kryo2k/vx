@@ -118,9 +118,9 @@ seeding.qFlushModels(User, Group, GroupMember)
   ])
   .then(function () {
     return Q.all([
-      groups[0].allMembers(true).then(groupify(groups[0])),
+      groups[0].allMembers({}, true).then(groupify(groups[0])),
       groups[0].memberCount(),
-      groups[1].allMembers(true).then(groupify(groups[1])),
+      groups[1].allMembers({}, true).then(groupify(groups[1])),
       groups[1].memberCount()
     ]);
   });

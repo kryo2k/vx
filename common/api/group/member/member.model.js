@@ -69,7 +69,7 @@ GroupMemberSchema.statics = {
 
     this.update(
     spec,
-    { $setOnInsert: { group: groupId, user: userId, role: role, joined: joined } },
+    { $setOnInsert: { group: groupId, user: userId, role: role||ROLE_MEMBER, joined: joined||Date.now() } },
     { upsert: true },
     (function(err, result) {
       if(err) return promise.error(err);

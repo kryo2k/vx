@@ -11,7 +11,10 @@ mongoUtil = require('../../components/mongo-util');
 
 var
 GroupSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   description: String,
   createdBy: {
     type: Schema.Types.ObjectId,
@@ -25,10 +28,34 @@ GroupSchema = new Schema({
   }
 });
 
+GroupSchema.virtual('profile')
+  .get(function () {
+    return {
+      _id: this._id,
+      name: this.name
+    };
+  });
+
+GroupSchema.virtual('profileDetail')
+  .get(function () {
+    return this.toObject();
+  });
+
+
 GroupSchema.statics = {
 };
 
 GroupSchema.methods = {
+
+  applyUpdate: function (data) {
+    data = data || {};
+    return ['name', 'description'].reduce(function (p, c) {
+      if(data.hasOwnProperty(c)) {
+        p[c] = data[c];
+      }
+      return p;
+    }, this);
+  },
 
   memberCount: function (cb) {
     var
@@ -43,14 +70,14 @@ GroupSchema.methods = {
     return promise;
   },
 
-  allMembers: function (descendingRole, decendingName, cb) {
+  allMembers: function (criteria, descendingRole, decendingName, cb) {
     var
     promise = new mongoose.Promise(cb),
     GroupMember = this.model('GroupMember'),
     cmp = GroupMember.comparer(descendingRole, decendingName);
 
     GroupMember
-      .find({ group: this })
+      .find(_.merge({ group: this }, criteria))
       .populate('user', '_id name')
       .exec(function (err, docs) {
         if(err) return promise.error(err);
