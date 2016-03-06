@@ -60,16 +60,15 @@ GroupMemberSchema.statics = {
   MANAGER: ROLE_MANAGER,
   MEMBER: ROLE_MEMBER,
 
-  findByIdAuthorized: function (user, id, projection, options, cb) {
-    console.log('Using group member authorized function');
-    return this.findById(id, projection, options, cb);
-  },
   validateRole: function (role) {
     return ROLES_ALL.indexOf(role) !== -1;
   },
+  comparerRole: function (descending, identity) {
+    return compare.enum(descending, ROLES_ALL, identity);
+  },
   comparer: function (descendingRole, decendingName) {
     return compare.multiCompare([
-      compare.enum(descendingRole, ROLES_ALL, function (o) { // sort by role order
+      this.comparerRole(descendingRole, function (o) {
         return o.role;
       }),
       compare.string(decendingName, function (o) { // sort by name order

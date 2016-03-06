@@ -162,6 +162,8 @@ exports.update = function (req, res, next) {
 // @auth
 // @method POST
 exports.addMember = function () {
+  var roleCmp = ModelGroupMember.comparerRole(true);
+
   return modelId({
     model: ModelUser,
     param: function (req) { return req.body.user; },
@@ -178,8 +180,9 @@ exports.addMember = function () {
       return next(new InputError('The one who created this group is automatically a member of it.'));
     }
 
-    // ensure role doesn't exceed that of user on this group
-
+    if(roleCmp(req.userGroupRole, req.body.role) === 1) {
+      return next(new InputError('You are not allowed to add a member with a higher role than you have.'));
+    }
 
     req.group.addMember(req.addUser, req.body.role)
       .then(function (groupMember) {
