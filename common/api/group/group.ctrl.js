@@ -9,20 +9,37 @@ ModelUser = require('../user/user.model'),
 ModelGroup = require('./group.model'),
 ModelGroupMember = require('./member/member.model');
 
+var
+defResults = 10,
+maxResults = 100;
+
+function page(query) {
+  return Math.max(query.page||1,1);
+}
+function offset(query) {
+  return Math.max(Math.min(query.limit||defResults, maxResults), 0);
+}
+
 // @auth
 // @method GET
 exports.index = function (req, res, next) {
-  ModelGroup.paginate({ createdBy: req.user }, {
-    select: '_id name',
-    sort: { name: 1 },
-    page: req.query.page||1,
-    limit: req.query.limit||10
-  }, function (err, docs) {
+  ModelGroup.allGroupIDsByUser(req.user, function (err, ids) {
     if(err) {
       return next(err);
     }
 
-    res.respondOk(docs);
+    ModelGroup.paginate({ _id: { $in: ids } }, {
+      select: '_id name',
+      sort: { name: 1 },
+      page: page(req.query),
+      limit: offset(req.query)
+    }, function (err, docs) {
+      if(err) {
+        return next(err);
+      }
+
+      res.respondOk(docs);
+    });
   });
 };
 
@@ -31,13 +48,13 @@ exports.index = function (req, res, next) {
 exports.members = function (req, res, next) {
   ModelGroupMember.paginate({ group: req.group }, {
     select: '_id user joined role',
+    sort: { 'joined': 1 },
     populate: {
       path: 'user',
       select: '_id name'
     },
-    sort: { 'joined': 1 },
-    page: req.query.page||1,
-    limit: req.query.limit||10
+    page: page(req.query),
+    limit: offset(req.query)
   }, function (err, docs) {
     if(err) {
       return next(err);
@@ -202,7 +219,7 @@ exports.removeMember = function (req, res, next) {
   if(!req.groupUser.group.equals(req.group._id)) {
     return next(new InputError('User does not belong to this group.'));
   }
-  else if(roleCmp(req.userGroupRole, req.groupUser.role) >= 0) {
+  else if(roleCmp(req.userGroupRole, req.groupUser.role) >= 0 && !req.userIsGroupCreator) {
     return next(new InputError('You are not allowed to remove a member with an equal or higher role than you have.'));
   }
 

@@ -51,6 +51,59 @@ GroupSchema.statics = {
   getRoleACLKey: function (role) {
     if(!role) return 'role:guest';
     return 'role:' + role;
+  },
+  allGroupIDsByUser: function (user, cb) {
+    var
+    self = this,
+    Member = self.model('GroupMember'),
+    promise = new mongoose.Promise(cb);
+
+    var
+    chain = Q([]),
+    pushRecordId = function (pushTo, property) {
+      return function (record) {
+        var
+        id = mongoUtil.getObjectId(record[property]),
+        idSTR;
+
+        if(!id) {
+          return pushTo;
+        }
+
+        idSTR = id.toString();
+
+        if(pushTo.indexOf(idSTR) === -1) { // only push unique ids
+          pushTo.push(idSTR);
+        }
+
+        return pushTo;
+      };
+    };
+
+    // find all group ids user created
+    chain = chain.then(function (out) {
+      return Q.nfcall(self.find.bind(self), { createdBy: user }, '_id')
+        .then(function (groupsCreated) {
+          groupsCreated.forEach(pushRecordId(out, '_id'));
+          return out;
+        });
+    });
+
+    // find all group ids user belongs to:
+    chain = chain.then(function (out) {
+      return Q.nfcall(Member.find.bind(Member), { user: user }, 'group')
+        .then(function (groupsParticipating) {
+          groupsParticipating.forEach(pushRecordId(out, 'group'));
+          return out;
+        });
+    });
+
+    // resolve the initial promise when ready
+    chain = chain
+      .then(promise.complete.bind(promise))
+      .catch(promise.error.bind(promise));
+
+    return promise;
   }
 };
 
