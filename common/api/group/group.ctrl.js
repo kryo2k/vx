@@ -63,8 +63,27 @@ exports.count = function (req, res, next) {
 };
 
 // @auth
+// @method GET
+exports.role = function (req, res, next) {
+  req.group.getRoleUser(req.user, function (err, role) {
+    if(err) {
+      return next(err);
+    }
+    else if(!role) {
+      return next(new InputError('You don\'t have a role on this group.'));
+    }
+
+    res.respondOk(role);
+  });
+};
+
+// @auth
 // @method DELETE
 exports.remove = function (req, res, next) {
+
+  //
+  // TODO: See if user can remove from this group
+  //
 
   // remove all members
   ModelGroupMember.find({ group: req.group }).remove(function (err) {
@@ -142,7 +161,7 @@ exports.addMember = function () {
     //
 
     req.group.addMember(req.addUser, req.body.role)
-      .then(res.respondOk.bind(res))
+      .then(function () { res.respondOk(); })
       .catch(next);
 
   }).apply(this, arguments);
@@ -152,11 +171,11 @@ exports.addMember = function () {
 // @method DELETE
 exports.removeMember = function (req, res, next) {
 
-    //
-    // TODO: See if user can remove member from this group
-    //
+  //
+  // TODO: See if user can remove member from this group
+  //
 
   req.group.removeMember(req.groupUser)
-    .then(res.respondOk.bind(this))
+    .then(function () { res.respondOk(); })
     .catch(next);
 };

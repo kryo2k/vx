@@ -73,6 +73,39 @@ GroupSchema.methods = {
     return promise;
   },
 
+  getRoleUser: function (user, cb) {
+    var
+    promise   = new mongoose.Promise(cb),
+    userId    = mongoUtil.getObjectId(user);
+
+    if(!userId) { // no user, no role
+      promise.complete(false);
+      return promise;
+    }
+
+    var
+    createdBy = mongoUtil.getObjectId(this.createdBy),
+    ModelGroupMember = this.model('GroupMember');
+
+    if(createdBy && createdBy.equals(userId)) { // compare createdBy id to user
+      promise.complete(ModelGroupMember.CREATOR); // is (a) creator
+      return promise;
+    }
+
+    ModelGroupMember.findOne({ group: this, user: userId}, '_id role', function (err, groupMem) {
+      if(err) {
+        return promise.error(err);
+      }
+      else if(!groupMem) {
+        return promise.complete(false); // invalid/non-existent user.
+      }
+
+      promise.complete(groupMem.role);
+    });
+
+    return promise;
+  },
+
   allMembers: function (criteria, descendingRole, decendingName, cb) {
     var
     promise = new mongoose.Promise(cb),

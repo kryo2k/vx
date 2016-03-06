@@ -25,6 +25,7 @@ router.get('/',                         auth(),                       controller
 router.get('/:groupId',                 auth(), groupId,              controller.detail);
 router.get('/:groupId/members',         auth(), groupId,              controller.members);
 router.get('/:groupId/count',           auth(), groupId,              controller.count);
+router.get('/:groupId/role',            auth(), groupId,              controller.role);
 router.post('/',                        auth(),                       controller.create);
 router.post('/:groupId',                auth(), groupId,              controller.update);
 router.post('/:groupId/add',            auth(), groupId,              controller.addMember);
