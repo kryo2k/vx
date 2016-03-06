@@ -111,13 +111,13 @@ GroupMemberSchema.statics = {
     return promise;
   },
 
-  removeMember: function (group, user, cb) {
+  removeMember: function (group, member, cb) {
     var
     promise = new mongoose.Promise(cb);
 
     this.remove({
-      group: group,
-      user: user
+      _id: member,
+      group: group
     }, function (err, result) {
       if(err) return promise.error(err);
       promise.complete(result);

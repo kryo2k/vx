@@ -148,8 +148,8 @@ GroupSchema.methods = {
     return this.model('GroupMember').addMember(this, user, role, joined, cb);
   },
 
-  removeMember: function (user, cb) {
-    return this.model('GroupMember').removeMember(this, user, cb);
+  removeMember: function (member, cb) {
+    return this.model('GroupMember').removeMember(this, member, cb);
   }
 };
 

@@ -166,6 +166,7 @@ exports.addMember = function () {
 
   return modelId({
     model: ModelUser,
+    modelName: 'user',
     param: function (req) { return req.body.user; },
     property: 'addUser',
     select: '_id name'
@@ -179,8 +180,7 @@ exports.addMember = function () {
 
       return next(new InputError('The one who created this group is automatically a member of it.'));
     }
-
-    if(roleCmp(req.userGroupRole, req.body.role) === 1) {
+    else if(roleCmp(req.userGroupRole, req.body.role) === 1) {
       return next(new InputError('You are not allowed to add a member with a higher role than you have.'));
     }
 
@@ -197,14 +197,14 @@ exports.addMember = function () {
 // @auth
 // @method DELETE
 exports.removeMember = function (req, res, next) {
+  var roleCmp = ModelGroupMember.comparerRole(true);
 
   if(!req.groupUser.group.equals(req.group._id)) {
     return next(new InputError('User does not belong to this group.'));
   }
-
-  //
-  // TODO: See if user can remove member from this group
-  //
+  else if(roleCmp(req.userGroupRole, req.groupUser.role) >= 0) {
+    return next(new InputError('You are not allowed to remove a member with an equal or higher role than you have.'));
+  }
 
   req.group.removeMember(req.groupUser)
     .then(function () { res.respondOk(); })
