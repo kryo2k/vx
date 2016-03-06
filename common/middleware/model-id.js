@@ -52,12 +52,6 @@ module.exports = function (opts) {
 
       var modelFn = model.findById.bind(model);
 
-      if(req.user && _.isFunction(model.findByIdAuthorized)) { // assume that we need to select docs that only belong to user.
-        modelFn = function (id, projection, options, callback) {
-          return model.findByIdAuthorized(req.user, id, projection, options, callback);
-        };
-      }
-
       modelFn(id, select, opts.options, function (err, doc) {
         if(err) {
           return next(err);

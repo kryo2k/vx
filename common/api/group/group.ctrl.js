@@ -12,7 +12,12 @@ ModelGroupMember = require('./member/member.model');
 // @auth
 // @method GET
 exports.index = function (req, res, next) {
-  ModelGroup.find({ createdBy: req.user }, '_id name', function (err, docs) {
+  ModelGroup.paginate({ createdBy: req.user }, {
+    select: '_id name',
+    sort: { name: 1 },
+    page: req.query.page||1,
+    limit: req.query.limit||10
+  }, function (err, docs) {
     if(err) {
       return next(err);
     }
@@ -24,9 +29,22 @@ exports.index = function (req, res, next) {
 // @auth
 // @method GET
 exports.members = function (req, res, next) {
-  req.group.allMembers({}, true, false)
-    .then(res.respondOk.bind(res))
-    .catch(next);
+  ModelGroupMember.paginate({ group: req.group }, {
+    select: '_id user joined role',
+    populate: {
+      path: 'user',
+      select: '_id name'
+    },
+    sort: { 'joined': 1 },
+    page: req.query.page||1,
+    limit: req.query.limit||10
+  }, function (err, docs) {
+    if(err) {
+      return next(err);
+    }
+
+    res.respondOk(docs);
+  });
 };
 
 // @auth
@@ -69,21 +87,26 @@ exports.role = function (req, res, next) {
     if(err) {
       return next(err);
     }
-    else if(!role) {
-      return next(new InputError('You don\'t have a role on this group.'));
-    }
 
     res.respondOk(role);
   });
 };
 
 // @auth
+// @method GET
+exports.privileges = function (req, res, next) {
+  req.group.getPrivilegesUser(req.user, function (err, priv) {
+    if(err) {
+      return next(err);
+    }
+
+    res.respondOk(priv);
+  });
+};
+
+// @auth
 // @method DELETE
 exports.remove = function (req, res, next) {
-
-  //
-  // TODO: See if user can remove from this group
-  //
 
   // remove all members
   ModelGroupMember.find({ group: req.group }).remove(function (err) {
@@ -112,6 +135,9 @@ exports.create = function (req, res, next) {
   group.createdBy = req.user;
   group.createdOn = new Date();
 
+  // setup acl access
+  group.initAclAccess(req.user);
+
   group.save(function (err) {
     if(err) {
       return next(new ValidationError(err));
@@ -124,11 +150,6 @@ exports.create = function (req, res, next) {
 // @auth
 // @method POST
 exports.update = function (req, res, next) {
-
-  //
-  // TODO: See if user can update this group
-  //
-
   req.group.applyUpdate(req.body).save(function (err) {
     if(err) {
       return next(new ValidationError(err));
@@ -146,7 +167,8 @@ exports.addMember = function () {
     param: function (req) { return req.body.user; },
     property: 'addUser',
     select: '_id name'
-  }).use(function (req, res, next) {
+  })
+  .use(function (req, res, next) {
 
     if(req.group.createdBy.equals(req.addUser._id)) { // prevent adding creator as member
       if(req.user._id.equals(req.addUser._id)) {
@@ -156,20 +178,26 @@ exports.addMember = function () {
       return next(new InputError('The one who created this group is automatically a member of it.'));
     }
 
-    //
-    // TODO: See if user can add member to this group
-    //
+    // ensure role doesn't exceed that of user on this group
+
 
     req.group.addMember(req.addUser, req.body.role)
-      .then(function () { res.respondOk(); })
+      .then(function (groupMember) {
+        res.respondOk();
+      })
       .catch(next);
 
-  }).apply(this, arguments);
+  })
+  .apply(this, arguments);
 };
 
 // @auth
 // @method DELETE
 exports.removeMember = function (req, res, next) {
+
+  if(!req.groupUser.group.equals(req.group._id)) {
+    return next(new InputError('User does not belong to this group.'));
+  }
 
   //
   // TODO: See if user can remove member from this group

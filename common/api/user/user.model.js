@@ -49,6 +49,7 @@ UserSchema = new Schema({
   _privateKey: String
 });
 
+
 UserSchema
 .path('email')
 .validate(function (email) {
@@ -168,10 +169,6 @@ UserSchema.pre('save', function(next) {
 var ML = 24, NONCE = Date.now();
 
 UserSchema.statics = {
-  findByIdAuthorized: function (user, id, projection, options, cb) {
-    console.log('Using user authorized function');
-    return this.findById(id, projection, options, cb);
-  },
   checkUniqueEmail: function (email, existingUser, cb) {
     var
     promise = new mongoose.Promise(cb),
@@ -436,5 +433,12 @@ UserSchema.methods = {
     return parsed.eAt - Date.now();
   }
 };
+
+UserSchema.plugin(require('mongoose-acl').subject, {
+  key: function() {
+    return 'user:' + this._id;
+  }
+});
+UserSchema.plugin(require('mongoose-paginate'));
 
 module.exports = mongoose.model('User', UserSchema);

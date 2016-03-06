@@ -4,8 +4,10 @@
 var
 Q = require('q'),
 _ = require('lodash'),
+format = require('util').format,
 mongoose = require('mongoose'),
 Schema = mongoose.Schema,
+InputError = require('../../../components/error-input'),
 compare = require('../../../components/compare'),
 mongoUtil = require('../../../components/mongo-util');
 
@@ -43,6 +45,16 @@ GroupMemberSchema = new Schema({
 // enfore unique group:user
 GroupMemberSchema.index({ group: 1, user: 1 }, { unique: true });
 
+GroupMemberSchema.virtual('profile')
+  .get(function () {
+    return {
+      _id: this._id,
+      user: this.user,
+      joined: this.joined,
+      role: this.role
+    };
+  });
+
 GroupMemberSchema.statics = {
   CREATOR: ROLE_CREATOR,
   MANAGER: ROLE_MANAGER,
@@ -51,6 +63,9 @@ GroupMemberSchema.statics = {
   findByIdAuthorized: function (user, id, projection, options, cb) {
     console.log('Using group member authorized function');
     return this.findById(id, projection, options, cb);
+  },
+  validateRole: function (role) {
+    return ROLES_ALL.indexOf(role) !== -1;
   },
   comparer: function (descendingRole, decendingName) {
     return compare.multiCompare([
@@ -70,6 +85,11 @@ GroupMemberSchema.statics = {
     groupId = mongoUtil.getObjectId(group),
     userId = mongoUtil.getObjectId(user),
     spec = { group: groupId, user: userId };
+
+    if(!this.validateRole(role)) {
+      promise.error(new InputError(format('Role supplied (%s) is invalid.', role)));
+      return promise;
+    }
 
     this.update(
     spec,
@@ -110,5 +130,12 @@ GroupMemberSchema.statics = {
 
 GroupMemberSchema.methods = {
 };
+
+GroupMemberSchema.plugin(require('mongoose-acl').subject, {
+  key: function () {
+    return this.role;
+  }
+});
+GroupMemberSchema.plugin(require('mongoose-paginate'));
 
 module.exports = mongoose.model('GroupMember', GroupMemberSchema);

@@ -38,17 +38,37 @@ GroupSchema.virtual('profile')
 
 GroupSchema.virtual('profileDetail')
   .get(function () {
-    return this.toObject();
+    var profile = this.toObject();
+
+    delete profile._acl;
+    delete profile.__v;
+
+    return profile;
   });
 
 
 GroupSchema.statics = {
+  getRoleACLKey: function (role) {
+    if(!role) return 'role:guest';
+    return 'role:' + role;
+  }
 };
 
 GroupSchema.methods = {
-  findByIdAuthorized: function (user, id, projection, options, cb) {
-    console.log('Using group authorized function');
-    return this.findById(id, projection, options, cb);
+  initAclAccess: function (creatorSubject) {
+    var
+    Member = this.model('GroupMember'),
+    roleKey = this.constructor.getRoleACLKey;
+
+    // grant all privileges on this group to creatorSubject
+    creatorSubject.setAccess(this, ['read','write','delete']);
+
+    // grant acl access based on role
+    this.setAccess(roleKey(Member.CREATOR), ['read','write','delete']);
+    this.setAccess(roleKey(Member.MANAGER), ['read','write']);
+    this.setAccess(roleKey(Member.MEMBER),  ['read']);
+
+    return this;
   },
   applyUpdate: function (data) {
     data = data || {};
@@ -92,7 +112,7 @@ GroupSchema.methods = {
       return promise;
     }
 
-    ModelGroupMember.findOne({ group: this, user: userId}, '_id role', function (err, groupMem) {
+    ModelGroupMember.findOne({ group: this, user: userId }, '_id role', function (err, groupMem) {
       if(err) {
         return promise.error(err);
       }
@@ -106,19 +126,20 @@ GroupSchema.methods = {
     return promise;
   },
 
-  allMembers: function (criteria, descendingRole, decendingName, cb) {
+  getPrivilegesUser: function (user, cb) {
+
     var
     promise = new mongoose.Promise(cb),
-    GroupMember = this.model('GroupMember'),
-    cmp = GroupMember.comparer(descendingRole, decendingName);
+    getAccess = this.getAccess.bind(this),
+    roleKey = this.constructor.getRoleACLKey.bind(this.constructor);
 
-    GroupMember
-      .find(_.merge({ group: this }, criteria))
-      .populate('user', '_id name')
-      .exec(function (err, docs) {
-        if(err) return promise.error(err);
-        promise.complete(docs.sort(cmp));
-      });
+    this.getRoleUser(user, function (err, role) {
+      if(err) {
+        return promise.error(err);
+      }
+
+      promise.complete(getAccess(roleKey(role)));
+    });
 
     return promise;
   },
@@ -131,5 +152,8 @@ GroupSchema.methods = {
     return this.model('GroupMember').removeMember(this, user, cb);
   }
 };
+
+GroupSchema.plugin(require('mongoose-acl').object);
+GroupSchema.plugin(require('mongoose-paginate'));
 
 module.exports = mongoose.model('Group', GroupSchema);
