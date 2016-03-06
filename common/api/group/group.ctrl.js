@@ -88,7 +88,7 @@ exports.role = function (req, res, next) {
       return next(err);
     }
 
-    res.respondOk(role);
+    res.respondOk({ role: role, isCreator: req.userIsGroupCreator });
   });
 };
 

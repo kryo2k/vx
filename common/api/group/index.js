@@ -41,6 +41,6 @@ router.post('/',                        auth(),                                 
 router.post('/:groupId',                auth(), groupId, groupRW,               controller.update);
 router.post('/:groupId/add',            auth(), groupId, groupRW,               controller.addMember);
 router.delete('/:groupId',              auth(), groupId, groupRWD,              controller.remove);
-router.delete('/:groupId/:groupUserId', auth(), groupId, groupUserId, groupRWD, controller.removeMember);
+router.delete('/:groupId/:groupUserId', auth(), groupId, groupRWD, groupUserId, controller.removeMember);
 
 module.exports = router;

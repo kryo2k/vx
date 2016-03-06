@@ -14,7 +14,8 @@ module.exports = function (options) {
   options = options || {};
 
   var
-  propertyUserGroup = 'userGroupRole',
+  propertyIsRealCreator = options.propertyIsGroupCreator||'userIsGroupCreator',
+  propertyUserGroup = options.propertyUserGroupRole||'userGroupRole',
   propertyUser  = options.propertyUser||'user',
   propertyGroup = options.propertyGroup||'group',
   requirements  = options.require||false;
@@ -32,6 +33,8 @@ module.exports = function (options) {
       if(!group || !_.isFunction(group.getRoleUser)) {
         return next(new AuthenticationError('Group ACL middle-ware requires group model.'));
       }
+
+      req[propertyIsRealCreator] = group.createdBy.equals(user._id);
 
       // get the role of user on requested group
       group.getRoleUser(user, function (err, role) {
