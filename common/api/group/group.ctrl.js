@@ -3,22 +3,12 @@
 var
 format = require('util').format,
 ValidationError = require('../../components/error-validation'),
+paginateUtil = require('../../components/paginate-util'),
 InputError = require('../../components/error-input'),
 modelId = require('../../middleware/model-id'),
 ModelUser = require('../user/user.model'),
 ModelGroup = require('./group.model'),
 ModelGroupMember = require('./member/member.model');
-
-var
-defResults = 10,
-maxResults = 100;
-
-function page(query) {
-  return Math.max(query.page||1,1);
-}
-function offset(query) {
-  return Math.max(Math.min(query.limit||defResults, maxResults), 0);
-}
 
 // @auth
 // @method GET
@@ -31,8 +21,8 @@ exports.index = function (req, res, next) {
     ModelGroup.paginate({ _id: { $in: ids } }, {
       select: '_id name',
       sort: { name: 1 },
-      page: page(req.query),
-      limit: offset(req.query)
+      page: paginateUtil.page(req.query),
+      limit: paginateUtil.offset(req.query)
     }, function (err, docs) {
       if(err) {
         return next(err);
@@ -53,8 +43,8 @@ exports.members = function (req, res, next) {
       path: 'user',
       select: '_id name'
     },
-    page: page(req.query),
-    limit: offset(req.query)
+    page: paginateUtil.page(req.query),
+    limit: paginateUtil.offset(req.query)
   }, function (err, docs) {
     if(err) {
       return next(err);

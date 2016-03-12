@@ -36,7 +36,7 @@ module.exports = function (config) {
       res.end = function (data) { // overload end function
 
         if(req.user) {
-          output.splice(1, 0, format('[%s]', req.user.name));
+          output.splice(1, 0, format('[%s]', req.user.name||req.user._id));
         }
 
         var

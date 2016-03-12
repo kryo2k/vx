@@ -4,8 +4,7 @@ var
 AuthenticationError = require('../../components/error-authentication'),
 InputError = require('../../components/error-input'),
 ValidationError = require('../../components/error-validation'),
-ModelUser = require('./user.model'),
-config = require('../../../config');
+ModelUser = require('./user.model');
 
 var
 useLongTermToken = true;

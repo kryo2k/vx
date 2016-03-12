@@ -85,6 +85,8 @@ GroupMemberSchema.statics = {
     userId = mongoUtil.getObjectId(user),
     spec = { group: groupId, user: userId };
 
+    role = role || ROLE_MEMBER;
+
     if(!this.validateRole(role)) {
       promise.error(new InputError(format('Role supplied (%s) is invalid.', role)));
       return promise;
