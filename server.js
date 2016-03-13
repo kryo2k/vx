@@ -11,6 +11,7 @@ config = require('./config'),
 log = require('./common/components/log'),
 requestLogger = require('./common/middleware/request-log'),
 responseHandler = require('./common/middleware/response-handler'),
+userNotification = require('./common/middleware/user-notification'),
 errorHandler = require('./common/middleware/error-handler'),
 serverFactory = require('./server/index');
 
@@ -35,6 +36,7 @@ app // add some basic middleware to app
 .use(expressReqId())
 .use(bodyParser.json())
 .use(cookieParser())
+.use(userNotification())
 .use(requestLogger())
 .use(responseHandler());
 

@@ -7,7 +7,8 @@ controller = require('./notification.ctrl');
 var
 router = express.Router();
 
-router.get('/',      controller.notifications);
-router.get('/count', controller.notificationCount);
+router.get('/',           controller.notifications);
+router.post('/mark-read', controller.markRead);
+router.get('/count',      controller.count);
 
 module.exports = router;

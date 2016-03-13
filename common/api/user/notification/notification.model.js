@@ -17,7 +17,10 @@ UserNotificationSchema = new Schema({
     require: true
   },
   typeData: Object,
-  unread: Boolean,
+  unread: {
+    type: Boolean,
+    default: true
+  },
   created: {
     type: Date,
     default: Date.now

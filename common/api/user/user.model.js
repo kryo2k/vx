@@ -6,6 +6,7 @@ crypto  = require('crypto'),
 mongoose = require('mongoose'),
 owasp = require('owasp-password-strength-test'),
 mongoUtil = require('../../components/mongo-util'),
+InputError = require('../../components/error-input'),
 AuthenticationError = require('../../components/error-authentication'),
 config = require('../../../config'),
 Schema = mongoose.Schema;
@@ -321,6 +322,17 @@ UserSchema.methods = {
       }
       return p;
     }, this);
+  },
+  addNotification: function (type, typeData, cb) {
+    var
+    promise = new mongoose.Promise(cb);
+
+    this.model('UserNotification').create({ user: this, type: type, typeDate: typeData }, function (err, doc) {
+      if(err) return promise.error(err);
+      promise.complete(doc);
+    });
+
+    return promise;
   },
   checkUniqueEmail: function (email, cb) {
     return this.constructor.checkUniqueEmail(email, this, cb);

@@ -16,7 +16,11 @@ exports.updateProfile = function (req, res, next) {
     if(err) {
       return next(new ValidationError(err));
     }
-    res.respondOk();
+
+    res.userNotify('update-profile', {}, function (err) {
+      if(err) return next(err);
+      res.respondOk();
+    });
   });
 };
 
@@ -46,7 +50,10 @@ exports.changePassword = function (req, res, next) {
       return next(new ValidationError(err));
     }
 
-    res.respondOk();
+    res.userNotify('change-password', {}, function (err) {
+      if(err) return next(err);
+      res.respondOk();
+    });
   });
 };
 
@@ -77,6 +84,10 @@ exports.signup = function (req, res, next) {
       return next(new ValidationError(err));
     }
 
-    res.respondOk({ token: user.tokenSign(ModelUser.sessionDuration(useLongTermToken)) });
+    user.addNotification('signup', {}, function (err) {
+      if(err) return next(err);
+
+      res.respondOk({ token: user.tokenSign(ModelUser.sessionDuration(useLongTermToken)) });
+    });
   });
 };
