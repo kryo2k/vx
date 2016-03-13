@@ -18,7 +18,7 @@ exports.markRead = function (req, res, next) {
 
   model.update({ user: req.user, _id: { $in: notificationIds } }, { unread: false }, { multi: true }, function (err) {
     if(err) return next(err);
-    res.send(200);
+    res.respondOk();
   });
 };
 
