@@ -2,9 +2,9 @@
 
 var
 AuthenticationError = require('../../components/error-authentication'),
-InputError = require('../../components/error-input'),
-ValidationError = require('../../components/error-validation'),
-ModelUser = require('./user.model');
+InputError          = require('../../components/error-input'),
+ValidationError     = require('../../components/error-validation'),
+model = require('./user.model');
 
 var
 useLongTermToken = true;
@@ -68,7 +68,7 @@ exports.login = function (req, res, next) {
 
   var data = req.body;
 
-  ModelUser.authenticate(data.username, data.password, useLongTermToken)
+  model.authenticate(data.username, data.password, useLongTermToken)
     .then(function (token) {
       res.respondOk({ token: token });
     })
@@ -78,7 +78,7 @@ exports.login = function (req, res, next) {
 // @method POST
 exports.signup = function (req, res, next) {
   var
-  user = new ModelUser(req.body);
+  user = new model(req.body);
   user.save(function (err) {
     if(err) {
       return next(new ValidationError(err));
@@ -87,7 +87,7 @@ exports.signup = function (req, res, next) {
     user.addNotification('signup', {}, function (err) {
       if(err) return next(err);
 
-      res.respondOk({ token: user.tokenSign(ModelUser.sessionDuration(useLongTermToken)) });
+      res.respondOk({ token: user.tokenSign(model.sessionDuration(useLongTermToken)) });
     });
   });
 };

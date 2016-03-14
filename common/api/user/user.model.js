@@ -155,6 +155,14 @@ UserSchema.virtual('profile')
     return o;
   });
 
+UserSchema.virtual('profileMinimal')
+  .get(function () {
+    return {
+      _id: this._id,
+      name: this.name
+    };
+  });
+
 UserSchema.pre('save', function(next) {
   if (!this.isNew) return next();
   if (!this.privateKey) { // create a new private key for this user, only if not previously set
@@ -383,6 +391,10 @@ UserSchema.methods = {
   resetPrivateKey: function () { // unsaved!!
     this._privateKey = this.constructor.createPrivateKey();
     return this;
+  },
+  sendMessage: function (receiver, message, cb) {
+    var promise = new mongoose.Promise(cb);
+    return promise;
   },
   passwordEncode: function (plaintext) {
     return this.encrypt(this.publicKey, plaintext);
