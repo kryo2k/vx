@@ -335,7 +335,7 @@ UserSchema.methods = {
     var
     promise = new mongoose.Promise(cb);
 
-    this.model('UserNotification').create({ user: this, type: type, typeDate: typeData }, function (err, doc) {
+    this.model('UserNotification').create({ user: this, type: type, typeData: typeData }, function (err, doc) {
       if(err) return promise.error(err);
       promise.complete(doc);
     });

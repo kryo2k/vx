@@ -8,57 +8,14 @@ InputError          = require('../../../components/error-input'),
 ValidationError     = require('../../../components/error-validation'),
 mongoUtil           = require('../../../components/mongo-util'),
 paginateUtil        = require('../../../components/paginate-util'),
-modelUser = require('../user.model'),
-model = require('./message.model');
+modelUser           = require('../user.model'),
+model               = require('./message.model');
 
-function queryMessages(sender, receiver, query, useOr, cb) {
-  var i = 3, arg;
-  while(arguments.hasOwnProperty(i)) {
-    arg = arguments[i];
-    if(_.isFunction(arg) && !_.isFunction(cb)) {
-      cb = arg;
-    }
-    else if(_.isBoolean(arg) && !_.isBoolean(useOr)) {
-      useOr = arg;
-    }
-    i++;
-  }
-
-  var
-  criteria = !!useOr
-    ? { $or: [ { sender: sender,  receiver: receiver }, { sender: receiver,  receiver: sender }] }
-    : { sender: sender, receiver: receiver },
-  options  = {
-    select: !!useOr ? '_id sender receiver unread created' : '_id unread created',
-    sort: { created: -1 },
+function paginateOptions (query, options) {
+  options = options || {};
+  return _.merge(options, {
     page: paginateUtil.page(query),
     limit: paginateUtil.offset(query)
-  };
-
-  return model.paginate(criteria, options, function (err, result) {
-    if(err) return cb(err);
-
-    if(!useOr) {
-      return cb(err, result);
-    }
-
-    result.sender   = sender.profileMinimal;
-    result.receiver = receiver.profileMinimal;
-
-    result.docs = result.docs.map(function (doc) {
-      var
-      obj = doc.toObject();
-
-      obj.isSender   = mongoUtil.isIdEqual(obj.sender,   sender);
-      obj.isReceiver = mongoUtil.isIdEqual(obj.receiver, sender);
-
-      delete obj.sender;
-      delete obj.receiver;
-
-      return obj;
-    });
-
-    return cb(err, result);
   });
 }
 
@@ -100,36 +57,76 @@ function messageParticipants(user, message) {
 // @auth
 // @method GET
 exports.messagesConvo = function (req, res, next) {
-  queryMessages(req.user, req.userTarget, req.query, true, function (err, docs) {
-    if(err) {
-      return next(err);
-    }
 
-    res.respondOk(docs);
+  var
+  user = req.user,
+  target = req.userTarget,
+  options  = paginateOptions (req.query, {
+    select: '_id sender receiver unread created',
+    sort: { created: -1 }
+  });
+
+  return model.paginate({
+    $or: [
+      { sender: user, receiver: target, removeFromSender:   false },
+      { sender: target, receiver: user, removeFromReceiver: false }
+    ]
+  }, options, function (err, result) {
+    if(err) return next(err);
+
+    result.docs = result.docs.map(function (doc) {
+      var obj = doc.toObject();
+      obj.isSender   = mongoUtil.isIdEqual(obj.sender,   user);
+      obj.isReceiver = mongoUtil.isIdEqual(obj.receiver, user);
+      // delete obj.sender;
+      // delete obj.receiver;
+      return obj;
+    });
+
+    result.self    = user.profileMinimal;
+    result.partner = target.profileMinimal;
+
+    res.respondOk(result);
   });
 };
 
 // @auth
 // @method GET
 exports.messagesFrom = function (req, res, next) {
-  queryMessages(req.userSender, req.user, req.query, function (err, docs) {
-    if(err) {
-      return next(err);
-    }
 
-    res.respondOk(docs);
+  var
+  options  = paginateOptions (req.query, {
+    select: '_id unread created',
+    sort: { created: -1 }
+  });
+
+  return model.paginate({
+    receiver: req.user,
+    sender: req.userSender,
+    removeFromReceiver: false
+  }, options, function (err, result) {
+    if(err) return next(err);
+    res.respondOk(result);
   });
 };
 
 // @auth
 // @method GET
 exports.messagesTo = function (req, res, next) {
-  queryMessages(req.user, req.userReceiver, req.query, function (err, docs) {
-    if(err) {
-      return next(err);
-    }
 
-    res.respondOk(docs);
+  var
+  options  = paginateOptions (req.query, {
+    select: '_id unread created',
+    sort: { created: -1 }
+  });
+
+  return model.paginate({
+    sender: req.user,
+    receiver: req.userReceiver,
+    removeFromSender: false
+  }, options, function (err, result) {
+    if(err) return next(err);
+    res.respondOk(result);
   });
 };
 
@@ -137,7 +134,7 @@ exports.messagesTo = function (req, res, next) {
 // @method GET
 exports.inbox = function (req, res, next) {
   model.aggregate([
-    { $match: { receiver: req.user._id } },
+    { $match: { receiver: req.user._id, removeFromReceiver: false } },
     { $group: {
       _id: { sender: '$sender'},
       total: { $sum: 1 },
@@ -166,7 +163,7 @@ exports.inbox = function (req, res, next) {
 // @method GET
 exports.sent = function (req, res, next) {
   model.aggregate([
-    { $match: { sender: req.user._id } },
+    { $match: { sender: req.user._id, removeFromSender: false } },
     { $group: {
       _id: { receiver: '$receiver'},
       total: { $sum: 1 },
@@ -200,7 +197,6 @@ exports.send = function (req, res, next) {
   }
 
   var
-  message,
   messageBody = req.body.hasOwnProperty('message') ? String(req.body.message) : false;
 
   if(!messageBody) {
@@ -208,8 +204,13 @@ exports.send = function (req, res, next) {
   }
 
   var
+  message,
   uSend = req.user,
   uRecv = req.userReceiver;
+
+  if(mongoUtil.isIdEqual(uSend, uRecv)) {
+    return next(new InputError('You can not send a message to yourself.'));
+  }
 
   message = new model({
     sender: uSend,
@@ -219,7 +220,16 @@ exports.send = function (req, res, next) {
 
   message.save(function (err) {
     if(err) return next(new ValidationError(err));
-    res.respondOk(message._id);
+
+    // add a notifcation for user that message was sent to them.
+    uRecv.addNotification('message', {
+      from: mongoUtil.getObjectId(uSend),
+      message: message._id
+    }, function (err) {
+      if(err) return next(new ValidationError(err));
+      res.respondOk(message._id);
+
+    });
   });
 };
 
