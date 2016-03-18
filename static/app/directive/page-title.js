@@ -6,7 +6,7 @@ angular.module('coordinate-vx')
 
       ctrl.setTitle(el.html());
 
-      scope.$on('$destroy', scope.$watch(function () {
+      scope.$watch(function () {
         if(!$state.current || !$state.current.data || !$state.current.data.title) {
           return false;
         }
@@ -14,13 +14,13 @@ angular.module('coordinate-vx')
         return $state.current.data.title;
       }, function (title) {
         if(!title) return;
-        ctrl.append(title);
+        ctrl.prepend(title);
         el.html(ctrl.title);
-      }));
+      });
 
-      scope.$on('$destroy', scope.$on('$stateChangeStart', function () {
+      scope.$on('$stateChangeStart', function () {
         ctrl.undo(); // step back one
-      }));
+      });
     }
   };
 })
