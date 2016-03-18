@@ -201,6 +201,9 @@ UserSchema.statics = {
 
     return promise;
   },
+  createToken: function (signer, longTerm) {
+    return signer.tokenSign(this.sessionDuration(longTerm), { longTerm: longTerm });
+  },
   passwordTest: function (password) {
     var
     result = owasp.test(password);
@@ -287,7 +290,7 @@ UserSchema.statics = {
   authenticate: function (email, password, longTerm, cb) {
     var
     promise = new mongoose.Promise(cb),
-    expireOn = this.sessionDuration(longTerm);
+    createToken = this.createToken.bind(this);
 
     if(!email) {
       promise.error(new AuthenticationError('E-mail address was not provided.'));
@@ -314,7 +317,7 @@ UserSchema.statics = {
         }));
       }
 
-      promise.complete(doc.tokenSign(expireOn));
+      promise.complete(createToken(doc, longTerm));
     });
 
     return promise;
@@ -399,11 +402,11 @@ UserSchema.methods = {
   passwordEncode: function (plaintext) {
     return this.encrypt(this.publicKey, plaintext);
   },
-  tokenSign: function (expiresOn) {
-    var payload = {
+  tokenSign: function (expiresOn, data) {
+    var payload = _.extend({}, data, {
       iAt: Date.now(),
       uID: this._id
-    };
+    });
 
     if(expiresOn) {
       var

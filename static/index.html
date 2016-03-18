@@ -4,9 +4,13 @@
   <base href="/">
   <link rel="stylesheet" type="text/css" href="vendor/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="vendor/angular-bootstrap/ui-bootstrap-csp.css" />
+
+  <style>
+  .navbar .navbar-text.navbar-text-dbl { margin: 9px 5px; }
+  </style>
 </head>
 <body>
-  <div ui-view=""></div>
+  <div ui-view="" heart-beat-touchzone></div> <!-- ng-mousemove="$heartBeat.touch()" -->
 
   <!-- app scripts -->
   <script type="text/javascript" src="vendor/angular/angular.min.js"></script>
@@ -25,12 +29,16 @@
   <script type="text/javascript" src="app/factory/error-validation.js"></script>
   <script type="text/javascript" src="app/service/modal-open.js"></script>
   <script type="text/javascript" src="app/service/modal-system-error.js"></script>
+  <script type="text/javascript" src="app/service/debounce.js"></script>
   <script type="text/javascript" src="app/service/api-url.js"></script>
   <script type="text/javascript" src="app/service/auth-persist.js"></script>
   <script type="text/javascript" src="app/service/auth-watch.js"></script>
   <script type="text/javascript" src="app/service/auth-state.js"></script>
   <script type="text/javascript" src="app/service/auth.js"></script>
   <script type="text/javascript" src="app/service/heart-beat.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat-touchzone.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat-control.js"></script>
   <script type="text/javascript" src="app/directive/form-reset.js"></script>
   <script type="text/javascript" src="app/directive/form-group.js"></script>
   <script type="text/javascript" src="app/directive/input-match.js"></script>
@@ -39,6 +47,7 @@
   <script type="text/javascript" src="app/directive/page-header.js"></script>
   <script type="text/javascript" src="app/resource/user.js"></script>
   <script type="text/javascript" src="app/controller/app.js"></script>
+  <script type="text/javascript" src="app/controller/heart-beat.js"></script>
   <script type="text/javascript" src="app/controller/navigation.js"></script>
   <script type="text/javascript" src="app/controller/page-header.js"></script>
   <script type="text/javascript" src="app/controller/guest.js"></script>

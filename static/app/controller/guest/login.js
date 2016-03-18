@@ -25,14 +25,12 @@ angular.module('coordinate-vx')
   });
 
   this.submit = function (event, form) {
-    return $auth.login(this.model.username, this.model.password)
-      .then(function (result) {
-        console.log('login result:', result);
-      })
+    return $auth.login(this.model.username, this.model.password, this.model.rememberMe)
       .catch((function (err) {
         if(this.model) {
           delete this.model.password; // clear password field
         }
+        return err;
       }).bind(this));
   };
   this.reset = function (event, form) {

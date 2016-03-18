@@ -40,7 +40,14 @@ module.exports = function (options) {
 
         req.user = user;
         req.tokenInfo = user.tokenParse(authorization);
-        req.tokenTTL  = user.tokenTTL(authorization);
+        req.tokenTTL = user.tokenTTL(authorization);
+        req.tokenExpireDate = (req.tokenTTL && isFinite(req.tokenTTL))
+          ? new Date(Date.now() + req.tokenTTL)
+          : null;
+        req.tokenIssuedDate = (req.tokenInfo && typeof req.tokenInfo.iAt === 'number' )
+          ? new Date(req.tokenInfo.iAt)
+          : false;
+        req.tokenLongTerm = req.tokenInfo ? req.tokenInfo.longTerm : false;
 
         next();
       });

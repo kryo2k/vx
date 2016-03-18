@@ -7,7 +7,6 @@ angular.module('coordinate-vx')
     loading = false;
   }); };
 
-
   Object.defineProperties(this, {
     authenticated: {
       get: function () {
@@ -42,6 +41,18 @@ angular.module('coordinate-vx')
     }
   });
 
+  this.accessInfo = function () {
+    return User.tokenInfo().$promise;
+  };
+
+  this.extendAccess = function (longTerm) {
+    return User.tokenExtend({ longTerm: (!!longTerm  ? 1 : 0)}).$promise
+      .then((function (data) {
+        $authPersist.set(data.token); // set the token for this user
+        return this.profile; // return existing profile
+      }).bind(this));
+  };
+
   this.reloadProfile = function () {
     return markLoading(
       User.getProfile().$promise
@@ -57,9 +68,9 @@ angular.module('coordinate-vx')
     );
   };
 
-  this.login = function (username, password) {
+  this.login = function (username, password, rememberMe) {
     return markLoading(
-      User.login({ username: username, password: password }).$promise
+      User.login({ username: username, password: password, rememberMe: rememberMe }).$promise
         .then((function (data) {
           $authPersist.set(data.token); // set the token for this user
           return this.reloadProfile();

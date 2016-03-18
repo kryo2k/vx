@@ -1,0 +1,15 @@
+<div heart-beat>
+  <label>Heart-beat</label>
+<pre>
+lastCheck: {{$heartBeat.service.lastCheck | date:'short'}} (next check in {{$heartBeat.service.nextCheckInSec | number}}s)
+ttl:       {{$heartBeat.service.expireAt  | date:'short'}} (expires in {{$heartBeat.service.ttlSec | number}}s, isWarning: {{$heartBeat.isWarning ? 'Yes' : 'No'}}, isWarningGraced: {{$heartBeat.service.isWarningGraced ? 'Yes' : 'No'}})
+idle:      {{$heartBeat.service.lastTouch | date:'short'}} (last touched {{$heartBeat.service.idleSec | number}}s ago, isIdle: {{$heartBeat.isIdle ? 'Yes' : 'No'}})
+checking:  {{$heartBeat.service.checking ? 'Yes' : 'No'}}
+</pre>
+  <div class="btn-group">
+    <button class="btn btn-default" ng-click="$heartBeat.extend()">Extend</button>
+    <button class="btn btn-default" ng-click="$heartBeat.service.refresh()" ng-disabled="$heartBeat.service.checking">Refresh</button>
+    <button class="btn btn-default" ng-click="$heartBeat.service.touch()">Touch</button>
+  </div>
+  <label><input type="checkbox" ng-model="$heartBeat.service.longTerm" /> Long-term</label>
+</div>

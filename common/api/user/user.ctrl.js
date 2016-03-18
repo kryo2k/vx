@@ -60,13 +60,19 @@ exports.changePassword = function (req, res, next) {
 // @auth
 // @method GET
 exports.tokenInfo = function (req, res, next) {
-  res.respondOk({ info: req.tokenInfo, ttl: req.tokenTTL });
+  res.respondOk({
+    // info: req.tokenInfo,
+    ttl: req.tokenTTL,
+    longTerm: req.tokenLongTerm,
+    expireDate: req.tokenExpireDate,
+    issuedDate: req.tokenIssuedDate
+  });
 };
 
 // @auth
 // @method GET
 exports.tokenExtend = function (req, res, next) {
-  res.respondOk({ token: req.user.tokenSign(model.sessionDuration(parseInt(req.query.longTerm) === 1)) });
+  res.respondOk({ token: model.createToken(req.user, parseInt(req.query.longTerm) === 1) });
 };
 
 // @auth
@@ -99,7 +105,7 @@ exports.signup = function (req, res, next) {
     user.addNotification('signup', {}, function (err) {
       if(err) return next(err);
 
-      res.respondOk({ token: user.tokenSign(model.sessionDuration(false)) });
+      res.respondOk({ token: model.createToken(user, false) });
     });
   });
 };

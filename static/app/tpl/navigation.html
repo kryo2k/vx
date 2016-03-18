@@ -8,14 +8,17 @@
       <li ui-sref-active="active"><a ui-sref="app.guest.contact">Contact</a></li>
     </ul>
 
-    <ul class="nav navbar-nav navbar-right" ng-if="$app.authenticated">
-      <li ui-sref-active="active"><a ui-sref="app.user.dashboard">Dashboard</a></li>
-      <li ui-sref-active="active"><a href="" ng-click="$navigation.logout($event)">Logout</a></li>
-    </ul>
-
-    <ul class="nav navbar-nav navbar-right" ng-if="!$app.authenticated">
-      <li ui-sref-active="active"><a ui-sref="app.guest.login">Login</a></li>
-      <li ui-sref-active="active"><a ui-sref="app.guest.signup">Signup</a></li>
+    <ul class="nav navbar-nav navbar-right" heart-beat>
+      <li class="navbar-text navbar-text-dbl" ng-if="$heartBeat.isWarning">
+        <div class="small text-right">
+          <div class="text-danger"><b>Your session will expire in <code>{{$heartBeat.service.ttlSec|number}} sec</code>.</b></div>
+          <div><a href="" ng-click="$heartBeat.extend()">Click here</a> <span>to extend it.</span></div>
+        </div>
+      </li>
+      <li ui-sref-active="active" ng-if="$app.authenticated"><a ui-sref="app.user.dashboard">Dashboard</a></li>
+      <li ui-sref-active="active" ng-if="$app.authenticated"><a href="" ng-click="$navigation.logout($event)">Logout</a></li>
+      <li ui-sref-active="active" ng-if="!$app.authenticated"><a ui-sref="app.guest.login">Login</a></li>
+      <li ui-sref-active="active" ng-if="!$app.authenticated"><a ui-sref="app.guest.signup">Signup</a></li>
     </ul>
 
     <ng-transclude></ng-transclude>
