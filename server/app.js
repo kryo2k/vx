@@ -8,6 +8,6 @@ module.exports = function (app) {
   app.set('server-name', 'Authentication');
 
   // install local routes:
-  app.use('/user',  require('../common/api/user'));
-  app.use('/group', require('../common/api/group'));
+  app.use('/api/user',  require('../common/api/user'));
+  app.use('/api/group', require('../common/api/group'));
 };

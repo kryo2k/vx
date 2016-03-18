@@ -1,0 +1,23 @@
+<div class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" ui-sref="app.guest.index"><span class="glyphicon glyphicon-home"></span> Brand</a>
+    </div>
+
+    <ul class="nav navbar-nav">
+      <li ui-sref-active="active"><a ui-sref="app.guest.contact">Contact</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right" ng-if="$app.authenticated">
+      <li ui-sref-active="active"><a ui-sref="app.user.dashboard">Dashboard</a></li>
+      <li ui-sref-active="active"><a href="" ng-click="$navigation.logout($event)">Logout</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right" ng-if="!$app.authenticated">
+      <li ui-sref-active="active"><a ui-sref="app.guest.login">Login</a></li>
+      <li ui-sref-active="active"><a ui-sref="app.guest.signup">Signup</a></li>
+    </ul>
+
+    <ng-transclude></ng-transclude>
+  </div>
+</div>

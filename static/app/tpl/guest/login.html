@@ -1,0 +1,31 @@
+<form class="form" name="form" ng-submit="$login.submit($event, form)" form-reset="$login.reset($event, $form)">
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label class="control-label">Username</label>
+      <input class="form-control" name="username" type="text" placeholder="Enter your username" ng-model="$login.model.username" required>
+    </div>
+    <div class="form-group col-sm-6">
+      <label class="control-label">Password</label>
+      <input class="form-control" name="password" type="password" placeholder="Enter your password" ng-model="$login.model.password" required>
+    </div>
+  </div>
+  <dl class="form-group text-right">
+    <div class="checkbox pull-left text-left">
+      <label>
+        <input type="checkbox" ng-model="$login.model.rememberMe">
+        <span>Remember my credentials</span>
+      </label>
+      <p class="help-block small">Only use this option if you're on a trusted computer.</p>
+    </div>
+    <div class="btn-group">
+      <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Login</button>
+      <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+    </div>
+    <div class="clearfix"></div>
+  </dl>
+</form>
+
+<ul class="nav nav-pills">
+  <li ui-sref-active="active"><a ui-sref="app.guest.signup">Signup</a></li>
+  <li ui-sref-active="active"><a ui-sref="app.guest.forgot">Forgot Password</a></li>
+</ul>

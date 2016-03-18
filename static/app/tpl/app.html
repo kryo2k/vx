@@ -1,0 +1,10 @@
+<div class="app-container">
+
+  <navigation></navigation>
+
+  <div class="container">
+    <page-header ph-title="$app.state.data.title" ph-description="$app.state.data.description" ng-if="$app.state.data.title"></page-header>
+
+    <div ui-view=""></div>
+  </div>
+</div>

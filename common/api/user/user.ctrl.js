@@ -59,6 +59,18 @@ exports.changePassword = function (req, res, next) {
 
 // @auth
 // @method GET
+exports.tokenInfo = function (req, res, next) {
+  res.respondOk({ info: req.tokenInfo, ttl: req.tokenTTL });
+};
+
+// @auth
+// @method GET
+exports.tokenExtend = function (req, res, next) {
+  res.respondOk({ token: req.user.tokenSign(model.sessionDuration(parseInt(req.query.longTerm) === 1)) });
+};
+
+// @auth
+// @method GET
 exports.profile = function (req, res, next) {
   res.respondOk(req.user.profile);
 };
@@ -68,7 +80,7 @@ exports.login = function (req, res, next) {
 
   var data = req.body;
 
-  model.authenticate(data.username, data.password, useLongTermToken)
+  model.authenticate(data.username, data.password, data.rememberMe)
     .then(function (token) {
       res.respondOk({ token: token });
     })
@@ -87,7 +99,7 @@ exports.signup = function (req, res, next) {
     user.addNotification('signup', {}, function (err) {
       if(err) return next(err);
 
-      res.respondOk({ token: user.tokenSign(model.sessionDuration(useLongTermToken)) });
+      res.respondOk({ token: user.tokenSign(model.sessionDuration(false)) });
     });
   });
 };

@@ -1,0 +1,35 @@
+<form class="form" name="form" ng-submit="$signup.submit($event, form)" form-reset="$signup.reset($event, $form)">
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label class="control-label">Name</label>
+      <input class="form-control" name="name" type="text" placeholder="Joe Smith" ng-model="$signup.model.name" required>
+    </div>
+    <div class="form-group col-sm-6">
+      <label class="control-label">E-mail address</label>
+      <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$signup.model.email" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label class="control-label">Password</label>
+      <input class="form-control" name="password" type="password" placeholder="My super STRONG password!" ng-model="$signup.model.password" ng-minlength="8" required>
+      <span class="help-block" ng-show="form.password.$error.minlength">Must be between 8 and 128 characters. At least one upper case and/or special character is required.</span>
+    </div>
+    <div class="form-group col-sm-6">
+      <label class="control-label">Confirm Password</label>
+      <input class="form-control" name="passwordConfirm" type="password" placeholder="Confirm your password" ng-model="$signup.model.passwordConfirm" input-match="$signup.model.password" required>
+      <span class="help-block" ng-show="form.passwordConfirm.$error.match">This does not match your password.</span></div>
+    </div>
+  </div>
+  <dl class="text-right">
+    <div class="btn-group">
+      <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Signup</button>
+      <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+    </div>
+  </dl>
+</form>
+
+<ul class="nav nav-pills">
+  <li ui-sref-active="active"><a ui-sref="app.guest.login">Login</a></li>
+  <li ui-sref-active="active"><a ui-sref="app.guest.forgot">Forgot Password</a></li>
+</ul>

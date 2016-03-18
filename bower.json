@@ -1,0 +1,25 @@
+{
+  "name": "coordinate-vX",
+  "version": "0.0.0",
+  "authors": [
+    "Hans Doller <hans@w3forge.org>"
+  ],
+  "license": "Copyright",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.5.0",
+    "angular-sanitize": "1.5.0",
+    "angular-resource": "1.5.0",
+    "angular-cookies": "1.5.0",
+    "angular-ui-router": "0.2.18",
+    "angular-bootstrap": "~1.2.4",
+    "bootstrap": "3.3.6"
+  }
+}

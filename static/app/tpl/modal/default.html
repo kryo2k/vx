@@ -1,0 +1,16 @@
+<div class="modal-header" ng-class="modal.titleClass">
+  <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+  <h4 ng-if="modal.title" ng-bind="modal.title" class="modal-title"></h4>
+</div>
+
+<div class="modal-body" ng-class="modal.bodyClass">
+  <div ng-if="modal.text" class="text-center">
+    <span ng-bind="modal.text"></span>
+  </div>
+  <div ng-if="modal.html" ng-bind-html="modal.html"></div>
+  <div ng-if="modal.template" ng-include="modal.template"></div>
+</div>
+
+<div class="modal-footer" ng-show="modal.buttons.length">
+  <button class="btn" ng-repeat="button in modal.buttons" ng-class="button.classes" ng-click="button.click($event)" ng-bind="button.text"></button>
+</div>

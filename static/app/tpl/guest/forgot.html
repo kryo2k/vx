@@ -1,0 +1,24 @@
+<form class="form" name="form" ng-submit="$forgot.submit($event, form)" form-reset="$forgot.reset($event, $form)">
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">E-mail address</label>
+      <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$forgot.model.email" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <p>If you have forgotten the e-mail address you used, or no longer have access to it, please <a ui-sref="app.guest.contact">contact our support</a> to assist you in recovering your account.</p>
+    </div>
+  </div>
+  <dl class="text-right">
+    <div class="btn-group">
+      <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Recover</button>
+      <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+    </div>
+  </dl>
+</form>
+
+<ul class="nav nav-pills">
+  <li ui-sref-active="active"><a ui-sref="app.guest.login">Login</a></li>
+  <li ui-sref-active="active"><a ui-sref="app.guest.signup">Signup</a></li>
+</ul>

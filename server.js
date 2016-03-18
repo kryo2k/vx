@@ -38,10 +38,22 @@ app // add some basic middleware to app
 .use(cookieParser())
 .use(userNotification())
 .use(requestLogger())
-.use(responseHandler());
+.use(responseHandler())
+.use(express.static('static'));
 
 // boostrap this server with app
 server(app);
+
+// serve 404s from these directories only
+app.route('/:url(api|app|vendor|assets)/*')
+.get(function (req, res) {
+  res.sendStatus(404);
+});
+
+// catch all else to index html page
+app.route('/*') .get(function (req, res) {
+  res.sendfile('static/index.html');
+});
 
 // handle errors with middleware
 app.use(errorHandler());

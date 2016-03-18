@@ -13,8 +13,7 @@ module.exports = function (options) {
   var
   headerKey     = options.headerKey||'authorization',
   allowUrlParam = !!options.allowUrlParam,
-  urlParam      = !!options.urlParam || 'auth_token',
-  errorCode     = options.errorCode||403;
+  urlParam      = !!options.urlParam || 'auth_token';
 
   return compose()
     .use(function (req, res, next) {
@@ -27,7 +26,7 @@ module.exports = function (options) {
       }
 
       if(!authorization) { // nothing was found, automatic forbidden
-        return next(new AuthenticationError('No authorization token was found.', { statusCode: 403, token: authorization }));
+        return next(new AuthenticationError('No authorization token was found.'));
       }
 
       ModelUser.findUserByToken(authorization, function (err, user) {
@@ -36,7 +35,7 @@ module.exports = function (options) {
         }
 
         if(!user) { // invalid token
-          return next(new AuthenticationError('Token provided is invalid or expired. Login to get a new token.', { statusCode: 403, token: authorization }));
+          return next(new AuthenticationError('Token provided is invalid or expired. Login to get a new token.', { statusCode: 401, token: authorization }));
         }
 
         req.user = user;

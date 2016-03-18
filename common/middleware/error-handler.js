@@ -14,16 +14,21 @@ module.exports = function (config) {
     payload = {
       success: false,
       message: 'unknown system error'
-    };
+    },
+    defaultStatus = (res.statusCode === 200);
 
     if(err instanceof ValidationError) { // no need to log these
       payload.message = err.message;
       payload.errors  = err.errors;
+
+      if(defaultStatus) { // set to 400 if unchanged
+        res.status(406);
+      }
     }
     else if(err instanceof InputError) { // no need to log these
       payload.message = err.message;
 
-      if(res.statusCode === 200) { // set to 400 if unchanged
+      if(defaultStatus) { // set to 400 if unchanged
         res.status(400);
       }
     }
@@ -32,8 +37,8 @@ module.exports = function (config) {
       log.warn('auth error: %s', err.message, meta);
       payload.message = err.message;
 
-      if(meta.statusCode) {
-        res.status(meta.statusCode);
+      if(defaultStatus) {
+        res.status(meta.statusCode||400);
       }
     }
     else if(util.isError(err)) {

@@ -1,0 +1,30 @@
+<form class="form" name="form" ng-submit="$contact.submit($event, form)" form-reset="$contact.reset($event, $form)">
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <label class="control-label">Name</label>
+      <input class="form-control" name="name" type="text" placeholder="Joe Smith" ng-model="$contact.model.name" required>
+    </div>
+    <div class="form-group col-sm-6">
+      <label class="control-label">E-mail address</label>
+      <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$contact.model.email" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">Subject</label>
+      <input class="form-control" name="subject" type="text" placeholder="Interested in your services." ng-model="$contact.model.subject">
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">Message</label>
+      <textarea class="form-control" name="message" rows="5" placeholder="Enter your message." ng-model="$contact.model.message" required></textarea>
+    </div>
+  </div>
+  <dl class="text-right">
+    <div class="btn-group">
+      <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Submit</button>
+      <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+    </div>
+  </dl>
+</form>
