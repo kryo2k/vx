@@ -6,7 +6,6 @@ angular.module('coordinate-vx')
       templateUrl: 'app/tpl/app.html',
       controller: 'AppCtrl as $app',
       data: {
-        title: 'Application'
       }
     });
 })

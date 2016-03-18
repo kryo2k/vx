@@ -7,14 +7,19 @@ angular.module('coordinate-vx')
       ctrl.setTitle(el.html());
 
       scope.$watch(function () {
-        if(!$state.current || !$state.current.data || !$state.current.data.title) {
+        if(!$state.current || !$state.current.data || !$state.current.data.title || $state.current.data.hideTabTitle) {
           return false;
         }
 
         return $state.current.data.title;
       }, function (title) {
-        if(!title) return;
-        ctrl.prepend(title);
+        if(title) {
+          ctrl.prepend(title);
+        }
+        else {
+          ctrl.undo();
+        }
+
         el.html(ctrl.title);
       });
 

@@ -11,18 +11,9 @@ angular.module('coordinate-vx')
       }
     });
 })
-.controller('AppGuestLoginCtrl', function ($rootScope, $scope, $auth, $state) {
+.controller('AppGuestLoginCtrl', function ($scope, $auth, $guestOnly) {
 
-  $scope.$watch(function () { return $auth.authenticated }, function (authenticated) {
-    if(authenticated) {
-      if($rootScope.restoreState) {
-        var restore = $rootScope.restoreState;
-        return $state.go(restore.name, restore.params);
-      }
-
-      return $state.go('app.user.dashboard');
-    }
-  });
+  $guestOnly($scope);
 
   this.submit = function (event, form) {
     return $auth.login(this.model.username, this.model.password, this.model.rememberMe)

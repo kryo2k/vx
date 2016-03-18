@@ -6,6 +6,7 @@ angular.module('coordinate-vx')
       templateUrl: 'app/tpl/guest/index.html',
       controller: 'AppGuestIndexCtrl',
       data: {
+        hideTabTitle: true,
         title: 'Home',
         description: 'Click around the links above'
       }

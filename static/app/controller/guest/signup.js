@@ -11,7 +11,10 @@ angular.module('coordinate-vx')
       }
     });
 })
-.controller('AppGuestSignupCtrl', function () {
+.controller('AppGuestSignupCtrl', function ($scope, $guestOnly) {
+
+  $guestOnly($scope);
+
   this.submit = function (event, form) {
     console.log('submitting form:', form);
   };
