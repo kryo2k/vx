@@ -1,5 +1,8 @@
 angular.module('coordinate-vx')
-.service('$heartBeat', function ($q, $timeout, $auth) {
+.service('$heartBeat', function ($q, $timeout, $auth, $filter) {
+
+  var
+  durationFilter = $filter('duration');
 
   var
   running = false,
@@ -84,6 +87,9 @@ angular.module('coordinate-vx')
       get: function () {
         return roundSec(this.ttlMs);
       }
+    },
+    ttlDuration: {
+      get: function () { return durationFilter(this.ttlSec * 1000); }
     },
     idleMs: {
       get: function () {

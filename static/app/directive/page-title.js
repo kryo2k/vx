@@ -1,17 +1,25 @@
 angular.module('coordinate-vx')
 .directive('pageTitle', function ($state) {
   return {
-    link: function (scope, el, attr) {
-      var originalTitle = el.html();
+    controller: 'PageTitleCtrl',
+    link: function (scope, el, attr, ctrl) {
+
+      ctrl.setTitle(el.html());
 
       scope.$on('$destroy', scope.$watch(function () {
         if(!$state.current || !$state.current.data || !$state.current.data.title) {
-          return attr.defaultTitle||'';
+          return false;
         }
 
         return $state.current.data.title;
       }, function (title) {
-        el.html(!!originalTitle ? (originalTitle + ' - ' + title) : title);
+        if(!title) return;
+        ctrl.append(title);
+        el.html(ctrl.title);
+      }));
+
+      scope.$on('$destroy', scope.$on('$stateChangeStart', function () {
+        ctrl.undo(); // step back one
       }));
     }
   };

@@ -3,6 +3,7 @@ angular.module('coordinate-vx', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ngDate',
   'ui.router',
   'ui.bootstrap'
 ])

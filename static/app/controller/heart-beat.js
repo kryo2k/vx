@@ -1,6 +1,10 @@
 angular.module('coordinate-vx')
-.controller('HeartBeatCtrl', function ($heartBeat) {
+.controller('HeartBeatCtrl', function ($scope, $heartBeat, DURATION_SHORT) {
   this.service = $heartBeat;
+
+  $scope.durationOpts = angular.extend({}, DURATION_SHORT, {
+    inputAsSec:   true
+  });
 
   Object.defineProperties(this, {
     isActive: {

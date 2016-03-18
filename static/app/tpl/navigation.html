@@ -11,7 +11,7 @@
     <ul class="nav navbar-nav navbar-right" heart-beat>
       <li class="navbar-text navbar-text-dbl" ng-if="$heartBeat.isWarning">
         <div class="small text-right">
-          <div class="text-danger"><b>Your session will expire in <code>{{$heartBeat.service.ttlSec|number}} sec</code>.</b></div>
+          <div class="text-danger"><b>Your session will expire in <code>{{$heartBeat.service.ttlSec|duration:durationOpts}}</code>.</b></div>
           <div><a href="" ng-click="$heartBeat.extend()">Click here</a> <span>to extend it.</span></div>
         </div>
       </li>
