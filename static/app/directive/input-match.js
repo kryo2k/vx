@@ -4,22 +4,46 @@ angular.module('coordinate-vx')
 
   return {
     restrict: 'A',
-    require: '?ngModel',
-    link: function (scope, el, attr, ctrl) {
-      if(!ctrl) return;
+    require: ['ngModel', '^?formReset'],
+    link: function (scope, el, attr, ctrls) {
+      var
+      ctrl = ctrls[0],
+      reset = ctrls[1],
+      watchers = {};
+
       if(!attr[id]) return;
 
       var
-      matchInput = $parse(attr[id]),
-      validator  = function (value) {
-        var current = matchInput(scope);
-        ctrl.$setValidity('match', value === current);
-        return current;
+      match = false,
+      cleanUp = function () {
+        ctrl.$setValidity('match', true);
+      },
+      validate = function (b) {
+        if(!angular.isFunction(match)) {
+          return false;
+        }
+
+        return match(scope) === b;
       };
 
-      ctrl.$parsers.unshift(validator);
-      ctrl.$formatters.unshift(validator);
-      attr.$observe(id, function () { validator(ctrl.$viewValue); });
+      ctrl.$validators.match = function (modelValue, viewValue) {
+        return validate(viewValue);
+      };
+
+      if(reset) { // clean up dereg on destroy
+        scope.$on('$destroy', reset.addListener(cleanUp));
+      }
+
+      var lwatcher = null;
+
+      attr.$observe(id, function (toEqual) {
+        match = $parse(toEqual);
+
+        if(lwatcher) lwatcher();
+
+        // watch for changes on model we're supposed to match
+        lwatcher = scope.$watch(toEqual, ctrl.$validate.bind(ctrl));
+      });
     }
   };
 });

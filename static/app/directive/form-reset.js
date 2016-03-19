@@ -1,14 +1,19 @@
 angular.module('coordinate-vx')
 .directive( 'formReset', function () {
   return {
-    require: ['form'],
+    require: ['formReset','form'],
     scope: {
       reset: '&formReset'
     },
+    controller: 'FormResetCtrl',
     link: function (scope, el, attr, ctrls) {
-      function notify (event, form) {
+      var self = ctrls[0], form = ctrls[1];
+
+      function notify (event, f) {
         return function () {
-          scope.reset({ $event: event, $form: form });
+          scope.reset({ $event: event, $form: f });
+
+          self.notify(f);
 
           if(!event.defaultPrevented) {
             form.$setPristine();
@@ -16,7 +21,7 @@ angular.module('coordinate-vx')
         };
       }
 
-      el.bind('reset', function (event) { scope.$apply(notify(event, ctrls[0])); });
+      el.bind('reset', function (event) { scope.$apply(notify(event, form)); });
     }
   };
 });

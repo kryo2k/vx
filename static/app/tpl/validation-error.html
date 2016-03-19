@@ -1,0 +1,14 @@
+<div class="help-block validation-error" ng-if="$validation.hasErrors">
+
+  <ul ng-if="$validation.isArray" class="list-unstyled">
+    <li ng-repeat="error in $validation.errors">
+      <span class="small validation-error-message" ng-bind="error"></span>
+    </li>
+  </ul>
+
+  <div ng-if="$validation.isString">
+    <span class="small validation-error-message" ng-bind="$validation.errors"></span>
+  </div>
+
+  <ng-transclude></ng-transclude>
+</div>

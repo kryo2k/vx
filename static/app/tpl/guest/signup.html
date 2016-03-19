@@ -1,28 +1,44 @@
 <form class="form" name="form" ng-submit="$signup.submit($event, form)" form-reset="$signup.reset($event, $form)">
   <div class="row">
-    <div class="form-group col-sm-6">
-      <label class="control-label">Name</label>
-      <input class="form-control" name="name" type="text" placeholder="Joe Smith" ng-model="$signup.model.name" required>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.name">
+        <label class="control-label">Name</label>
+        <input class="form-control" name="name" type="text" placeholder="Joe Smith" ng-model="$signup.model.name" validation-input required>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
-    <div class="form-group col-sm-6">
-      <label class="control-label">E-mail address</label>
-      <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$signup.model.email" required>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.email">
+        <label class="control-label">E-mail address</label>
+        <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$signup.model.email" validation-input required>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
   </div>
   <div class="row">
-    <div class="form-group col-sm-6">
-      <label class="control-label">Password</label>
-      <input class="form-control" name="password" type="password" placeholder="My super STRONG password!" ng-model="$signup.model.password" ng-minlength="8" required>
-      <span class="help-block" ng-show="form.password.$error.minlength">Must be between 8 and 128 characters. At least one upper case and/or special character is required.</span>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.password">
+        <label class="control-label">Password</label>
+        <input class="form-control" name="password" type="password" placeholder="My super STRONG password!" ng-model="$signup.model.password" ng-minlength="8" validation-input required>
+        <span class="help-block" ng-show="form.password.$error.minlength">Must be between 8 and 128 characters. At least one upper case and/or special character is required.</span>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
-    <div class="form-group col-sm-6">
-      <label class="control-label">Confirm Password</label>
-      <input class="form-control" name="passwordConfirm" type="password" placeholder="Confirm your password" ng-model="$signup.model.passwordConfirm" input-match="$signup.model.password" required>
-      <span class="help-block" ng-show="form.passwordConfirm.$error.match">This does not match your password.</span></div>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.passwordConfirm">
+        <label class="control-label">Confirm Password</label>
+        <input class="form-control" name="passwordConfirm" type="password" placeholder="Confirm your password" ng-model="$signup.model.passwordConfirm" validation-input input-match="$signup.model.password" required>
+        <span class="help-block" ng-show="form.passwordConfirm.$error.match">This does not match your password.</span>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
   </div>
   <dl class="text-right">
-    <div class="pull-left text-left" ng-if="$signup.model.$wasPrefilled">
+    <div class="pull-left text-left" ng-if="$signup.model.$wasPrefilled && !!$signup.model.password">
       <div><b><small>Generated Password:</small></b></div>
       <code class="text-muted">{{$signup.model.password}}</code>
     </div>

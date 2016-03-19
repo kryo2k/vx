@@ -195,4 +195,10 @@ angular.module('coordinate-vx')
       return $shuffledCopy(array).slice(0, items);
     }
   }
+})
+.service('$uuid', function () {
+  var nonce = 1;
+  return function () {
+    return nonce++;
+  };
 });

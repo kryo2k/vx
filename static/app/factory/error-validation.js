@@ -13,5 +13,27 @@ angular.module('coordinate-vx')
     return angular.isObject(v) && (v instanceof ErrorValidation);
   };
 
+  ErrorValidation.normalizeError = function (err, key) {
+    return {};
+  };
+
+  ErrorValidation.prototype.gradeForm = function (scope, form) {
+    if(!form || !this.errors) return this;
+
+    var errs = this.errors||{};
+
+    Object.keys(errs).forEach(function (path) {
+      if(!form.hasOwnProperty(path)) {
+        return;
+      }
+
+      var model = form[path];
+      model.$lastErrors = errs[path];
+      model.$validate();
+    });
+
+    return this;
+  };
+
   return ErrorValidation;
 });

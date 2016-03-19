@@ -11,40 +11,43 @@ angular.module('coordinate-vx')
       }
     });
 })
-.controller('AppGuestSignupCtrl', function ($scope, $guestOnly, User, $randomEmail, $randomPassword) {
+.controller('AppGuestSignupCtrl', function ($scope, $guestOnly, $auth, $randomEmail, $randomPassword, ErrorValidation) {
 
   $guestOnly($scope);
-
-  this.model = {};
 
   this.quickFill = function (form) {
     var
     m = this.model,
     ident = $randomEmail();
 
+    if(!m) {
+      m = this.model = {};
+    }
+
     m.name = ident.toString();
     m.email = ident.toEmail();
     m.password = $randomPassword();
     m.passwordConfirm = String(m.password);
+    m.$wasPrefilled = true; // mark so view can respond
 
-    m.$wasPrefilled = true;
-
-    form.$setDirty();
+    if(form) {
+      form.$setDirty();
+    }
   };
 
   this.submit = function (event, form) {
-    console.log('submitting form:', form);
-    return User.signup(this.model).$promise
-      .then(function(result){
-        console.log(result);
-        return result;
-      })
-      .catch(function(err){
-        console.error(err);
+    return $auth.signup(this.model)
+      .catch(function (err) {
+        console.error('caught error:', err);
+
+        if(ErrorValidation.is(err)) { // activate form validation
+          err.gradeForm($scope, form);
+        }
+
         return err;
       });
   };
   this.reset = function (event, form) {
-    this.model = {};
+    delete this.model;
   };
 });

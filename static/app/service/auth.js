@@ -68,13 +68,24 @@ angular.module('coordinate-vx')
     );
   };
 
-  this.login = function (username, password, rememberMe) {
+  this.loadUserProfile = function (token) {
+    $authPersist.set(token); // set the token for this user
+    return this.reloadProfile();
+  };
+
+  this.signup = function (model) {
     return markLoading(
-      User.login({ username: username, password: password, rememberMe: rememberMe }).$promise
-        .then((function (data) {
-          $authPersist.set(data.token); // set the token for this user
-          return this.reloadProfile();
-        }).bind(this))
+      User.signup(model).$promise
+        .then(function (data) { return data.token; })
+        .then(this.loadUserProfile.bind(this))
+    );
+  };
+
+  this.login = function (model) {
+    return markLoading(
+      User.login(model).$promise
+        .then(function (data) { return data.token; })
+        .then(this.loadUserProfile.bind(this))
     );
   };
 

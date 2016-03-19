@@ -16,7 +16,7 @@ angular.module('coordinate-vx')
   $guestOnly($scope);
 
   this.submit = function (event, form) {
-    return $auth.login(this.model.username, this.model.password, this.model.rememberMe)
+    return $auth.login(this.model)
       .catch((function (err) {
         if(this.model) {
           delete this.model.password; // clear password field

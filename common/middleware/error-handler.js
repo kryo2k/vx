@@ -1,11 +1,66 @@
 'use strict';
 
 var
+_ = require('lodash'),
 util = require('util'),
 log = require('../components/log'),
 InputError = require('../components/error-input'),
 ValidationError = require('../components/error-validation'),
 AuthenticationError = require('../components/error-authentication');
+
+function normalizeValidationError (err, errKey) {
+  var
+  normalized  = {},
+  isErrArray  = _.isArray(err),
+  isErrObject = _.isObject(err),
+  isErrString = _.isString(err);
+
+  if(!errKey) {
+    if(isErrObject) { errKey = err.path; }
+    else if(isErrArray || isErrString) {
+      console.warn('Error (%j:%j) has no error key to send.', errKey, err);
+      errKey = null;
+    }
+  }
+
+  if(!errKey) {
+    return false;
+  }
+
+  normalized.property = errKey;
+
+  if(isErrArray || isErrString) {
+    normalized.message = isErrString ? err : err.filter(_.isString);
+  }
+  else if(isErrObject) {
+    normalized.original = err.value;
+    normalized.message  = err.message;
+  }
+
+  return normalized;
+}
+
+function simplifyValidationErrors(errs) {
+  var
+  normalized = [];
+
+  if(_.isArray(errs)) {
+    normalized = errs.map(normalizeValidationError);
+  }
+  else if(_.isObject(errs)) {
+    normalized = Object.keys(errs).map(function (key) {
+      return normalizeValidationError(errs[key], key);
+    });
+  }
+
+  return normalized.reduce(function (p, c) {
+    if(c && c.message) {
+      p[c.property] = c.message;
+    }
+
+    return p;
+  }, {});
+}
 
 module.exports = function (config) {
   return function (err, req, res, next) { // cant be a composable, signature doesn't match.
@@ -19,7 +74,7 @@ module.exports = function (config) {
 
     if(err instanceof ValidationError) { // no need to log these
       payload.message = err.message;
-      payload.errors  = err.errors;
+      payload.errors  = simplifyValidationErrors(err.errors);
 
       if(defaultStatus) { // set to 400 if unchanged
         res.status(406);
