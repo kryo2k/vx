@@ -22,6 +22,11 @@
     </div>
   </div>
   <dl class="text-right">
+    <div class="pull-left text-left" ng-if="$signup.model.$wasPrefilled">
+      <div><b><small>Generated Password:</small></b></div>
+      <code class="text-muted">{{$signup.model.password}}</code>
+    </div>
+    <button type="button" class="btn btn-default" ng-click="$signup.quickFill(form)">Quick Fill</button>
     <div class="btn-group">
       <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Signup</button>
       <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
