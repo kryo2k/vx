@@ -23,15 +23,24 @@ angular.module('coordinate-vx')
       get: function () {
         var input = this.input;
         if(!input || !input.hasModel) return null;
-        return input.model.$lastErrors||null;
+
+        var errs = input.model.$lastErrors||null
+        if(!errs) {
+          return errs;
+        }
+
+        return errs.message||null;
       }
     },
     hasErrors: {
       get: function () {
-        var lastErrs = this.errors; // look for actual errors
-        if(angular.isArray(lastErrs) || angular.isString(lastErrs)) {
-          return lastErrs.length > 0;
+        var message = this.errors; // look for actual errors
+        if(!message) return false;
+
+        if(angular.isArray(message) || angular.isString(message)) {
+          return message.length > 0;
         }
+
         return false;
       }
     },

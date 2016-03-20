@@ -55,7 +55,7 @@ function simplifyValidationErrors(errs) {
 
   return normalized.reduce(function (p, c) {
     if(c && c.message) {
-      p[c.property] = c.message;
+      p[c.property] = c;
     }
 
     return p;

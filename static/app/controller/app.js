@@ -20,6 +20,11 @@ angular.module('coordinate-vx')
       get: function () {
         return $auth.authenticated;
       }
+    },
+    'profile': {
+      get: function () {
+        return $auth.profile;
+      }
     }
   });
 });

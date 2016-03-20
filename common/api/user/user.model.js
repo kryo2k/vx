@@ -76,7 +76,10 @@ UserSchema.virtual('password')
 
     var results;
     if((results = this.constructor.passwordTest(val)) !== true) { // invalid/insecure password
-      this.invalidate('password', this._lastPasswordErrors = results);
+      this.invalidate('password', {
+        value: val,
+        message: this._lastPasswordErrors = results
+      });
     }
 
     if(!val) {

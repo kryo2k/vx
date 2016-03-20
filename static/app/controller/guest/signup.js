@@ -26,7 +26,7 @@ angular.module('coordinate-vx')
 
     m.name = ident.toString();
     m.email = ident.toEmail();
-    m.password = $randomPassword();
+    m.password = $randomPassword(1);
     m.passwordConfirm = String(m.password);
     m.$wasPrefilled = true; // mark so view can respond
 

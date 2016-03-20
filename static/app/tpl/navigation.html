@@ -15,6 +15,14 @@
           <div><a href="" ng-click="$heartBeat.extend()">Click here</a> <span>to extend it.</span></div>
         </div>
       </li>
+      <li class="navbar-text" ng-class="{'navbar-text-dbl': !!$app.profile.email}" ui-sref-active="active" ng-if="$app.authenticated">
+        <div class="small text-right">
+          <small>
+            <b>{{$app.profile.name}}</b>
+            <div>{{$app.profile.email}}</div>
+          </small>
+        </div>
+      </li>
       <li ui-sref-active="active" ng-if="$app.authenticated"><a ui-sref="app.user.dashboard">Dashboard</a></li>
       <li ui-sref-active="active" ng-if="$app.authenticated"><a href="" ng-click="$navigation.logout($event)">Logout</a></li>
       <li ui-sref-active="active" ng-if="!$app.authenticated"><a ui-sref="app.guest.login">Login</a></li>
