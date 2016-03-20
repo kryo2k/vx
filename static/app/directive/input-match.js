@@ -4,35 +4,28 @@ angular.module('coordinate-vx')
 
   return {
     restrict: 'A',
-    require: ['ngModel', '^?formReset'],
-    link: function (scope, el, attr, ctrls) {
+    require: 'ngModel',
+    link: function (scope, el, attr, ctrl) {
       var
-      ctrl = ctrls[0],
-      reset = ctrls[1],
       watchers = {};
 
       if(!attr[id]) return;
 
       var
       match = false,
-      cleanUp = function () {
-        ctrl.$setValidity('match', true);
-      },
       validate = function (b) {
         if(!angular.isFunction(match)) {
           return false;
         }
 
-        return match(scope) === b;
+        var a = match(scope);
+
+        return ctrl.$isEmpty(a) || a === b;
       };
 
       ctrl.$validators.match = function (modelValue, viewValue) {
         return validate(viewValue);
       };
-
-      if(reset) { // clean up dereg on destroy
-        scope.$on('$destroy', reset.addListener(cleanUp));
-      }
 
       var lwatcher = null;
 

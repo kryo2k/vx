@@ -1,12 +1,20 @@
 <form class="form" name="form" ng-submit="$login.submit($event, form)" form-reset="$login.reset($event, $form)">
   <div class="row">
-    <div class="form-group col-sm-6">
-      <label class="control-label">Username</label>
-      <input class="form-control" name="username" type="text" placeholder="Enter your username" ng-model="$login.model.username" required>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.username">
+        <label class="control-label">Username</label>
+        <input class="form-control" name="username" type="text" placeholder="Enter your username" ng-model="$login.model.username" required>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
-    <div class="form-group col-sm-6">
-      <label class="control-label">Password</label>
-      <input class="form-control" name="password" type="password" placeholder="Enter your password" ng-model="$login.model.password" required>
+    <div class="col-sm-6">
+      <div class="form-group has-feedback" form-input="form.password">
+        <label class="control-label">Password</label>
+        <input class="form-control" name="password" type="password" placeholder="Enter your password" ng-model="$login.model.password" required>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
   </div>
   <dl class="form-group text-right">

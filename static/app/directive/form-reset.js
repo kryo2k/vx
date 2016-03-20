@@ -11,9 +11,10 @@ angular.module('coordinate-vx')
 
       function notify (event, f) {
         return function () {
-          scope.reset({ $event: event, $form: f });
 
           self.notify(f);
+
+          scope.reset({ $event: event, $form: f });
 
           if(!event.defaultPrevented) {
             form.$setPristine();

@@ -1,8 +1,12 @@
 <form class="form" name="form" ng-submit="$forgot.submit($event, form)" form-reset="$forgot.reset($event, $form)">
   <div class="row">
-    <div class="form-group col-sm-12">
-      <label class="control-label">E-mail address</label>
-      <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$forgot.model.email" required>
+    <div class="col-sm-12">
+      <div class="form-group has-feedback" form-input="form.email">
+        <label class="control-label">E-mail address</label>
+        <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$forgot.model.email" required>
+        <validation-feedback></validation-feedback>
+        <validation-error></validation-error>
+      </div>
     </div>
   </div>
   <div class="row">
