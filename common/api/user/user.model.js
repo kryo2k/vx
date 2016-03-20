@@ -7,6 +7,7 @@ mongoose = require('mongoose'),
 owasp = require('owasp-password-strength-test'),
 mongoUtil = require('../../components/mongo-util'),
 InputError = require('../../components/error-input'),
+SiteSignature = require('../../components/site-signature'),
 AuthenticationError = require('../../components/error-authentication'),
 config = require('../../../config'),
 Schema = mongoose.Schema;
@@ -205,7 +206,10 @@ UserSchema.statics = {
     return promise;
   },
   createToken: function (signer, longTerm) {
-    return signer.tokenSign(this.sessionDuration(longTerm), { longTerm: longTerm });
+    return SiteSignature.sign(signer.tokenSign(this.sessionDuration(longTerm), { longTerm: longTerm }));
+  },
+  parseToken: function (signedToken) {
+    return SiteSignature.parse(signedToken);
   },
   passwordTest: function (password) {
     var
@@ -241,11 +245,13 @@ UserSchema.statics = {
   tokenJoin: function (id, payload) {
     return String(id) + payload;
   },
-  tokenId: function (token) {
+  tokenId: function (token, isParsed) {
+    token = isParsed ? token : this.parseToken(token);
     if(!_.isString(token) || token.length < ML) return false;
     return mongoUtil.getObjectId(token.substring(0, ML));
   },
-  tokenPayload: function (token) {
+  tokenPayload: function (token, isParsed) {
+    token = isParsed ? token : this.parseToken(token);
     var tlen = token.length;
     if(!_.isString(token) || tlen < ML) return false;
     return token.substring(ML, tlen);

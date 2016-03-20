@@ -4,6 +4,7 @@ var
 express = require('express'),
 mongoose = require('mongoose'),
 http = require('http'),
+path = require('path'),
 bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
 expressReqId = require('express-request-id'),
@@ -36,10 +37,10 @@ app // add some basic middleware to app
 .use(expressReqId())
 .use(bodyParser.json())
 .use(cookieParser())
+.use(express.static('static'))
 .use(userNotification())
 .use(requestLogger())
-.use(responseHandler())
-.use(express.static('static'));
+.use(responseHandler());
 
 // boostrap this server with app
 server(app);
@@ -52,7 +53,7 @@ app.route('/:url(api|app|vendor|assets)/*')
 
 // catch all else to index html page
 app.route('/*') .get(function (req, res) {
-  res.sendfile('static/index.html');
+  res.sendFile(path.join(__dirname, 'static/index.html'));
 });
 
 // handle errors with middleware
