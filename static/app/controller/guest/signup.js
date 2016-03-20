@@ -38,12 +38,9 @@ angular.module('coordinate-vx')
   this.submit = function (event, form) {
     return $auth.signup(this.model)
       .catch(function (err) {
-        console.error('caught error:', err);
-
-        if(ErrorValidation.is(err)) { // activate form validation
+        if(ErrorValidation.is(err)) {
           err.gradeForm($scope, form);
         }
-
         return err;
       });
   };

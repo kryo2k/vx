@@ -67,7 +67,7 @@ angular.module('coordinate-vx')
     return result;
   };
 })
-.service('$isDate', function () {
+.service('$isDate', function ($isObject) {
   return function (v) { // matches only Date object instances
     return $isObject(v, Date);
   };
