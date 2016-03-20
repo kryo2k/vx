@@ -1,4 +1,4 @@
-<span class="form-control-feedback">
-  <span class="glyphicon glyphicon-remove form-control-feedback" ng-if="$formInput.model.$invalid"></span>
-  <span class="glyphicon glyphicon-ok form-control-feedback" ng-if="$formInput.model.$valid"></span>
+<span class="form-control-feedback" ng-show="$formInput.model.$dirty">
+  <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="$formInput.model.$invalid"></span>
+  <span class="glyphicon glyphicon-ok form-control-feedback" ng-show="$formInput.model.$valid"></span>
 </span>

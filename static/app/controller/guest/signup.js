@@ -11,7 +11,7 @@ angular.module('coordinate-vx')
       }
     });
 })
-.controller('AppGuestSignupCtrl', function ($scope, $guestOnly, $auth, $randomEmail, $randomPassword, ErrorValidation) {
+.controller('AppGuestSignupCtrl', function ($scope, $dirtyForm, $guestOnly, $auth, $randomEmail, $randomWords, ErrorValidation) {
 
   $guestOnly($scope);
 
@@ -26,16 +26,15 @@ angular.module('coordinate-vx')
 
     m.name = ident.toString();
     m.email = ident.toEmail();
-    m.password = $randomPassword();
+    m.password = $randomWords();
     m.passwordConfirm = String(m.password);
     m.$wasPrefilled = true; // mark so view can respond
 
-    if(form) {
-      form.$setDirty();
-    }
+    $dirtyForm(form);
   };
 
   this.submit = function (event, form) {
+    form.$setSubmitted();
     return $auth.signup(this.model)
       .catch(function (err) {
         if(ErrorValidation.is(err)) {
