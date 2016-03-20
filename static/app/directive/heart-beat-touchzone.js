@@ -55,8 +55,11 @@ angular.module('coordinate-vx')
         moveDetDeb = $debounce(moveDetect, num, true);
       });
 
+      // listen for these events as input:
       angular.element(el).bind('mousemove', moveDetDeb);
-      angular.element(el).bind('click', clickDetect);
+      angular.element(el).bind('touchmove', moveDetDeb);
+      angular.element(el).bind('click',      clickDetect);
+      angular.element(el).bind('touchstart', clickDetect);
     }
   };
 });
