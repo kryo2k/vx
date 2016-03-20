@@ -21,60 +21,65 @@
   <script type="text/javascript" src="vendor/angular-date/angular-date.min.js"></script>
   <script type="text/javascript" src="vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
   <script type="text/javascript" src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="vendor/autobahn/autobahn.min.js"></script>
+  <script type="text/javascript" src="vendor/angular-wamp/release/angular-wamp.js"></script>
   <script type="text/javascript" src="app/app-constants.js"></script>
   <script type="text/javascript" src="app/app.js"></script>
-  <script type="text/javascript" src="app/factory/http-normalizer.js"></script>
-  <script type="text/javascript" src="app/factory/auth-interceptor.js"></script>
-  <script type="text/javascript" src="app/factory/error-bad-token.js"></script>
-  <script type="text/javascript" src="app/factory/error-alert.js"></script>
-  <script type="text/javascript" src="app/factory/error-validation.js"></script>
-  <script type="text/javascript" src="app/factory/revision-control.js"></script>
-  <script type="text/javascript" src="app/service/util.js"></script>
-  <script type="text/javascript" src="app/service/random.js"></script>
-  <script type="text/javascript" src="app/service/modal-open.js"></script>
-  <script type="text/javascript" src="app/service/modal-system-error.js"></script>
-  <script type="text/javascript" src="app/service/modal-message.js"></script>
-  <script type="text/javascript" src="app/service/debounce.js"></script>
-  <script type="text/javascript" src="app/service/dirty-form.js"></script>
-  <script type="text/javascript" src="app/service/api-url.js"></script>
-  <script type="text/javascript" src="app/service/auth-persist.js"></script>
-  <script type="text/javascript" src="app/service/auth-watch.js"></script>
-  <script type="text/javascript" src="app/service/auth-state.js"></script>
-  <script type="text/javascript" src="app/service/auth.js"></script>
-  <script type="text/javascript" src="app/service/guest-only.js"></script>
-  <script type="text/javascript" src="app/service/heart-beat.js"></script>
-  <script type="text/javascript" src="app/directive/heart-beat.js"></script>
-  <script type="text/javascript" src="app/directive/heart-beat-touchzone.js"></script>
-  <script type="text/javascript" src="app/directive/heart-beat-title.js"></script>
+  <script type="text/javascript" src="app/controller/app.js"></script>
+  <script type="text/javascript" src="app/controller/form-input.js"></script>
+  <script type="text/javascript" src="app/controller/form-reset.js"></script>
+  <script type="text/javascript" src="app/controller/guest.js"></script>
+  <script type="text/javascript" src="app/controller/guest/contact.js"></script>
+  <script type="text/javascript" src="app/controller/guest/forgot.js"></script>
+  <script type="text/javascript" src="app/controller/guest/index.js"></script>
+  <script type="text/javascript" src="app/controller/guest/login.js"></script>
+  <script type="text/javascript" src="app/controller/guest/signup.js"></script>
+  <script type="text/javascript" src="app/controller/heart-beat-title.js"></script>
+  <script type="text/javascript" src="app/controller/heart-beat.js"></script>
+  <script type="text/javascript" src="app/controller/navigation.js"></script>
+  <script type="text/javascript" src="app/controller/page-header.js"></script>
+  <script type="text/javascript" src="app/controller/page-title.js"></script>
+  <script type="text/javascript" src="app/controller/user.js"></script>
+  <script type="text/javascript" src="app/controller/user-notifications.js"></script>
+  <script type="text/javascript" src="app/controller/user/dashboard.js"></script>
+  <script type="text/javascript" src="app/controller/user/settings.js"></script>
+  <script type="text/javascript" src="app/controller/validation-error.js"></script>
+  <script type="text/javascript" src="app/directive/form-group.js"></script>
+  <script type="text/javascript" src="app/directive/form-input.js"></script>
+  <script type="text/javascript" src="app/directive/form-reset.js"></script>
   <script type="text/javascript" src="app/directive/heart-beat-control.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat-title.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat-touchzone.js"></script>
+  <script type="text/javascript" src="app/directive/heart-beat.js"></script>
+  <script type="text/javascript" src="app/directive/input-match.js"></script>
+  <script type="text/javascript" src="app/directive/navigation.js"></script>
+  <script type="text/javascript" src="app/directive/page-header.js"></script>
+  <script type="text/javascript" src="app/directive/page-title.js"></script>
+  <script type="text/javascript" src="app/directive/user-notifications.js"></script>
   <script type="text/javascript" src="app/directive/validation-error.js"></script>
   <script type="text/javascript" src="app/directive/validation-feedback.js"></script>
   <script type="text/javascript" src="app/directive/validation-input.js"></script>
-  <script type="text/javascript" src="app/directive/form-reset.js"></script>
-  <script type="text/javascript" src="app/directive/form-group.js"></script>
-  <script type="text/javascript" src="app/directive/form-input.js"></script>
-  <script type="text/javascript" src="app/directive/input-match.js"></script>
-  <script type="text/javascript" src="app/directive/navigation.js"></script>
-  <script type="text/javascript" src="app/directive/page-title.js"></script>
-  <script type="text/javascript" src="app/directive/page-header.js"></script>
+  <script type="text/javascript" src="app/factory/auth-interceptor.js"></script>
+  <script type="text/javascript" src="app/factory/error-alert.js"></script>
+  <script type="text/javascript" src="app/factory/error-bad-token.js"></script>
+  <script type="text/javascript" src="app/factory/error-validation.js"></script>
+  <script type="text/javascript" src="app/factory/http-normalizer.js"></script>
+  <script type="text/javascript" src="app/factory/revision-control.js"></script>
   <script type="text/javascript" src="app/resource/user.js"></script>
-  <script type="text/javascript" src="app/controller/app.js"></script>
-  <script type="text/javascript" src="app/controller/heart-beat.js"></script>
-  <script type="text/javascript" src="app/controller/heart-beat-title.js"></script>
-  <script type="text/javascript" src="app/controller/validation-error.js"></script>
-  <script type="text/javascript" src="app/controller/navigation.js"></script>
-  <script type="text/javascript" src="app/controller/form-input.js"></script>
-  <script type="text/javascript" src="app/controller/form-reset.js"></script>
-  <script type="text/javascript" src="app/controller/page-header.js"></script>
-  <script type="text/javascript" src="app/controller/page-title.js"></script>
-  <script type="text/javascript" src="app/controller/guest.js"></script>
-  <script type="text/javascript" src="app/controller/guest/index.js"></script>
-  <script type="text/javascript" src="app/controller/guest/contact.js"></script>
-  <script type="text/javascript" src="app/controller/guest/login.js"></script>
-  <script type="text/javascript" src="app/controller/guest/signup.js"></script>
-  <script type="text/javascript" src="app/controller/guest/forgot.js"></script>
-  <script type="text/javascript" src="app/controller/user.js"></script>
-  <script type="text/javascript" src="app/controller/user/dashboard.js"></script>
-  <script type="text/javascript" src="app/controller/user/settings.js"></script>
+  <script type="text/javascript" src="app/service/api-url.js"></script>
+  <script type="text/javascript" src="app/service/auth-persist.js"></script>
+  <script type="text/javascript" src="app/service/auth-state.js"></script>
+  <script type="text/javascript" src="app/service/auth-watch.js"></script>
+  <script type="text/javascript" src="app/service/auth.js"></script>
+  <script type="text/javascript" src="app/service/debounce.js"></script>
+  <script type="text/javascript" src="app/service/dirty-form.js"></script>
+  <script type="text/javascript" src="app/service/guest-only.js"></script>
+  <script type="text/javascript" src="app/service/heart-beat.js"></script>
+  <script type="text/javascript" src="app/service/modal-message.js"></script>
+  <script type="text/javascript" src="app/service/modal-open.js"></script>
+  <script type="text/javascript" src="app/service/modal-system-error.js"></script>
+  <script type="text/javascript" src="app/service/random.js"></script>
+  <script type="text/javascript" src="app/service/real-time.js"></script>
+  <script type="text/javascript" src="app/service/util.js"></script>
 </body>
 </html>

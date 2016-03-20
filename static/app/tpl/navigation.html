@@ -16,17 +16,13 @@
         </div>
       </li>
 
-
-      <!-- user menu -->
-
-      <li class="navbar-text" ng-class="{'navbar-text-dbl': !!$app.profile.email}" ui-sref-active="active" ng-if="$app.authenticated">
-        <div class="small text-right">
-          <a href="" ui-sref="app.user.dashboard">
-            <b>{{$app.profile.name}}</b>
-            <div>{{$app.profile.email}}</div>
-          </a>
-        </div>
+      <li ui-sref-active="active" ng-if="$app.authenticated">
+        <a href="" ui-sref="app.user.settings">
+          <small>{{$app.profile.name}}</small>
+          <!-- <div>{{$app.profile.email}}</div> -->
+        </a>
       </li>
+      <li ng-if="$app.authenticated" user-notifications></li>
       <li ng-if="$app.authenticated" uib-dropdown>
 
         <a href="" uib-dropdown-toggle>

@@ -12,7 +12,7 @@ var
 app = express(),
 port = config.server.port,
 addr = config.server.address,
-comp = config.server.component,
+comp = process.argv[2] || config.server.component,
 server = serverFactory(comp);
 
 if(!server) {

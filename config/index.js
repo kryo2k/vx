@@ -21,6 +21,16 @@ module.exports = {
       new (winston.transports.Console)({ level: 'debug' })
     ]
   },
+  wampServer: {
+    url: 'ws://localhost:8080/ws',
+    realm: 'realm1',
+    // authmethods: ["wampcra"],
+    // authid: 'SYS'
+  },
+  socketServer: {
+    userNotifications: {
+    }
+  },
   secret: {
 
     //

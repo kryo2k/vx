@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autobahn": "^0.9.9",
     "body-parser": "^1.15.0",
     "bytes": "^2.3.0",
     "composable-middleware": "^0.3.0",

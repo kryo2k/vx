@@ -29,7 +29,7 @@ angular.module('coordinate-vx')
   };
 
   this.submit = function (event, form) {
-    console.log('submitting form:', form);
+    form.$setSubmitted();
     $modalMessage('Forgot-password feature is coming soon', 'Coming Soon');
   };
 

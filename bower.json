@@ -21,6 +21,8 @@
     "angular-ui-router": "0.2.18",
     "angular-bootstrap": "~1.2.4",
     "bootstrap": "3.3.6",
-    "angular-date": "*"
+    "angular-date": "*",
+    "autobahn": "~0.9.9",
+    "angular-wamp": "~0.1.8"
   }
 }

@@ -5,7 +5,8 @@ angular.module('coordinate-vx', [
   'ngSanitize',
   'ngDate',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'vxWamp'
 ])
 .config(function ($urlRouterProvider, $locationProvider, $httpProvider, $uibTooltipProvider) {
   $urlRouterProvider.otherwise('/');

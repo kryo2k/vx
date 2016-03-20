@@ -16,6 +16,7 @@ angular.module('coordinate-vx')
   $guestOnly($scope);
 
   this.submit = function (event, form) {
+    form.$setSubmitted();
     return $auth.login(this.model)
       .catch((function (err) {
         if(this.model) {
