@@ -2,4 +2,4 @@
 
 var autobahn = require('autobahn');
 
-console.log('Authenticator starting...');
+console.log('Backend starting...');

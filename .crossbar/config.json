@@ -8,30 +8,70 @@
                 {
                     "name": "realm1",
                     "roles": [
+
                         {
-                            "name": "anonymous",
-                            "permissions": [
-                                {
-                                    "uri": "",
-                                    "match": "prefix",
-                                    "allow": {
-                                        "call": true,
-                                        "register": true,
-                                        "publish": true,
-                                        "subscribe": true
-                                    },
-                                    "disclose": {
-                                        "caller": false,
-                                        "publisher": false
-                                    },
-                                    "cache": true
-                                }
-                            ]
+                           "name": "authenticator",
+                           "permissions": [
+                              {
+                                 "uri": "vx.authenticate",
+                                 "register": true
+                              }
+                           ]
+                        },
+
+                        {
+                           "name": "backend",
+                           "permissions": [
+                              {
+                                 "uri": "*",
+                                 "publish": true,
+                                 "subscribe": true,
+                                 "call": true,
+                                 "register": true
+                              }
+                           ]
+                        },
+
+                        {
+                           "name": "guest",
+                           "permissions": [
+                           ]
+                        },
+
+                        {
+                           "name": "user",
+                           "permissions": [
+                           ]
                         }
                     ]
                 }
             ],
             "transports": [
+
+                {
+                   "type": "websocket",
+                   "endpoint": {
+                      "type": "tcp",
+                      "port": 9000,
+                      "interface": "127.0.0.1"
+                   },
+                   "auth": {
+                      "wampcra": {
+                         "type": "static",
+                         "users": {
+                            "authenticator1": {
+                               "secret": "secret123",
+                               "role": "authenticator"
+                            },
+                            "backend1": {
+                               "secret": "secret456",
+                               "role": "backend"
+                            }
+                         }
+                      }
+                   }
+                },
+
                 {
                    "type": "web",
                    "endpoint": {
@@ -64,6 +104,53 @@
                 }
             ]
         },
+
+        {
+           "type": "guest",
+           "executable": "node",
+           "arguments": [
+                "server/wamp/authenticator.js",
+                "ws://127.0.0.1:9000",
+                "realm1",
+                "authenticator1",
+                "secret123"
+           ],
+           "options": {
+                "workdir": "..",
+                "watch": {
+                    "directories": [
+                        "../server",
+                        "../config",
+                        "../common"
+                    ],
+                    "action": "restart"
+                }
+           }
+        },
+
+        {
+           "type": "guest",
+           "executable": "node",
+           "arguments": [
+                "server/wamp/backend.js",
+                "ws://127.0.0.1:9000",
+                "realm1",
+                "backend1",
+                "secret456"
+           ],
+           "options": {
+                "workdir": "..",
+                "watch": {
+                    "directories": [
+                        "../server",
+                        "../config",
+                        "../common"
+                    ],
+                    "action": "restart"
+                }
+           }
+        },
+
         {
             "type": "guest",
             "executable": "node",
