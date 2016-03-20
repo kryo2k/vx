@@ -9,7 +9,7 @@ angular.module('coordinate-vx', [
 ])
 .config(function ($urlRouterProvider, $locationProvider, $httpProvider, $uibTooltipProvider) {
   $urlRouterProvider.otherwise('/');
-  $locationProvider.html5Mode(true);
+  $locationProvider.html5Mode(false); // messes with crossbar.io
   $httpProvider.interceptors.push('AuthInterceptor', 'HttpNormalizer');
   $uibTooltipProvider.options({
     popupDelay: 500

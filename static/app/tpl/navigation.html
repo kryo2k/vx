@@ -21,10 +21,10 @@
 
       <li class="navbar-text" ng-class="{'navbar-text-dbl': !!$app.profile.email}" ui-sref-active="active" ng-if="$app.authenticated">
         <div class="small text-right">
-          <small>
+          <a href="" ui-sref="app.user.dashboard">
             <b>{{$app.profile.name}}</b>
             <div>{{$app.profile.email}}</div>
-          </small>
+          </a>
         </div>
       </li>
       <li ng-if="$app.authenticated" uib-dropdown>
@@ -34,8 +34,8 @@
         </a>
 
         <ul uib-dropdown-menu>
-          <li ui-sref-active="active"><a ui-sref="app.user.settings">Settings</a></li>
           <li ui-sref-active="active"><a ui-sref="app.user.dashboard">Dashboard</a></li>
+          <li ui-sref-active="active"><a ui-sref="app.user.settings">Settings</a></li>
           <li role="separator" class="divider"></li>
           <li ui-sref-active="active"><a href="" ng-click="$navigation.logout($event)">Logout</a></li>
         </ul>

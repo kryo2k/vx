@@ -8,7 +8,7 @@ module.exports = {
   debugging: (parseInt(envVar.CX_DEBUG) === 1),
   server: {
     port: envVar.CX_PORT || 9999,
-    address: envVar.CX_ADDR || '0.0.0.0',
+    address: envVar.CX_ADDR || '127.0.0.1',
     component: envVar.CX_COMPONENT || 'test-json-rpc'
   },
   database: {
