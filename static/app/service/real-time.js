@@ -6,16 +6,30 @@ angular.module('coordinate-vx')
     authmethods: ['wampcra']
   });
 })
-.service('$realTime', function ($wamp, $authPersist, $rootScope) {
+.service('$realTime', function ($wamp, $auth, $authPersist, $rootScope) {
 
   var
   running = false;
 
   // locally bind these functions
-  this.subscribe = $wamp.subscribe.bind($wamp);
-  this.publish   = $wamp.publish.bind($wamp);
-  this.register  = $wamp.register.bind($wamp);
-  this.call      = $wamp.call.bind($wamp);
+  this.subscribe      = $wamp.subscribe.bind($wamp);
+  this.unsubscribe    = $wamp.unsubscribe.bind($wamp);
+  this.publish        = $wamp.publish.bind($wamp);
+  this.register       = $wamp.register.bind($wamp);
+  this.unregister     = $wamp.unregister.bind($wamp);
+  this.call           = $wamp.call.bind($wamp);
+
+  // can't use native subscribe on scope, borks up the returned subscription:
+  // this.subscribeScope = $wamp.subscribeOnScope.bind($wamp);
+  this.subscribeScope = (function (scope, channel, callback) {
+    return this.subscribe(channel, callback).then(function (subscription) {
+      scope.$on('$destroy', function () {
+        return subscription.unsubscribe();
+      });
+
+      return subscription;
+    });
+  }).bind($wamp);
 
   this.start = function () {
     if(running) return this;
@@ -33,26 +47,11 @@ angular.module('coordinate-vx')
   };
 
   $rootScope.$on("$wamp.onchallenge", function (event, data) {
-    console.log('getting challenge request:', data.method);
-
-      // if (data.method === "myauth"){
-      //     return data.promise.resolve(autobahn.auth_cra.sign('someSecret', data.extra.challenge));
-      //  }
-      //  //You can also access the following objects:
-      //  // data.session
-      //  //data.extra
+    var
+    extra = data.extra,
+    derived = autobahn.auth_cra.derive_key($auth.profile._id, extra.salt, extra.iterations, extra.keylen);
+    return data.promise.resolve(autobahn.auth_cra.sign(derived, extra.challenge));
   });
-
-  // $rootScope.$on("$wamp.open", function (event, session) {
-  //   console.log('We are connected to the WAMP Router!', arguments);
-  // });
-
-  // $rootScope.$on("$wamp.close", function (event, data) {
-  //   console.log('We are disconnected from the WAMP Router!', arguments);
-  //   $scope.reason = data.reason;
-  //   $scope.details = data.details;
-  // });
-
 })
 .run(function ($realTime, $authWatch) {
   $authWatch((function (authenticated) { !!authenticated ? this.start() : this.stop(); }).bind($realTime));

@@ -6,11 +6,6 @@ envVar = process.env;
 
 module.exports = {
   debugging: (parseInt(envVar.CX_DEBUG) === 1),
-  server: {
-    port: envVar.CX_PORT || 9999,
-    address: envVar.CX_ADDR || '127.0.0.1',
-    component: envVar.CX_COMPONENT || 'test-json-rpc'
-  },
   database: {
     uri: envVar.CX_MONGO_URI || 'mongodb://localhost:27017/test',
     options: {
@@ -21,14 +16,12 @@ module.exports = {
       new (winston.transports.Console)({ level: 'debug' })
     ]
   },
-  wampServer: {
-    url: 'ws://localhost:8080/ws',
-    realm: 'realm1',
-    // authmethods: ["wampcra"],
-    // authid: 'SYS'
-  },
-  socketServer: {
-    userNotifications: {
+  server: {
+    api: {
+    },
+    backend: {
+    },
+    authenticator: {
     }
   },
   secret: {
@@ -39,6 +32,7 @@ module.exports = {
     //
 
     token: envVar.CX_SECRET_TOKEN || 'an invalid key error will occur',
+    ws: envVar.CX_SECRET_WS || 'some random string here'
   },
   session: {
     durationShortLived: 120000,    // 1 hr
