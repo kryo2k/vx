@@ -9,7 +9,7 @@ angular.module('coordinate-vx')
       $scope.inputTest = function () {
         return User.input({ test: true }).$promise
           .then(function(response) {
-            console.log('got response:', response);
+            console.log('HTTP response from input test:', response);
             return response;
           });
       };
