@@ -45,6 +45,12 @@ angular.module('coordinate-vx')
       params: {
         controller: 'change-password'
       }
+    },
+    input: {
+      method: 'POST',
+      params: {
+        controller: 'input'
+      }
     }
   });
 });

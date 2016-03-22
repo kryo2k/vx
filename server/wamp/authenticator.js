@@ -5,7 +5,7 @@ _ = require('lodash'),
 crypto = require('crypto'),
 Q = require('q'),
 autobahn = require('autobahn'),
-autobahnCon = require('../../common/components/autobahn-connection'),
+autobahnSvc = require('../../common/components/autobahn-service'),
 config = require('../../config'),
 ModelUser = require('../../common/api/user/user.model');
 
@@ -51,11 +51,7 @@ function authenticate (args) {
 }
 
 module.exports = function () {
-
-  var
-  connection = autobahnCon(process.argv[3], process.argv[4], process.argv[5], process.argv[6]);
-
-  connection.onopen = function (session, details) {
+  autobahnSvc.on('open', function (session) {
     console.log(TAG, 'Connected to wamp server');
 
     var
@@ -69,7 +65,7 @@ module.exports = function () {
         console.log(TAG + ' routine (%s) failed to register (%s)', tagAuth, err);
       }
     );
-  };
+  });
 
-  connection.open();
+  autobahnSvc.init(process.argv[3], process.argv[4], process.argv[5], process.argv[6]).start();
 };

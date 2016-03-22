@@ -440,15 +440,14 @@ UserSchema.methods = {
   tokenParse: function (token) {
     var
     parsed, spl = this.constructor.tokenSplit(token);
-
-    if(!spl || !this._id.equals(spl.id)) { // ensure decoded and belongs to this user (before starting)
-      return parsed;
+    if(!spl || !mongoUtil.isIdEqual(this._id, spl.id)) { // ensure decoded and belongs to this user (before starting)
+      return false;
     }
 
     parsed = this.decryptObj(this.publicKey, spl.payload);
 
     if(parsed) { // further validate the token
-      if(!this._id.equals(parsed.uID)) { // encrypted uID must belong to this user
+      if(!mongoUtil.isIdEqual(this._id, parsed.uID)) { // encrypted uID must belong to this user
         return false;
       }
       if(parsed.eAt && Date.now() >= parsed.eAt) { // must be greater than now.

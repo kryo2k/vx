@@ -3,8 +3,9 @@
 var
 Q = require('q'),
 _ = require('lodash'),
+format = require('util').format,
 autobahn = require('autobahn'),
-autobahnCon = require('../../common/components/autobahn-connection'),
+autobahnSvc = require('../../common/components/autobahn-service'),
 ellipsis = require('../../common/components/ellipsis'),
 ModelUser = require('../../common/api/user/user.model');
 
@@ -18,6 +19,9 @@ logSub = function (args, b, c) {
   sval  = !!c.publication ? c.publication : (!!c.publisher ? c.publisher : null);
 
   console.log('>>> %s[%s:%j] #%d %j', c.topic, stype, sval, args.length, args);
+},
+logErr = function (e) {
+  console.log('ERR', arguments);
 };
 
 var
@@ -67,7 +71,7 @@ userSessionGet = function (id, session) {
       return session.call("wamp.session.get", [id])
         .then(function(res) {
           if(!res) return Q.reject(new Error('No result returned from session query.'));
-          if(res.authrole !== 'user') return Q.reject(new Error('Non-user role attempted user action.'));
+          if(res.authrole !== 'user') return Q.reject(new Error(format('Non-user role (%s) attempted user action.', res.authrole)));
           if(!res.authid) return Q.reject(new Error('Unable to re-load session id, most likely non-existent.'));
 
           return userSessionAdhoc(id, res.authid);
@@ -129,37 +133,29 @@ function subOnCreate (session) {
 
     var id = args[0], subscr = args[1];
 
-    userSessionGet(id, session).then(function (user) {
+    return userSessionGet(id, session).then(function (user) {
       console.log(TAG + ' [SUB CREATE] (sessionId: %s, user: %j, uri: %s)', ellipsis(id), user.profileMinimal, subscr.uri);
+
+      // console.log('subscription info:', subscr);
+
+      // session.call('wamp.subscription.get', [subscr.id])
+      //   .then(function () { console.log('wamp.subscription.get:', arguments); });
+
+      // session.call('wamp.subscription.list_subscribers', [subscr.id])
+      //   .then(function () { console.log('wamp.subscription.list_subscribers:', arguments); });
+
+      // session.call('wamp.subscription.count_subscribers', [subscr.id])
+      //   .then(function () { console.log('wamp.subscription.count_subscribers:', arguments); });
+
+      return false;
     });
   };
 }
 
 function subOnSubscribe(session) {
   return function (args, b, c) {
-    var
-    id = args[0], subto = args[1],
-    elSessId = ellipsis(id),
-    elSubId = ellipsis(subto),
-    topic = virtUserSub[subto].topic;
-
-    if(virtUserSub.hasOwnProperty(subto)) {
-      return userSessionGet(id, session).then(function (user) {
-        console.log(TAG+' subscription to (%s:%s) succeeded (sessionId: %s)', elSubId, topic, elSessId);
-
-        // var
-        // pusId = pushUserSubscription(user, id, subto);
-
-        //
-        // All data here needs to be specific to the user subscribed above.
-        //
-
-      });
-    }
-
-    // pass-thru subscription if not a virtual user subscription
+    var id = args[0], subto = args[1];
     logSub.apply(this, arguments);
-    return args;
   };
 }
 
@@ -173,19 +169,6 @@ function subOnDelete(session) {
   return function (args, b, c) {
     logSub.apply(this, arguments);
   };
-}
-
-function virtualUserSubscription(session, uri, handler) {
-  console.log(TAG + ' creating virtual user subscription (uri: %s)', uri);
-  return session.subscribe(uri, _.isFunction(handler) ? handler : function (v) { return v; })
-    .then(function (reg) {
-      console.log(TAG + ' virtual subscription (uri: %s) created with id (%s:%s)', uri, ellipsis(reg.id), reg.topic);
-      virtUserSub[reg.id] = reg;
-      return reg;
-    }, function (err) {
-      console.error(TAG + ' unable to create virtual subscription (uri: %s) [%s].', uri, err);
-      return err;
-    });
 }
 
 //
@@ -203,7 +186,6 @@ function procRequestChannel(args) {
 module.exports = function () {
 
   var
-  connection = autobahnCon(process.argv[3], process.argv[4], process.argv[5], process.argv[6]),
   slog = function (reg) {
     if(reg.error) {
       return console.error('ERROR:', reg.error);
@@ -218,11 +200,8 @@ module.exports = function () {
     console.log('success (%j)', arguments);
   };
 
-  connection.onopen = function (session, details) {
+  autobahnSvc.on('open', function (session, details) {
     console.log(TAG, 'Connected to wamp server');
-
-    // virtual user topic subscriptions
-    virtualUserSubscription(session, 'vx.user.notifications');
 
     // meta-event subscriptions
     session.subscribe('wamp.session.on_join',             sessionOnJoin(session))    .then(slog, slog);
@@ -234,7 +213,7 @@ module.exports = function () {
 
     // custom procedures
     // session.register('vx.user.requestChannel', procRequestChannel).then(slog, slog);
-  };
+  });
 
-  connection.open();
+  autobahnSvc.init(process.argv[3], process.argv[4], process.argv[5], process.argv[6]).start();
 };

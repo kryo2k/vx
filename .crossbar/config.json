@@ -69,7 +69,7 @@
                             "name": "user",
                             "permissions": [
                                 {
-                                    "uri": "vx.",
+                                    "uri": "vx.user",
                                     "match": "prefix",
                                     "allow": {
                                         "call": true,
@@ -106,6 +106,10 @@
                                 },
                                 "backend1": {
                                     "secret": "secret456",
+                                    "role": "backend"
+                                },
+                                "backend2": {
+                                    "secret": "secret789",
                                     "role": "backend"
                                 }
                             }
@@ -197,7 +201,11 @@
                 "server.js",
                 "api",
                 "8081",
-                "127.0.0.1"
+                "127.0.0.1",
+                "ws://127.0.0.1:9000",
+                "realm1",
+                "backend2",
+                "secret789"
             ],
             "options": {
                 "workdir": "../",

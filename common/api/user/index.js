@@ -14,6 +14,7 @@ router.post('/login',           controller.login);
 router.get('/profile',          auth(), controller.profile);
 router.get('/token-info',       auth(), controller.tokenInfo);
 router.get('/token-extend',     auth(), controller.tokenExtend);
+router.post('/input',           auth(), controller.input);
 router.post('/profile',         auth(), controller.updateProfile);
 router.post('/change-password', auth(), controller.changePassword);
 

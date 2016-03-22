@@ -7,6 +7,8 @@ bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
 expressReqId = require('express-request-id'),
 log = require('../common/components/log'),
+autobahnSvc = require('../common/components/autobahn-service'),
+autobahnMw = require('../common/middleware/autobahn'),
 requestLogger = require('../common/middleware/request-log'),
 responseHandler = require('../common/middleware/response-handler'),
 userNotification = require('../common/middleware/user-notification'),
@@ -21,15 +23,27 @@ module.exports = function () {
 
   var
   app = express(),
-  port = process.argv[3],
-  addr = process.argv[4];
+  argv = process.argv,
+  port = argv[3],
+  addr = argv[4];
 
   app.set('server-name', 'API');
+
+  //
+  // Connect to wamp
+  //
+
+  autobahnSvc.on('open', function (session) {
+    log.info('%s server connected to WAMP server.', app.get('server-name'));
+  });
+
+  autobahnSvc.init(argv[5], argv[6], argv[7], argv[8]).start();
 
   app // add some basic middleware to app
   .use(expressReqId())
   .use(bodyParser.json())
   .use(cookieParser())
+  .use(autobahnMw())
   .use(userNotification())
   .use(requestLogger())
   .use(responseHandler());

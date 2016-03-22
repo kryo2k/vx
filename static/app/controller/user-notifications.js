@@ -1,5 +1,5 @@
 angular.module('coordinate-vx')
-.controller('UserNotificationsCtrl', function ($q, $scope, $rootScope, $authPersist, $realTime, $interval, $filter) {
+.controller('UserNotificationsCtrl', function ($q, $scope, $rootScope, $auth, $authPersist, $realTime, $interval, $filter) {
   var filterEllipsis = $filter('ellipsis');
 
   //
@@ -29,10 +29,11 @@ angular.module('coordinate-vx')
   activeSubscription = false;
 
   this.subscribe = function () {
-
     if(activeSubscription) {
       return $q.when(activeSubscription);
     }
+
+    // .'+$auth.profile._id+'
 
     return subChange($realTime.subscribeScope($scope, 'vx.user.notifications', subscriptionUpdate))
       .then(function(subscription) {
