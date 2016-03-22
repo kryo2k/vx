@@ -6,6 +6,7 @@ crypto = require('crypto'),
 Q = require('q'),
 autobahn = require('autobahn'),
 autobahnSvc = require('../../common/components/autobahn-service'),
+ellipsis = require('../../common/components/ellipsis'),
 config = require('../../config'),
 ModelUser = require('../../common/api/user/user.model');
 
@@ -36,7 +37,7 @@ function authenticate (args) {
     salt       = crypto.randomBytes(keylength).toString('hex'),
     derived    = autobahn.auth_cra.derive_key(String(user._id), salt, iterations, keylength);
 
-    console.log('User (%s: %s) authenticated via sockets (session id).', user.name, derived);
+    console.log('User (%s:%s) authenticated via sockets.', user.name, ellipsis(authid, 8, 8));
 
     defer.resolve({
       role: 'user',

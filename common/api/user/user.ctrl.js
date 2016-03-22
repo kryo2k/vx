@@ -143,21 +143,9 @@ function findUserSubscriptionSessions(ab, topic, user) {
 }
 
 exports.input = function (req, res, next) {
-  var
-  topic = 'vx.user.notifications',
-  data  = req.body;
-
-  req.userSubscriptionSessions(topic)
-    .then(function (sessions) {
-      var published = sessions.length;
-
-      if(published) {
-        res.abPublish(topic, [{ type: 'input', data: data }], { something: 'one' }, {
-          eligible: sessions // find all eligible session ids
-        });
-      }
-
-      res.respondOk({ published: published });
+  res.pushNotify('input', req.body, { something: 'new' })
+    .then(function (notifCount) {
+      res.respondOk({ published: notifCount });
     })
     .catch(next);
 };

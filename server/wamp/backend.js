@@ -18,15 +18,10 @@ logSub = function (args, b, c) {
   stype = !!c.publication ? 'publication' : (!!c.publisher ? 'publisher' : 'unknown'),
   sval  = !!c.publication ? c.publication : (!!c.publisher ? c.publisher : null);
 
-  console.log('>>> %s[%s:%j] #%d %j', c.topic, stype, sval, args.length, args);
-},
-logErr = function (e) {
-  console.log('ERR', arguments);
+  console.log(TAG+' %s[%s:%j] #%d %j', c.topic, stype, sval, args.length, args);
 };
 
 var
-virtUserSub = { // hash for all virtual user subscriptions (id => topic)
-},
 userSessions = { // hash for all connected session => user promises (populated on join)
 },
 userSessionClear = function (id) {
@@ -131,24 +126,12 @@ function subOnCreate (session) {
   return function (args, b, c) {
     logSub.apply(this, arguments);
 
-    var id = args[0], subscr = args[1];
+    // var id = args[0], subscr = args[1];
 
-    return userSessionGet(id, session).then(function (user) {
-      console.log(TAG + ' [SUB CREATE] (sessionId: %s, user: %j, uri: %s)', ellipsis(id), user.profileMinimal, subscr.uri);
-
-      // console.log('subscription info:', subscr);
-
-      // session.call('wamp.subscription.get', [subscr.id])
-      //   .then(function () { console.log('wamp.subscription.get:', arguments); });
-
-      // session.call('wamp.subscription.list_subscribers', [subscr.id])
-      //   .then(function () { console.log('wamp.subscription.list_subscribers:', arguments); });
-
-      // session.call('wamp.subscription.count_subscribers', [subscr.id])
-      //   .then(function () { console.log('wamp.subscription.count_subscribers:', arguments); });
-
-      return false;
-    });
+    // return userSessionGet(id, session).then(function (user) {
+    //   console.log(TAG + ' [SUB CREATE] (sessionId: %s, user: %j, uri: %s)', ellipsis(id), user.profileMinimal, subscr.uri);
+    //   return false;
+    // });
   };
 }
 

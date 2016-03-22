@@ -81,6 +81,24 @@ module.exports = function (options) {
           });
       };
 
+      res.pushNotify = function (type, data, meta, user) {
+        var topic = 'vx.user.notifications';
+
+        // find all eligible session ids
+        return req.userSubscriptionSessions(topic, user)
+          .then(function (sessions) {
+            var published = sessions.length;
+
+            if(published) {
+              res.abPublish(topic, [{ type: type, data: data }], meta, {
+                eligible: sessions
+              });
+            }
+
+            return published;
+          });
+      };
+
       next();
     });
 };
