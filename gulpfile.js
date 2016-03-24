@@ -111,10 +111,14 @@ gulp.task('watch', function() {
   gulp.watch(path.join(pathSrc, '**/*.js'),   ['build-core',      'inject-app-html']);
 });
 
-gulp.task('default', [
+gulp.task('build', [
   'build-sass',
   'build-templates',
   'build-core',
-  'inject-app-html',
+  'inject-app-html'
+])
+
+gulp.task('default', [
+  'build',
   'watch'
 ]);
