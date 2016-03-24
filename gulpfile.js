@@ -20,15 +20,7 @@ pathBuild = path.join(pathRoot, 'build'),
 fileTpl   = 'app.tpl.js',
 fileCore  = 'app.js';
 
-gulp.task('default', [
-  'sass',
-  'app-templates',
-  'app-core',
-  'inject-app-html',
-  'watch'
-]);
-
-gulp.task('inject-app-scss', function (done) {
+gulp.task('inject-app-scss', function () {
   var
   srcApp  = path.join(pathSrc, 'app'),
   srcFile = path.join(srcApp, 'app.scss'),
@@ -49,7 +41,7 @@ gulp.task('inject-app-scss', function (done) {
     .pipe(gulp.dest(srcApp)); // overwrites source file
 });
 
-gulp.task('inject-app-html', function (done) {
+gulp.task('inject-app-html', function () {
   var
   sourceFile = path.join(pathSrc, 'index.html'),
   sources = gulp.src([
@@ -72,17 +64,16 @@ gulp.task('inject-app-html', function (done) {
     .pipe(gulp.dest(pathBuild))
 });
 
-gulp.task('sass', ['inject-app-scss'], function(done) {
-  gulp.src([path.join(pathSrc, 'app.scss')])
+gulp.task('build-sass', ['inject-app-scss'], function() {
+  return gulp.src([path.join(pathSrc, 'app.scss')])
     .pipe(sass())
     // .pipe(gulp.dest(pathBuild))
     .pipe(minifyCss({ keepSpecialComments: 0 }))
     .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest(pathBuild))
-    .on('end', done);
+    .pipe(gulp.dest(pathBuild));
 });
 
-gulp.task('app-templates', function(done) {
+gulp.task('build-templates', function() {
   return gulp.src([
       path.join(pathSrc, '**/*.html')
     ])
@@ -102,7 +93,7 @@ gulp.task('app-templates', function(done) {
     .pipe(gulp.dest(pathBuild));
 });
 
-gulp.task('app-core', function(done) {
+gulp.task('build-core', function() {
   return gulp.src([
       path.join(pathSrc, '**/*.js')
     ])
@@ -115,7 +106,15 @@ gulp.task('app-core', function(done) {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(path.join(pathSrc, '**/*.scss'), ['sass']);
-  gulp.watch(path.join(pathSrc, '**/*.html'), ['app-templates']);
-  gulp.watch(path.join(pathSrc, '**/*.js'),   ['app-core']);
+  gulp.watch(path.join(pathSrc, '**/*.scss'), ['build-sass',      'inject-app-html']);
+  gulp.watch(path.join(pathSrc, '**/*.html'), ['build-templates', 'inject-app-html']);
+  gulp.watch(path.join(pathSrc, '**/*.js'),   ['build-core',      'inject-app-html']);
 });
+
+gulp.task('default', [
+  'build-sass',
+  'build-templates',
+  'build-core',
+  'inject-app-html',
+  'watch'
+]);
