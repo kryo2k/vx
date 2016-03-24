@@ -24,5 +24,13 @@
     "angular-date": "*",
     "autobahn": "~0.9.9",
     "angular-wamp": "~0.1.8"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": "dist/css/bootstrap.min.css"
+    },
+    "angular-bootstrap": {
+      "main": ["ui-bootstrap-csp.css", "ui-bootstrap.min.js", "ui-bootstrap-tpls.min.js"]
+    }
   }
 }

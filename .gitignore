@@ -1,5 +1,5 @@
 node_modules
-static/vendor
+bower_components
 ._.*
 .crossbar/node.key
 .crossbar/node.pid

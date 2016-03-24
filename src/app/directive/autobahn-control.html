@@ -1,0 +1,34 @@
+<div autobahn>
+  <div>
+    <label>Autobahn</label>
+    <span class="text-success" ng-if="$autobahn.connected">Online</span>
+    <span class="text-danger" ng-if="!$autobahn.connected">Offline</span>
+  </div>
+
+  <pre ng-if="$autobahn.connected" ng-bind="$autobahn.connectionInfo|json"></pre>
+
+  <div class="btn-group">
+    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="inputTest()">Input Test</button>
+
+    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="$autobahn.realTime.close()">Close</button>
+    <button class="btn btn-default" ng-if="!$autobahn.connected" ng-click="$autobahn.realTime.open()">Open</button>
+  </div>
+
+  <table class="table table-condensed small">
+    <thead>
+      <tr>
+        <th>Message</th>
+        <th class="text-right">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="entry in $autobahn.log" ng-class="entry.cls">
+        <td ng-bind="entry.message"></td>
+        <td class="text-right" ng-bind="entry.date|date:'short'"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- <pre ng-bind="$autobahn.wamp|json"></pre> -->
+  <ng-transclude></ng-transclude>
+</div>

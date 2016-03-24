@@ -1,0 +1,20 @@
+<li>
+  <ul class="nav navbar-nav">
+    <li class="user-notifications" uib-dropdown autobahn ng-show="$autobahn.connected">
+
+      <a href="" class="notifcation-button" uib-dropdown-toggle>
+        <span class="glyphicon glyphicon-inbox"></span>
+        <span class="notification-count">69</span>
+      </a>
+
+      <div uib-dropdown-menu>
+        <p>Notifications will arrive here soon</p>
+      </div>
+
+      <ng-transclude></ng-transclude>
+    </li>
+    <li class="navbar-form small">
+      <label><input type="checkbox" ng-model="pushSubscribe" ng-disabled="subscriptionChanging"> subscribe</label>
+    </li>
+  </ul>
+</li>

@@ -125,7 +125,14 @@
                     "paths": {
                         "/": {
                             "type": "static",
-                            "directory": "../static",
+                            "directory": "../build",
+                            "options": {
+                                "cache_timeout": 0
+                            }
+                        },
+                        "bower_components": {
+                            "type": "static",
+                            "directory": "../bower_components",
                             "options": {
                                 "cache_timeout": 0
                             }
