@@ -29,8 +29,35 @@
     "bootstrap": {
       "main": "dist/css/bootstrap.min.css"
     },
+    "angular": {
+      "main": "angular.min.js"
+    },
+    "autobahn": {
+      "main": "autobahn.min.js"
+    },
     "angular-bootstrap": {
       "main": ["ui-bootstrap-csp.css", "ui-bootstrap.min.js", "ui-bootstrap-tpls.min.js"]
+    },
+    "angular-cookies": {
+      "main": ["angular-cookies.min.js"]
+    },
+    "angular-resource": {
+      "main": ["angular-resource.min.js"]
+    },
+    "angular-sanitize": {
+      "main": ["angular-sanitize.min.js"]
+    },
+    "angular-ui-router": {
+      "main": ["release/angular-ui-router.min.js"]
+    },
+    "angular-wamp": {
+      "main": ["release/angular-wamp.min.js"]
+    },
+    "angular-date": {
+      "main": ["angular-date.min.js"]
+    },
+    "jquery": {
+      "ignore": true
     }
   }
 }

@@ -10,5 +10,6 @@ idle:      {{$heartBeat.service.lastTouch | date:'short'}} (last touched {{$hear
     <button class="btn btn-default" ng-click="$heartBeat.service.refresh()" ng-disabled="$heartBeat.service.checking">Refresh</button>
     <button class="btn btn-default" ng-click="$heartBeat.service.touch()">Touch</button>
   </div>
+  &nbsp;
   <label><input type="checkbox" ng-model="$heartBeat.service.longTerm" /> Long-term session</label>
 </div>

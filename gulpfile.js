@@ -33,14 +33,14 @@ gulp.task('inject-app-scss', function (done) {
   srcApp  = path.join(pathSrc, 'app'),
   srcFile = path.join(srcApp, 'app.scss'),
   files   = gulp.src([
-    path.join(pathSrc, 'app/**/*.scss'),
+    path.join(pathSrc, '**/*.scss'),
     '!' + srcFile
   ], { read: false });
 
   return gulp.src(srcFile)
     .pipe(inject(files, {
       transform: function(filePath) {
-        filePath = filePath.replace('/src/app/', './');
+        filePath = filePath.replace('/src', './');
         return '@import \'' + filePath + '\';';
       },
       starttag: '// injector',
@@ -51,17 +51,12 @@ gulp.task('inject-app-scss', function (done) {
 
 gulp.task('inject-app-html', function (done) {
   var
-  useMin = true,
   sourceFile = path.join(pathSrc, 'index.html'),
-  sources = gulp.src((useMin ? [
+  sources = gulp.src([
     path.join(pathBuild, fileCore.replace('.js','.min.js')),
     path.join(pathBuild, fileTpl.replace('.js','.min.js')),
     path.join(pathBuild, 'app.min.css')
-  ] : [
-    path.join(pathBuild, fileCore),
-    path.join(pathBuild, fileTpl),
-    path.join(pathBuild, 'app.css')
-  ]), {
+  ], {
     cwd: pathBuild
   });
 
@@ -78,9 +73,9 @@ gulp.task('inject-app-html', function (done) {
 });
 
 gulp.task('sass', ['inject-app-scss'], function(done) {
-  gulp.src([path.join(pathSrc, 'app/app.scss')])
+  gulp.src([path.join(pathSrc, 'app.scss')])
     .pipe(sass())
-    .pipe(gulp.dest(pathBuild))
+    // .pipe(gulp.dest(pathBuild))
     .pipe(minifyCss({ keepSpecialComments: 0 }))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest(pathBuild))
@@ -89,7 +84,7 @@ gulp.task('sass', ['inject-app-scss'], function(done) {
 
 gulp.task('app-templates', function(done) {
   return gulp.src([
-      path.join(pathSrc, 'app/**/*.html')
+      path.join(pathSrc, '**/*.html')
     ])
     .pipe(minifyHtml({
       empty: true,
@@ -101,7 +96,7 @@ gulp.task('app-templates', function(done) {
       // prefix: '/vx'
     }))
     .pipe(concat(fileTpl))
-    .pipe(gulp.dest(pathBuild))
+    // .pipe(gulp.dest(pathBuild))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest(pathBuild));
@@ -109,18 +104,18 @@ gulp.task('app-templates', function(done) {
 
 gulp.task('app-core', function(done) {
   return gulp.src([
-      path.join(pathSrc, 'app/**/*.js')
+      path.join(pathSrc, '**/*.js')
     ])
     .pipe(concat(fileCore))
     .pipe(ngAnnotate())
-    .pipe(gulp.dest(pathBuild))
+    // .pipe(gulp.dest(pathBuild))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest(pathBuild));
 });
 
 gulp.task('watch', function() {
-  gulp.watch(path.join(pathSrc, 'app/**/*.scss'), ['sass']);
-  gulp.watch(path.join(pathSrc, 'app/**/*.html'), ['app-templates']);
-  gulp.watch(path.join(pathSrc, 'app/**/*.js'),   ['app-core']);
+  gulp.watch(path.join(pathSrc, '**/*.scss'), ['sass']);
+  gulp.watch(path.join(pathSrc, '**/*.html'), ['app-templates']);
+  gulp.watch(path.join(pathSrc, '**/*.js'),   ['app-core']);
 });

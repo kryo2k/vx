@@ -9,7 +9,7 @@ angular.module('coordinate-vx')
    */
   return function (scope, opts) {
     return $uibModal.open(angular.extend({
-      templateUrl: 'app/tpl/modal/default.html',
+      templateUrl: 'modal/default.html',
       scope: angular.extend($rootScope.$new(), scope || {})
     }, opts));
   };
