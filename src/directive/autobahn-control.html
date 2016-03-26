@@ -24,7 +24,7 @@
     <tbody>
       <tr ng-repeat="entry in $autobahn.log" ng-class="entry.cls">
         <td ng-bind="entry.message"></td>
-        <td class="text-right" ng-bind="entry.date|date:'short'"></td>
+        <td class="text-right" ng-bind="entry.date|date:'shortTime'"></td>
       </tr>
     </tbody>
   </table>

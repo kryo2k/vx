@@ -25,7 +25,7 @@ angular.module('coordinate-vx')
   var
   filterEllipsis = $filter('ellipsis'),
   running = false,
-  log = new RealTimeLog([], 10, true),
+  log = new RealTimeLog([], 5, true),
   logWrapFn = (function (message, cls, fn) {
     return function () {
       // console.log('CALLING', this, arguments);

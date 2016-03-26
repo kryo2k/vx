@@ -8,7 +8,7 @@ angular.module('coordinate-vx')
     controller: 'UserNotificationsCtrl as $notifications'
   };
 })
-.controller('UserNotificationsCtrl', function ($q, $scope, $realTime, $filter, $debounce, PaginateLazy, UserNotification) {
+.controller('UserNotificationsCtrl', function ($q, $scope, $realTime, $timeout, $filter, $debounce, PaginateLazy, UserNotification) {
   var filterEllipsis = $filter('ellipsis');
 
   var
@@ -76,7 +76,10 @@ angular.module('coordinate-vx')
 
   this.markRead = function (notification) {
     if(!notification.unread) return;
-    notification.unread = false; // in memory only, till service updates
+
+    $timeout(function (){ // give the user time to see the notification
+      notification.unread = false; // in memory only, till service updates
+    }, 500);
 
     pushMarkReadQueue.push(notification._id);
     processMarkReadQueue();

@@ -103,7 +103,7 @@ exports.signup = function (req, res, next) {
       return next(new ValidationError(err));
     }
 
-    user.addNotification('signup', {}, function (err) {
+    user.addNotification('signup', { name: user.name, email: user.email, date: user.created }, function (err) {
       if(err) return next(err);
 
       res.respondOk({ token: model.createToken(user, false) });
