@@ -6,10 +6,10 @@ angular.module('coordinate-vx')
     transclude: true,
     templateUrl: 'directive/autobahn-control.html',
     controller: function ($scope, User) {
-      $scope.inputTest = function () {
-        return User.input({ test: true }).$promise
+      $scope.notificationTest = function () {
+        return User.notificationTest({ test: true }).$promise
           .then(function(response) {
-            console.log('HTTP response from input test:', response);
+            console.log('HTTP response from notification test:', response);
             return response;
           });
       };

@@ -3,13 +3,10 @@ angular.module('coordinate-vx')
   return {
     replace: true,
     transclude: true,
-    controller: 'PageHeaderCtrl',
     templateUrl: 'directive/page-header.html',
     scope: {
       title: '=phTitle',
       description: '=phDescription'
     }
   };
-})
-.controller('PageHeaderCtrl', function ($scope) {
 });

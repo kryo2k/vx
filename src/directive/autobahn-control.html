@@ -8,7 +8,7 @@
   <pre ng-if="$autobahn.connected" ng-bind="$autobahn.connectionInfo|json"></pre>
 
   <div class="btn-group">
-    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="inputTest()">Input Test</button>
+    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="notificationTest()">Notification Test</button>
 
     <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="$autobahn.realTime.close()">Close</button>
     <button class="btn btn-default" ng-if="!$autobahn.connected" ng-click="$autobahn.realTime.open()">Open</button>

@@ -46,10 +46,10 @@ angular.module('coordinate-vx')
         controller: 'change-password'
       }
     },
-    input: {
+    notificationTest: {
       method: 'POST',
       params: {
-        controller: 'input'
+        controller: 'notification-test'
       }
     }
   });

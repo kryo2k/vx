@@ -1,6 +1,7 @@
 'use strict';
 
 var
+_ = require('lodash'),
 AuthenticationError = require('../../components/error-authentication'),
 InputError          = require('../../components/error-input'),
 ValidationError     = require('../../components/error-validation'),
@@ -110,42 +111,10 @@ exports.signup = function (req, res, next) {
   });
 };
 
-function findUserSubscriptionSessions(ab, topic, user) {
-  return ab.call('wamp.subscription.lookup', [topic, { match: 'exact' }])
-    .then(function (subscriptionId) {
-      if(!subscriptionId) {
-        return [];
-      }
-
-      return ab.call('wamp.subscription.list_subscribers', [subscriptionId]);
-    })
-    .then(function (sessionIds) {
-      if(!sessionIds || !sessionIds.length) {
-        return [];
-      }
-
-      // loop thru session ids and filter the one(s) we're looking for:
-      return sessionIds.reduce(function (promise, id) {
-        return promise.then(function (result) {
-          return ab.call('wamp.session.get', [id])
-            .then(function (info) {
-              if(!info || info.authrole !== 'user' || !user.tokenVerify(info.authid)) {
-                return result;
-              }
-
-              result.push(id);
-
-              return result;
-            });
-        });
-      }, Q.when([]));
-    });
-}
-
-exports.input = function (req, res, next) {
-  res.pushNotify('input', req.body, { something: 'new' })
-    .then(function (notifCount) {
-      res.respondOk({ published: notifCount });
+exports.testNotification = function (req, res, next) {
+  res.userNotify('test', _.merge({ nonce: Date.now() }, req.body))
+    .then(function (notification) {
+      res.respondOk({ notification: notification });
     })
     .catch(next);
 };

@@ -23,7 +23,8 @@
     "bootstrap": "3.3.6",
     "angular-date": "*",
     "autobahn": "~0.9.9",
-    "angular-wamp": "~0.1.8"
+    "angular-wamp": "~0.1.8",
+    "angular-inview": "^1.5.7"
   },
   "overrides": {
     "bootstrap": {
@@ -36,25 +37,41 @@
       "main": "autobahn.min.js"
     },
     "angular-bootstrap": {
-      "main": ["ui-bootstrap-csp.css", "ui-bootstrap.min.js", "ui-bootstrap-tpls.min.js"]
+      "main": [
+        "ui-bootstrap-csp.css",
+        "ui-bootstrap.min.js",
+        "ui-bootstrap-tpls.min.js"
+      ]
     },
     "angular-cookies": {
-      "main": ["angular-cookies.min.js"]
+      "main": [
+        "angular-cookies.min.js"
+      ]
     },
     "angular-resource": {
-      "main": ["angular-resource.min.js"]
+      "main": [
+        "angular-resource.min.js"
+      ]
     },
     "angular-sanitize": {
-      "main": ["angular-sanitize.min.js"]
+      "main": [
+        "angular-sanitize.min.js"
+      ]
     },
     "angular-ui-router": {
-      "main": ["release/angular-ui-router.min.js"]
+      "main": [
+        "release/angular-ui-router.min.js"
+      ]
     },
     "angular-wamp": {
-      "main": ["release/angular-wamp.min.js"]
+      "main": [
+        "release/angular-wamp.min.js"
+      ]
     },
     "angular-date": {
-      "main": ["angular-date.min.js"]
+      "main": [
+        "angular-date.min.js"
+      ]
     },
     "jquery": {
       "ignore": true

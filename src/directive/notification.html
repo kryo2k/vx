@@ -1,0 +1,10 @@
+<div class="notification" ng-class="{'notification-unread': model.unread}">
+  <span class="pull-right" ng-if="model.unread"><span class="glyphicon glyphicon-star"></span></span>
+  <notification-by-type type="model.type" type-data="model.typeData"></notification-by-type>
+
+  <div class="text-muted text-right small">{{model.created|date:'short'}}</div>
+
+  <span in-view="viewing({$model: model})"></span>
+
+  <ng-transclude></ng-transclude>
+</div>

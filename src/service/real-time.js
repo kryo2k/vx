@@ -61,9 +61,8 @@ angular.module('coordinate-vx')
     subscriptionId = null,
     ellipSubId = null;
 
-    // log.add({ m: 'Subscribing to channel ('+channel+')..' });
-    return $wamp.subscribe(channel, function (args) {
-      log.add({ m: 'Subscription ('+channel+':'+ellipSubId+') got data: ' + JSON.stringify(args) })
+    return $wamp.subscribe(channel, function (args, meta) {
+      log.add({ m: 'Subscription ('+channel+':'+ellipSubId+') got data: ' + JSON.stringify(args) + ' meta: ' + JSON.stringify(meta) });
       return fn.apply(this, arguments);
     })
       .then(function(res){
@@ -81,8 +80,6 @@ angular.module('coordinate-vx')
     channel = subscription.topic,
     id = subscription.id,
     eid = filterEllipsis(id);
-
-    // log.add({ m: 'Unsubscribing from channel ('+channel+') id ('+eid+')..' });
 
     return $wamp.unsubscribe(subscription)
       .then(function(res){

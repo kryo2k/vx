@@ -16,28 +16,21 @@ exports.markRead = function (req, res, next) {
     return next(new InputError('No notification IDs were provided to mark as read.'));
   }
 
-  model.update({ user: req.user, _id: { $in: notificationIds } }, { unread: false }, { multi: true }, function (err) {
+  model.update({ user: req.user, _id: { $in: notificationIds } }, { unread: false, readOn: Date.now() }, { multi: true }, function (err) {
     if(err) return next(err);
+
     res.respondOk();
+    res.fetchAndPushNotificationCount('markRead', { notificationIds: notificationIds });
   });
 };
 
 // @auth
 // @method GET
 exports.count = function (req, res, next) {
-  var
-  countFN = model.count.bind(model);
-
-  Q.all([
-    // total read
-    Q.nfcall(countFN, { user: req.user, unread: false }),
-    // total unread
-    Q.nfcall(countFN, { user: req.user, unread: true })
-  ])
-  .spread(function (countRead, countUnread) {
-    res.respondOk({ read: countRead, unread: countUnread });
-  })
-  .catch(next);
+  model.fetchCounts(req.user, function (err, counts) {
+    if(err) return next(err);
+    res.respondOk(counts);
+  });
 };
 
 // @auth

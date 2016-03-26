@@ -5,6 +5,7 @@ angular.module('coordinate-vx', [
   'ngResource',
   'ngSanitize',
   'ngDate',
+  'angular-inview',
   'ui.router',
   'ui.bootstrap',
   'vxWamp'

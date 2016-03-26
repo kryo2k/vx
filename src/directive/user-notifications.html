@@ -3,18 +3,21 @@
     <li class="user-notifications" uib-dropdown autobahn ng-show="$autobahn.connected">
 
       <a href="" class="notifcation-button" uib-dropdown-toggle>
-        <span class="glyphicon glyphicon-inbox"></span>
-        <span class="notification-count">69</span>
+        <span class="glyphicon glyphicon-bell"></span>
+        <span class="notification-count" ng-if="$notifications.source.totalUnread > 0">{{$notifications.source.totalUnread}}</span>
       </a>
 
-      <div uib-dropdown-menu>
-        <p>Notifications will arrive here soon</p>
+      <div class="notifcation-menu-dropdown" uib-dropdown-menu infinite-scroll="$notifications.loadMore()" in-view-container>
+        <div class="list-group" ng-if="$notifications.source.length > 0">
+          <div class="list-group-item" ng-repeat="notification in $notifications.source.records" notification="notification">
+            <span in-view="$notifications.markRead(notification)"></span>
+          </div>
+        </div>
+
+        <div class="text-muted text-center" ng-if="$notifications.source.length === 0">No notifications are available yet.</div>
       </div>
 
       <ng-transclude></ng-transclude>
-    </li>
-    <li class="navbar-form small">
-      <label><input type="checkbox" ng-model="pushSubscribe" ng-disabled="subscriptionChanging"> subscribe</label>
     </li>
   </ul>
 </li>

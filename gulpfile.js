@@ -1,6 +1,5 @@
 var
 path = require('path'),
-es = require('event-stream'),
 bowerFiles = require('main-bower-files'),
 gulp = require('gulp'),
 sass = require('gulp-sass'),
