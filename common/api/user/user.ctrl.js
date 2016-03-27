@@ -62,7 +62,6 @@ exports.changePassword = function (req, res, next) {
 // @method GET
 exports.tokenInfo = function (req, res, next) {
   res.respondOk({
-    // info: req.tokenInfo,
     ttl: req.tokenTTL,
     longTerm: req.tokenLongTerm,
     expireDate: req.tokenExpireDate,
@@ -70,10 +69,23 @@ exports.tokenInfo = function (req, res, next) {
   });
 };
 
+function issueTokenPayload(token, user) {
+  var
+  tokenInfo = user.tokenParse(token),
+  ttl       = user.tokenTTL(token);
+
+  return {
+    token:      token,
+    ttl:        ttl,
+    expireDate: (!!ttl && isFinite(ttl)) ? new Date(Date.now() + ttl) : null,
+    longTerm:   (!!tokenInfo ? tokenInfo.longTerm : false)
+  };
+}
+
 // @auth
 // @method GET
 exports.tokenExtend = function (req, res, next) {
-  res.respondOk({ token: model.createToken(req.user, parseInt(req.query.longTerm) === 1) });
+  res.respondOk(issueTokenPayload(model.createToken(req.user, parseInt(req.query.longTerm) === 1), req.user));
 };
 
 // @auth
@@ -89,7 +101,7 @@ exports.login = function (req, res, next) {
 
   model.authenticate(data.username, data.password, data.rememberMe)
     .then(function (token) {
-      res.respondOk({ token: token });
+      res.respondOk(issueTokenPayload(token, req.user));
     })
     .catch(next);
 };
@@ -106,7 +118,7 @@ exports.signup = function (req, res, next) {
     user.addNotification('signup', { name: user.name, email: user.email, date: user.created }, function (err) {
       if(err) return next(err);
 
-      res.respondOk({ token: model.createToken(user, false) });
+      res.respondOk(issueTokenPayload(model.createToken(user, false), user));
     });
   });
 };

@@ -48,7 +48,7 @@ angular.module('coordinate-vx')
   this.extendAccess = function (longTerm) {
     return User.tokenExtend({ longTerm: (!!longTerm  ? 1 : 0)}).$promise
       .then((function (data) {
-        $authPersist.set(data.token); // set the token for this user
+        $authPersist.set(data.token, data.expireDate);
         return this.profile; // return existing profile
       }).bind(this));
   };
@@ -69,14 +69,15 @@ angular.module('coordinate-vx')
   };
 
   this.loadUserProfile = function (token) {
-    $authPersist.set(token); // set the token for this user
     return this.reloadProfile();
   };
 
   this.signup = function (model) {
     return markLoading(
       User.signup(model).$promise
-        .then(function (data) { return data.token; })
+        .then(function (data) {
+          return $authPersist.set(data.token, data.expireDate);
+        })
         .then(this.loadUserProfile.bind(this))
     );
   };
@@ -84,7 +85,9 @@ angular.module('coordinate-vx')
   this.login = function (model) {
     return markLoading(
       User.login(model).$promise
-        .then(function (data) { return data.token; })
+        .then(function (data) {
+          return $authPersist.set(data.token, data.expireDate);
+        })
         .then(this.loadUserProfile.bind(this))
     );
   };
