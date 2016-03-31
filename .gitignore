@@ -3,3 +3,4 @@ bower_components
 ._.*
 .crossbar/node.key
 .crossbar/node.pid
+./start_app.sh
