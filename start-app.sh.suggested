@@ -1,0 +1,9 @@
+#!/bin/sh
+
+export CX_AWS_ACCESSKEYID=""
+export CX_AWS_ACCESSSECRET=""
+export CX_DEBUG="1"
+export CX_SECRET_TOKEN=""
+export CX_MONGO_URI="mongodb://localhost:27017/vx"
+
+crossbar start
