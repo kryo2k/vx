@@ -7,9 +7,11 @@ angular.module('coordinate-vx')
     records = [],
     lastPromise = $q.when(null),
     maxPageLoaded = null,
+    defaultLimit = 0,
     appendRecords = function (rows) {
       Array.prototype.push.apply(records, rows);
       maxPageLoaded = Math.max(maxPageLoaded, query.currentPage);
+      defaultLimit = query.currentLimit;
       return records;
     };
 
@@ -24,8 +26,20 @@ angular.module('coordinate-vx')
     this.reload = function () {
       maxPageLoaded = null;
       records.splice(0, records.length); // remove previous records
-      lastPromise = query.load(1).then(appendRecords);
+      lastPromise = query.moveFirst().then(appendRecords);
       return lastPromise
+    };
+
+    this.truncate = function (num) {
+      num = (!angular.isNumber(num)||num<0)?defaultLimit:num;
+
+      var length = records.length;
+
+      if(num > 0 && length > num) {
+        records.splice(num, length);
+        maxPageLoaded = 1;
+        query.setData(records, null, null, maxPageLoaded);
+      }
     };
 
     Object.defineProperties(this, {

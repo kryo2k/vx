@@ -1,13 +1,13 @@
 <li>
   <ul class="nav navbar-nav">
-    <li class="user-notifications" uib-dropdown autobahn ng-show="$autobahn.connected">
+    <li class="user-notifications" uib-dropdown autobahn ng-show="$autobahn.connected" on-toggle="onToggle(open)">
 
       <a href="" class="notifcation-button" uib-dropdown-toggle>
         <span class="glyphicon glyphicon-bell"></span>
         <span class="notification-count" ng-if="$notifications.source.totalUnread > 0">{{$notifications.source.totalUnread}}</span>
       </a>
 
-      <div class="notifcation-menu-dropdown" uib-dropdown-menu infinite-scroll="$notifications.loadMore()" in-view-container>
+      <div class="notifcation-menu-dropdown" uib-dropdown-menu dd-on-close-top infinite-scroll="$notifications.loadMore()" in-view-container>
         <div class="list-group" ng-if="$notifications.source.length > 0">
           <div class="list-group-item" ng-repeat="notification in $notifications.source.records" notification="notification">
             <span in-view="$notifications.markRead(notification)"></span>

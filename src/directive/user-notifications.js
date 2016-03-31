@@ -42,10 +42,28 @@ angular.module('coordinate-vx')
       case 'counts':
       setCounts(data.read, data.unread);
       break;
+      case 'markRead':
+      if(angular.isArray(data)) {
+        notifications.records.forEach(function (rec) { // mark any records in view read
+          if(data.indexOf(rec._id) > -1) {
+            rec.unread = false;
+          }
+        });
+      }
+      break;
       case 'new':
-      this.source.records.unshift(data);
+      notifications.records.unshift(data);
+      notifications.truncate();
       break;
     }
+  }
+
+  function subChange(promise) {
+    $scope.subscriptionChanging = true;
+    return promise
+      .finally(function () {
+        $scope.subscriptionChanging = false;
+      });
   }
 
   var processMarkReadQueue = $debounce(function () {
@@ -66,22 +84,11 @@ angular.module('coordinate-vx')
     ]);
   };
 
-  function subChange(promise) {
-    $scope.subscriptionChanging = true;
-    return promise
-      .finally(function () {
-        $scope.subscriptionChanging = false;
-      });
-  }
-
   this.markRead = function (notification) {
-    if(!notification.unread) return;
+    var id = (!!notification ? notification._id : false);
+    if(!id || !notification.unread || pushMarkReadQueue.indexOf(id) > -1) return;
 
-    $timeout(function (){ // give the user time to see the notification
-      notification.unread = false; // in memory only, till service updates
-    }, 500);
-
-    pushMarkReadQueue.push(notification._id);
+    pushMarkReadQueue.push(id);
     processMarkReadQueue();
   };
 
@@ -113,4 +120,10 @@ angular.module('coordinate-vx')
   };
 
   this.subscribe();
+
+  $scope.onToggle = function (opened) {
+    if(!opened) {
+      notifications.truncate();
+    }
+  };
 });

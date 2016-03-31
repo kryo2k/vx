@@ -5,6 +5,7 @@ angular.module('coordinate-vx')
     opts = angular.isObject(opts) ? opts : {};
 
     var
+    loading     = false,
     lastPromise = $q.when(null),
     // properties on resulting object
     rpdocs      = opts.resultDocs      || 'docs',
@@ -34,18 +35,51 @@ angular.module('coordinate-vx')
     }
 
     this.next = function () {
+      if(rcurrpage === null) return this.load();
       if(!this.canGoNext) return $q.when(false);
       return this.load(rcurrpage + 1);
     };
 
     this.prev = function () {
+      if(rcurrpage === null) return this.load();
       if(!this.canGoPrev) return $q.when(false);
       return this.load(rcurrpage - 1);
     };
 
+    this.reset = function (load) {
+      lastPromise = $q.when(null);
+      rdocs = null;
+      rtotalrec = null;
+      rtotalpage = null;
+      rcurrpage = null;
+      rcurrlimit = null;
+      if(load) this.load();
+      return this;
+    };
+
+    this.moveFirst = function (limit, params) {
+      return this.load(1, limit, params);
+    };
+
+    this.moveLast = function (limit, params) {
+      return this.load(rtotalpage, limit, params);
+    };
+
+    this.setData = function (docs, totalRecords, totalPages, currentPage, currentLimit) {
+      rdocs      = docs || rdocs;
+      rtotalrec  = totalRecords || rtotalrec;
+      rtotalpage = totalPages || rtotalpage;
+      rcurrpage  = currentPage || rcurrpage;
+      rcurrlimit = currentLimit || rcurrlimit;
+      return this;
+    };
+
     this.load = function (page, limit, params) {
       var
-      nopts = angular.merge({}, queryOpts, params);
+      nopts = angular.merge({}, queryOpts, params),
+      setData = this.setData.bind(this);
+
+      if(loading) return lastPromise;
 
       if(angular.isNumber(page))  nopts[qpage]  = page;
       if(angular.isNumber(limit)) nopts[qlimit] = limit;
@@ -62,22 +96,22 @@ angular.module('coordinate-vx')
         return $q.when(promise);
       }
 
+      loading = true;
       promise = lastPromise = promise.then(function (data) {
-          if(!isPaginated(data)) { // pass thru data
-            $log.warn('Data received does not appear to be paginated.', data);
-            return data;
-          }
+        if(!isPaginated(data)) { // pass thru data
+          $log.warn('Data received does not appear to be paginated.', data);
+          return data;
+        }
 
-          // sync internals with data received
-          rdocs      = data[rpdocs];
-          rtotalrec  = data[rptotal];
-          rtotalpage = data[rppagetot];
-          rcurrpage  = data[rppage];
-          rcurrlimit = data[rplimit];
+        // sync internals with data received
+        setData(data[rpdocs], data[rptotal], data[rppagetot], data[rppage], data[rplimit]);
 
-          // return the documents we got thru the promise.
-          return rdocs;
-        });
+        // return the documents we got thru the promise.
+        return rdocs;
+      })
+      .finally(function () {
+        loading = false;
+      });
 
       return promise;
     };
@@ -85,6 +119,7 @@ angular.module('coordinate-vx')
     Object.defineProperties(this, {
       '$promise':   { get: function () { return lastPromise; } },
       length:       { get: function () { return !!rdocs ? rdocs.length : 0; } },
+      loading:      { get: function () { return loading; } },
       records:      { get: function () { return rdocs; } },
       totalRecords: { get: function () { return rtotalrec; } },
       totalPages:   { get: function () { return rtotalpage; } },

@@ -19,6 +19,8 @@ exports.markRead = function (req, res, next) {
   model.update({ user: req.user, _id: { $in: notificationIds } }, { unread: false, readOn: Date.now() }, { multi: true }, function (err) {
     if(err) return next(err);
 
+    res.pushNotification('markRead', notificationIds);
+
     res.respondOk();
     res.fetchAndPushNotificationCount('markRead', { notificationIds: notificationIds });
   });

@@ -4,10 +4,15 @@ angular.module('coordinate-vx')
     scope: {
       getMore: '&infiniteScroll'
     },
-    link: function(scope, element, attrs) {
+    require: '?^uibDropdown',
+    link: function(scope, element, attrs, ctrl) {
       var threshold = 100;
 
       element[0].addEventListener('scroll', $debounce(function() {
+        if(ctrl && !ctrl.isOpen()) { // ignore reloading if dd's are closed.
+          return;
+        }
+
         var
         elementHeight       = element.prop('offsetHeight'),
         scrollableHeight    = element.prop('scrollHeight'),
