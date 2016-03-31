@@ -10,6 +10,19 @@ model = require('./user.model');
 var
 useLongTermToken = true;
 
+function issueTokenPayload(token, user) {
+  var
+  tokenInfo = user.tokenParse(token),
+  ttl       = user.tokenTTL(token);
+
+  return {
+    token:      token,
+    ttl:        ttl,
+    expireDate: (!!ttl && isFinite(ttl)) ? new Date(Date.now() + ttl) : null,
+    longTerm:   (!!tokenInfo ? tokenInfo.longTerm : false)
+  };
+}
+
 // @auth
 // @method POST
 exports.updateProfile = function (req, res, next) {
@@ -69,19 +82,6 @@ exports.tokenInfo = function (req, res, next) {
   });
 };
 
-function issueTokenPayload(token, user) {
-  var
-  tokenInfo = user.tokenParse(token),
-  ttl       = user.tokenTTL(token);
-
-  return {
-    token:      token,
-    ttl:        ttl,
-    expireDate: (!!ttl && isFinite(ttl)) ? new Date(Date.now() + ttl) : null,
-    longTerm:   (!!tokenInfo ? tokenInfo.longTerm : false)
-  };
-}
-
 // @auth
 // @method GET
 exports.tokenExtend = function (req, res, next) {
@@ -125,10 +125,6 @@ exports.signup = function (req, res, next) {
       res.respondOk(issueTokenPayload(model.createToken(user, false), user));
     });
   });
-};
-
-exports.pingSessions = function (req, res, next) {
-  req.userSessions().then(res.respondOk).catch(next);
 };
 
 exports.testNotification = function (req, res, next) {
