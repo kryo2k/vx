@@ -187,8 +187,8 @@ module.exports = function () {
     console.log(TAG, 'Connected to wamp server');
 
     // meta-event subscriptions
-    session.subscribe('wamp.session.on_join',             sessionOnJoin(session))    .then(slog, slog);
-    session.subscribe('wamp.session.on_leave',            sessionOnLeave(session))   .then(slog, slog);
+    // session.subscribe('wamp.session.on_join',             sessionOnJoin(session))    .then(slog, slog);
+    // session.subscribe('wamp.session.on_leave',            sessionOnLeave(session))   .then(slog, slog);
     session.subscribe('wamp.subscription.on_create',      subOnCreate(session))      .then(slog, slog);
     session.subscribe('wamp.subscription.on_subscribe',   subOnSubscribe(session))   .then(slog, slog);
     session.subscribe('wamp.subscription.on_unsubscribe', subOnUnsubscribe(session)) .then(slog, slog);

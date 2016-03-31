@@ -2,6 +2,7 @@
 
 var
 winston = require('winston'),
+nodemailer = require('nodemailer'),
 envVar = process.env;
 
 module.exports = {
@@ -15,6 +16,14 @@ module.exports = {
     transports: [ // only log to console
       new (winston.transports.Console)({ level: 'debug' })
     ]
+  },
+  mailer: {
+    transport: nodemailer.createTransport({
+      transport: 'ses', // loads nodemailer-ses-transport
+      accessKeyId:envVar.CX_AWS_ACCESSKEYID || 'AWSACCESSKEY',
+      secretAccessKey: envVar.CX_AWS_ACCESSSECRET || 'AWS/Secret/key'
+    }),
+    fromSystem: 'Ticonerd <no-reply@ticonerd.com>'
   },
   server: {
     api: {

@@ -44,13 +44,24 @@ module.exports = function (options) {
         return ab.unsubscribe.apply(ab, arguments);
       };
 
+      req.userSessions = function (user) {
+        user = user || req.user;
+
+        if(!user) return Q.reject(new Error('User was not found in request.'));
+        if(!_.isFunction(user.tokenVerify)) return Q.reject(new Error('User is not loaded properly, or has no token validator function.'));
+
+        return res.autobahn.call('vx.fn.findUserSessions', [user._id.toString()]);
+      };
+
       req.userSubscriptionSessions = function (topic, user) {
         user = user || req.user;
 
         if(!user) return Q.reject(new Error('User was not found in request.'));
         if(!_.isFunction(user.tokenVerify)) return Q.reject(new Error('User is not loaded properly, or has no token validator function.'));
 
-        var ab = res.autobahn, verifier = user.tokenVerify.bind(user);
+        var
+        ab = res.autobahn,
+        verifier = user.tokenVerify.bind(user);
 
         return ab.call('wamp.subscription.lookup', [topic, { match: 'exact' }])
           .then(function (subscriptionId) {
@@ -65,21 +76,16 @@ module.exports = function (options) {
               return [];
             }
 
-            // loop thru session ids and filter the one(s) we're looking for:
-            return sessionIds.reduce(function (promise, id) {
-              return promise.then(function (result) {
-                return ab.call('wamp.session.get', [id])
-                  .then(function (info) {
-                    if(!info || info.authrole !== 'user' || !verifier(info.authid)) {
-                      return result;
-                    }
+            return req.userSessions(user).then(function (userSessions) {
+              if(!userSessions || !userSessions.length) {
+                return [];
+              }
 
-                    result.push(id);
-
-                    return result;
-                  });
+              // restrict to user sessions only
+              return sessionIds.filter(function (sesId) {
+                return userSessions.indexOf(sesId) > -1;
               });
-            }, Q.when([]));
+            });
           });
       };
 
@@ -88,7 +94,7 @@ module.exports = function (options) {
       };
 
       res.pushTopicUser = function (topic, args, meta, opts, user) {
-        return req.userSubscriptionSessions(topic, user)
+        return req.userSessions(user)
           .then(function (sessions) {
             var published = sessions.length;
             if(!published) {

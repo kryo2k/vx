@@ -12,8 +12,36 @@
                             "name": "authenticator",
                             "permissions": [
                                 {
+                                    "uri": "wamp.",
+                                    "match": "prefix",
+                                    "allow": {
+                                        "call": true,
+                                        "subscribe": true
+                                    },
+                                    "disclose": {
+                                        "caller": false,
+                                        "publisher": false
+                                    },
+                                    "cache": true
+                                },
+                                {
                                     "uri": "vx.authenticate",
                                     "match": "exact",
+                                    "allow": {
+                                        "call": false,
+                                        "register": true,
+                                        "publish": false,
+                                        "subscribe": false
+                                    },
+                                    "disclose": {
+                                        "caller": false,
+                                        "publisher": false
+                                    },
+                                    "cache": true
+                                },
+                                {
+                                    "uri": "vx.fn.",
+                                    "match": "prefix",
                                     "allow": {
                                         "call": false,
                                         "register": true,

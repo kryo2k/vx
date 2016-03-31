@@ -17,6 +17,7 @@ router.get('/profile',          auth(), controller.profile);
 router.get('/token-info',       auth(), controller.tokenInfo);
 router.get('/token-extend',     auth(), controller.tokenExtend);
 router.post('/profile',         auth(), controller.updateProfile);
+router.post('/ping',            auth(), controller.pingSessions);
 router.post('/change-password', auth(), controller.changePassword);
 
 router.use('/notification',     auth(), require('./notification'));

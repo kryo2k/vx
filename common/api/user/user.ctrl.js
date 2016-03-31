@@ -101,7 +101,11 @@ exports.login = function (req, res, next) {
 
   model.authenticate(data.username, data.password, data.rememberMe)
     .then(function (token) {
-      res.respondOk(issueTokenPayload(token, req.user));
+      return model.findUserByToken(token)
+        .then(function (user) {
+          res.respondOk(issueTokenPayload(token, user));
+          return token;
+        });
     })
     .catch(next);
 };
@@ -121,6 +125,10 @@ exports.signup = function (req, res, next) {
       res.respondOk(issueTokenPayload(model.createToken(user, false), user));
     });
   });
+};
+
+exports.pingSessions = function (req, res, next) {
+  req.userSessions().then(res.respondOk).catch(next);
 };
 
 exports.testNotification = function (req, res, next) {
