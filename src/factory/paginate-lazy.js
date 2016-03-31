@@ -7,11 +7,9 @@ angular.module('coordinate-vx')
     records = [],
     lastPromise = $q.when(null),
     maxPageLoaded = null,
-    defaultLimit = 0,
     appendRecords = function (rows) {
       Array.prototype.push.apply(records, rows);
       maxPageLoaded = Math.max(maxPageLoaded, query.currentPage);
-      defaultLimit = query.currentLimit;
       return records;
     };
 
@@ -31,7 +29,7 @@ angular.module('coordinate-vx')
     };
 
     this.truncate = function (num) {
-      num = (!angular.isNumber(num)||num<0)?defaultLimit:num;
+      num = (!angular.isNumber(num)||num<0)?query.currentLimit:num;
 
       var length = records.length;
 
