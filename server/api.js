@@ -7,6 +7,7 @@ bodyParser = require('body-parser'),
 cookieParser = require('cookie-parser'),
 expressReqId = require('express-request-id'),
 log = require('../common/components/log'),
+mailer = require('../common/components/mailer'),
 autobahnSvc = require('../common/components/autobahn-service'),
 autobahnMw = require('../common/middleware/autobahn'),
 requestLogger = require('../common/middleware/request-log'),
@@ -28,6 +29,31 @@ module.exports = function () {
   addr = argv[4];
 
   app.set('server-name', 'API');
+
+  [ // install event listeners for mailer
+    'queue-processing-start',
+    'queue-before-send',
+    'queue-error',
+    'queue-after-send',
+    'queue-processing-finish',
+    'send-success',
+    'error',
+    'before-send',
+    'send-error-noretry',
+    'send-error',
+    'send-error-retry-failed',
+    'send-error-retry',
+    'queue-item-add',
+    'queue-start',
+    'queue-stop'
+  ].forEach(function(evt) {
+    mailer.on(evt, function () {
+      log.info('Mailer (%s) %j', evt, Array.prototype.slice.call(arguments));
+    });
+  });
+
+  // start queueing email requests
+  mailer.queueStart();
 
   //
   // Connect to wamp

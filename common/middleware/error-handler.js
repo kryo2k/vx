@@ -45,7 +45,9 @@ function simplifyValidationErrors(errs) {
   normalized = [];
 
   if(_.isArray(errs)) {
-    normalized = errs.map(normalizeValidationError);
+    normalized = errs.map(function (err) {
+      return normalizeValidationError(err);
+    });
   }
   else if(_.isObject(errs)) {
     normalized = Object.keys(errs).map(function (key) {

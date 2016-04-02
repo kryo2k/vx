@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$debounce', function ($timeout) {
 
   // Returns a function, that, as long as it continues to be invoked, will not

@@ -1,4 +1,5 @@
 var
+format = require('util').format,
 objectDot = require('../common/components/object-dot');
 
 exports.getSimple = function (test) {
@@ -121,5 +122,19 @@ exports.setNestedArrayNoCreateOnArray = function (test) {
   var t = [], v = true;
   test.ok(!objectDot.set(t, '$.something', v, false), 'Expected objectDot.set to return false.');
   test.equal(JSON.stringify(t), JSON.stringify([]));
+  test.done();
+};
+
+exports.dotify = function (test) {
+
+  var
+  t = { one: '1', two: { one: '1', two: null }, three: ['one','two','three', 4] },
+  d = objectDot.dotify(t);
+
+  Object.keys(d).forEach(function(key) {
+    var A = d[key], B = objectDot.get(t, key);
+    test.equal(A, B, format('Expected %j to equal %j.', A, B));
+  });
+
   test.done();
 };

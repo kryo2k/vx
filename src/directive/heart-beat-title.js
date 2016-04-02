@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive( 'heartBeatTitle', function ($heartBeat) {
   return {
     require: ['heartBeatTitle', '?HeartBeatCtrl', '?pageTitle'],

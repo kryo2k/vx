@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('PaginateQuery', function ($q, $log) {
 
   function PaginateQuery (queryFn, queryOpts, opts) {

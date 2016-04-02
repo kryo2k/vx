@@ -24,7 +24,8 @@
     "angular-date": "*",
     "autobahn": "~0.9.9",
     "angular-wamp": "~0.1.8",
-    "angular-inview": "^1.5.7"
+    "angular-inview": "^1.5.7",
+    "angular-recaptcha": "^3.0.0"
   },
   "overrides": {
     "bootstrap": {
@@ -71,6 +72,11 @@
     "angular-date": {
       "main": [
         "angular-date.min.js"
+      ]
+    },
+    "angular-recaptcha": {
+      "main": [
+        "release/angular-recaptcha.min.js"
       ]
     },
     "jquery": {

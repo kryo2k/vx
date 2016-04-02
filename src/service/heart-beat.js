@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$heartBeat', function ($q, $timeout, $auth, $filter) {
 
   var

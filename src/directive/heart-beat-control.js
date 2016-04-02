@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive( 'heartBeatControl', function () {
   return {
     restrict: 'EA',

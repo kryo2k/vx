@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .config(function ($stateProvider) {
   $stateProvider
     .state('app.guest.login', {

@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive( 'heartBeatTouchzone', function ($window, $debounce, $heartBeat) {
   return {
     require: '?heartBeat',

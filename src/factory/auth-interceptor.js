@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('AuthInterceptor', function (ErrorBadToken, $rootScope, $q, $authPersist) {
   return {
 

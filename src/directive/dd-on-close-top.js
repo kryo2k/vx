@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive('ddOnCloseTop', function () {
   return {
     restrict: 'A',

@@ -94,6 +94,23 @@ exports.profile = function (req, res, next) {
   res.respondOk(req.user.profile);
 };
 
+exports.forgotPassword = function (req, res, next) {
+
+  model.findOne({ email: req.body.email }, function (err, doc) {
+    if(err) {
+      return next(err);
+    }
+
+    if(doc) {
+      // create a temporary reset password request
+    }
+
+    res.respondOk();
+  });
+
+
+};
+
 // @method POST
 exports.login = function (req, res, next) {
 

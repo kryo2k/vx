@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$guestOnly', function ($rootScope, $auth, $state) {
   return function (scope) {
     return (scope||$rootScope).$watch(function () { return $auth.authenticated }, function (authenticated) {

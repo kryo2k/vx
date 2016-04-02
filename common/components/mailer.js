@@ -4,6 +4,7 @@ var
 _ = require('lodash'),
 Q = require('q'),
 EventEmitter = require('events'),
+htmlToText = require('html-to-text'),
 config = require('../../config/index');
 
 var
@@ -13,6 +14,9 @@ mailQueue = [], // this should be persistable, but for now, lets use memory.
 loopInterval = 5000;
 
 var
+defaultHtmlTextOpts = {
+  wordwrap: 130
+},
 defaultMailOpts = {
   from: config.mailer.fromSystem
   // from:          '',    // The sender of this email
@@ -155,33 +159,39 @@ proto.send = function () {
     .reduce(function (promise, spec) {
       var cloneSpec = _.extend({}, spec); // nodemailer taints original object
 
+      if(cloneSpec.html && !cloneSpec.hasOwnProperty('text')) {
+        cloneSpec.text = proto.htmlToText(cloneSpec.html); // automatically include a text-only version if none provided.
+      }
+
       return promise.then(function (results) {
+        emit('before-send', cloneSpec);
+
         return Q.nfcall(sendMail, cloneSpec)
           .then(function (mailResult) {
             results.push(mailResult);
-            emit('send-success', spec, mailResult);
+            emit('send-success', cloneSpec, mailResult);
             return results;
           })
           .catch(function (err) {
             emit('error', err);
 
             if(!err.retryable) {
-              emit('send-error-noretry', spec, err);
+              emit('send-error-noretry', cloneSpec, err);
               return Q.reject(err); // this breaks entire promise chain
             }
 
             var
             retryErrors = [],
             retryLoop = function (lastError) {
-              emit('send-error', spec, err);
+              emit('send-error', cloneSpec, err);
               var retryNum = retryErrors.length + 1;
 
               if(retryNum > maxRetry) {
-                emit('send-error-retry-failed', spec, lastError, retryErrors);
+                emit('send-error-retry-failed', cloneSpec, lastError, retryErrors);
                 return Q.reject(new Error('Failed to send message after '+maxRetry+' retries.')); // this breaks entire promise chain
               }
 
-              emit('send-error-retry', spec, lastError, retryNum, maxRetry);
+              emit('send-error-retry', cloneSpec, lastError, retryNum, maxRetry);
 
               retryErrors.push(lastError);
 
@@ -247,6 +257,15 @@ proto.queueStop = function () {
   queueTimeoutClr(); // clear any existing timeout
   queueEnabled = false;
   return this;
+};
+
+proto.htmlToText = function (html, opts) {
+  return htmlToText.fromString(html, _.merge({}, defaultHtmlTextOpts, opts));
+};
+
+proto.templates = {
+  forgotPassword: require('../../email/forgot-password'),
+  contact:        require('../../email/contact')
 };
 
 module.exports = proto;

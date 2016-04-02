@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('ErrorBadToken', function () {
   function ErrorBadToken (message) {
     this.message = message;

@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$authPersist', function ($cookies, DOMAIN, DOMAINHTTPS) {
   var KEY_TOKEN = 'cvx-token';
 

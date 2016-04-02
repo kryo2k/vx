@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .config(function ($wampProvider, WAMP_URL, WAMP_REALM) {
   $wampProvider.init({
     url: WAMP_URL,

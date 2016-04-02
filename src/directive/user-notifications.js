@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive('userNotifications', function () {
   return {
     restrict: 'A',

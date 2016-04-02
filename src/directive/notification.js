@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive( 'notification', function () { // ($parse, $compile
   var id = 'notification';
   return {

@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('HttpNormalizer', function ($q, $rootScope, ErrorBadToken, ErrorAlert, ErrorValidation) {
   return {
     response: function (response) {

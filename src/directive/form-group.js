@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive( 'formGroup', function () {
   return {
     restrict: 'C',

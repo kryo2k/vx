@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .filter('ellipsis', function () {
   return function (str, lenStart, lenEnd, threshold, ellip) {
     var

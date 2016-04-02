@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$modalMessage', function ($q, $modalOpen) {
   return function (message, title, cls) {
     title = title || 'Message';

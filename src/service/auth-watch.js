@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$authWatch', function ($rootScope, $auth) {
   return function () {
 

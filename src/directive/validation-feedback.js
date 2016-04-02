@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .directive('validationFeedback', function ($compile) {
   return {
     restrict: 'E',

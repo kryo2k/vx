@@ -1,6 +1,6 @@
-angular.module('coordinate-vx', [
-  'coordinate-vx.constants',
-  'coordinate-vx.tpl',
+angular.module('vx', [
+  'vx.constants',
+  'vx.tpl',
   'ngCookies',
   'ngResource',
   'ngSanitize',
@@ -8,6 +8,7 @@ angular.module('coordinate-vx', [
   'angular-inview',
   'ui.router',
   'ui.bootstrap',
+  'vcRecaptcha',
   'vxWamp'
 ])
 .config(function ($urlRouterProvider, $locationProvider, $httpProvider, $uibTooltipProvider) {

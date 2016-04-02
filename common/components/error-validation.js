@@ -8,7 +8,7 @@ function ValidationError (mongoError) {
   this.message = 'An unknown validation error occurred.';
 
   if(mongoError) {
-    this.message = 'A validation error occurred. See details.';
+    this.message = mongoError.validationMessage || 'A validation error occurred. See details.';
     this.errors = mongoError.errors;
   }
 }

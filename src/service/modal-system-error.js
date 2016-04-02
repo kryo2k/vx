@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$modalSystemError', function ($q, $modalOpen) {
   return function (err) {
     var dialog = $modalOpen({

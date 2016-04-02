@@ -2,6 +2,11 @@
 
 export CX_AWS_ACCESSKEYID=""
 export CX_AWS_ACCESSSECRET=""
+export CX_CONTACT_ADDR="Site <site@site.com>"
+export CX_CONTACT_FROM="Site <site@site.com>"
+export CX_CONTACT_SUBJ="Contact from site (Name: {name} Email: {email})"
+export CX_RECAPTCHA_SITEKEY=""
+export CX_RECAPTCHA_SECRET=""
 export CX_DEBUG="1"
 export CX_SECRET_TOKEN=""
 export CX_MONGO_URI="mongodb://localhost:27017/vx"

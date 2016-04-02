@@ -108,8 +108,46 @@ function deepSet(obj, path, value, createMissing) {
   return path.length === 0;
 }
 
+function dotify(obj, recurse) {
+  recurse = _.isArray(recurse)?recurse:[];
+
+  var result  = {};
+
+  if(_.isObject(obj)) { // includes arrays!
+
+    var
+    keys = Object.keys(obj),
+    key, val;
+
+    while((key = keys.shift()) !== undefined) {
+      val = obj[key];
+
+      if(_.isObject(val)) {
+        if(recurse.indexOf(val) > -1) { // prevent recursive dotify
+          continue;
+        }
+
+        var rdot = dotify(val, recurse);
+
+        Object.keys(rdot).reduce(function (p, c) {
+          p[key + '.' + c] = rdot[c];
+          return p;
+        }, result);
+
+        recurse.push(val);
+      }
+      else if(!_.isFunction(val)) { // include anything but functions
+        result[key] = val;
+      }
+    }
+  }
+
+  return result;
+}
+
 module.exports = {
   has: deepHas,
   get: deepGet,
-  set: deepSet
+  set: deepSet,
+  dotify: dotify
 };

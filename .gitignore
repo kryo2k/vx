@@ -4,3 +4,4 @@ bower_components
 .crossbar/node.key
 .crossbar/node.pid
 start-app.sh
+.tmp

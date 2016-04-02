@@ -1,7 +1,9 @@
-<html ng-app="coordinate-vx">
+<html ng-app="vx">
 <head>
   <title page-title heart-beat-title>VX</title>
   <base href="/">
+
+  <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
 
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css">
@@ -26,6 +28,7 @@
   <script src="bower_components/autobahn/autobahn.min.js"></script>
   <script src="bower_components/angular-wamp/release/angular-wamp.min.js"></script>
   <script src="bower_components/angular-inview/angular-inview.js"></script>
+  <script src="bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
   <!-- endinject -->
   <!-- inject:js -->
   <script src="app.min.js"></script>

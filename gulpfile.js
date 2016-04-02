@@ -1,16 +1,21 @@
 var
+_ = require('lodash'),
 path = require('path'),
 bowerFiles = require('main-bower-files'),
 gulp = require('gulp'),
 sass = require('gulp-sass'),
+clean = require('gulp-clean'),
 rename = require('gulp-rename'),
 inject = require('gulp-inject'),
 concat = require("gulp-concat"),
 uglify = require("gulp-uglify"),
+replace = require('gulp-replace-task'),
 ngHtml2Js = require("gulp-ng-html2js"),
 ngAnnotate = require('gulp-ng-annotate'),
 minifyHtml = require('gulp-minify-html'),
-minifyCss = require('gulp-minify-css');
+minifyCss = require('gulp-minify-css'),
+objectDot = require('./common/components/object-dot'),
+config = require('./config');
 
 var
 pathRoot  = __dirname,
@@ -63,6 +68,24 @@ gulp.task('inject-app-html', function () {
     .pipe(gulp.dest(pathBuild))
 });
 
+gulp.task('replace-constants', function () {
+
+  var
+  configCopy = _.merge({}, config);
+
+  delete configCopy.mailer.transport;
+  delete configCopy.log;
+
+  return gulp.src('./src/app-constants.js')
+    .pipe(replace({
+      patterns: [
+        { match: 'timestamp', replacement: Date.now() },
+        { json: configCopy }
+      ]
+    }))
+    .pipe(gulp.dest('.tmp'));
+});
+
 gulp.task('build-sass', ['inject-app-scss'], function() {
   return gulp.src([path.join(pathSrc, 'app.scss')])
     .pipe(sass())
@@ -82,7 +105,7 @@ gulp.task('build-templates', function() {
       quotes: true
     }))
     .pipe(ngHtml2Js({
-      moduleName: 'coordinate-vx.tpl'
+      moduleName: 'vx.tpl'
       // prefix: '/vx'
     }))
     .pipe(concat(fileTpl))
@@ -92,16 +115,20 @@ gulp.task('build-templates', function() {
     .pipe(gulp.dest(pathBuild));
 });
 
-gulp.task('build-core', function() {
+gulp.task('build-core', ['replace-constants'], function() {
   return gulp.src([
-      path.join(pathSrc, '**/*.js')
+      path.join(pathSrc, '**/*.js'),
+      '!' + path.join(pathSrc, 'app-constants.js'),
+      path.join('.tmp', '**/*.js')
     ])
     .pipe(concat(fileCore))
     .pipe(ngAnnotate())
     // .pipe(gulp.dest(pathBuild))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(pathBuild));
+    .pipe(gulp.dest(pathBuild))
+    // .pipe(gulp.src(['.tmp'], { read: false }))
+    // .pipe(clean({ force: true }));
 });
 
 gulp.task('watch', function() {
@@ -115,7 +142,7 @@ gulp.task('build', [
   'build-templates',
   'build-core',
   'inject-app-html'
-])
+]);
 
 gulp.task('default', [
   'build',

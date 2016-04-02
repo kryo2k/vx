@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('Log', function () {
 
   function Log (data, maxLength, addToStart) {

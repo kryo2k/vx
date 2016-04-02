@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('UserNotification', function ($apiUrl, $resource) {
   return $resource($apiUrl('user/notification/:controller'), {
     controller: null,

@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$dirtyForm', function (){
   return function (form) {
     if(!form || !form.hasOwnProperty('$setDirty'))

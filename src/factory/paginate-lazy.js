@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('PaginateLazy', function ($q, $log, PaginateQuery) {
 
   function PaginateLazy (queryFn, queryOpts, opts) {

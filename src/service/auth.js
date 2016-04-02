@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$auth', function ($q, $authPersist, User) {
   var
   loading = false,

@@ -10,6 +10,7 @@ router = express.Router();
 
 router.post('/signup',          controller.signup);
 router.post('/login',           controller.login);
+router.post('/forgot-pw',       controller.forgotPassword);
 
 router.post('/notification-test', auth(), controller.testNotification);
 

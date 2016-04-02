@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .config(function ($stateProvider) {
   $stateProvider
     .state('app.guest.contact', {
@@ -11,7 +11,7 @@ angular.module('coordinate-vx')
       }
     });
 })
-.controller('AppGuestContactCtrl', function ($scope, $dirtyForm, $modalMessage, $randomEmail, $randomWords) {
+.controller('AppGuestContactCtrl', function ($scope, $dirtyForm, $modalMessage, $randomEmail, $randomWords, ErrorValidation, Contact) {
 
   this.quickFill = function (form) {
     var
@@ -33,7 +33,20 @@ angular.module('coordinate-vx')
 
   this.submit = function (event, form) {
     form.$setSubmitted();
-    $modalMessage('Contact feature is coming soon', 'Coming Soon');
+
+    return Contact.submit(this.model).$promise
+      .then((function (result) {
+        this.reset(null, form);
+        form.$setPristine(true);
+        $modalMessage(result.message);
+        return result;
+      }).bind(this))
+      .catch(function (err) {
+        if(ErrorValidation.is(err)) {
+          err.gradeForm($scope, form);
+        }
+        return err;
+      });
   };
 
   this.reset = function (event, form) {

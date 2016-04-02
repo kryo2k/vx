@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$isNull', function () {
   return function (v) { return v === null; };
 })

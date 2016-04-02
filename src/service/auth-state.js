@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .service('$authState', function ($rootScope, $state, $auth) {
   return {
     onStateChangeStart: function () {

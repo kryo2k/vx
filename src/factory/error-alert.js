@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('ErrorAlert', function () {
   function ErrorAlert (message, title) {
     this.message = message;

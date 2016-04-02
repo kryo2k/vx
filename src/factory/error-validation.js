@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('ErrorValidation', function (ErrorAlert) {
   function ErrorValidation (message, errors, title) {
     ErrorAlert.call(this, message, title||'Validation Error');

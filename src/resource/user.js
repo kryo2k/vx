@@ -1,4 +1,4 @@
-angular.module('coordinate-vx')
+angular.module('vx')
 .factory('User', function ($apiUrl, $resource) {
   return $resource($apiUrl('user/:controller'), {
     controller: null,
