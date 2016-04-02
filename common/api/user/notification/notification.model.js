@@ -27,7 +27,7 @@ UserNotificationSchema = new Schema({
   },
   readOn: {
     type: Date,
-    expires: 8.64e7  // expire 1 day after being read
+    expires: 86400  // expire 1 day after being read
   }
 });
 

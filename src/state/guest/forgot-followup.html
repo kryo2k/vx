@@ -1,0 +1,55 @@
+<div ng-if="$forgotFollowUp.valid">
+  <pre ng-bind="$forgotFollowUp.id|json"></pre>
+  <pre ng-bind="$forgotFollowUp.user|json"></pre>
+  <pre ng-bind="$forgotFollowUp.model|json"></pre>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <label>Your Name</label>
+      <span>{{$forgotFollowUp.user.name}}</span>
+    </div>
+    <div class="col-sm-6">
+      <label>Your Email</label>
+      <span>{{$forgotFollowUp.user.email}}</span>
+    </div>
+  </div>
+
+  <h3>Reset Password</h3>
+
+  <form class="form" name="form" ng-submit="$forgotFollowUp.submit($event, form)" form-reset="$forgotFollowUp.reset($event, $form)">
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group has-feedback" form-input="form.password">
+          <label class="control-label">Password</label>
+          <input class="form-control" name="password" type="password" placeholder="My super STRONG password!" ng-model="$forgotFollowUp.model.password" ng-minlength="8" validation-input required>
+          <span class="help-block" ng-show="form.password.$dirty && form.password.$error.minlength">Must be between 8 and 128 characters. At least one upper case and/or special character is required.</span>
+          <validation-feedback></validation-feedback>
+          <validation-error></validation-error>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group has-feedback" form-input="form.passwordConfirm">
+          <label class="control-label">Confirm Password</label>
+          <input class="form-control" name="passwordConfirm" type="password" placeholder="Confirm your password" ng-model="$forgotFollowUp.model.passwordConfirm" validation-input input-match="$forgotFollowUp.model.password" required>
+          <span class="help-block" ng-show="form.passwordConfirm.$dirty && form.passwordConfirm.$error.match">This does not match your password.</span>
+          <validation-feedback></validation-feedback>
+          <validation-error></validation-error>
+        </div>
+      </div>
+    </div>
+
+    <dl class="text-right">
+      <div class="btn-group">
+        <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Reset my password</button>
+        <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+      </div>
+    </dl>
+
+  </form>
+</div>
+
+<div ng-if="!$forgotFollowUp.valid">
+  <h3>Invalid link</h3>
+  <p>The unique ID you are using does not exist, it has been expired, or has already been used.</p>
+</div>

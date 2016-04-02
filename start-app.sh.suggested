@@ -2,9 +2,12 @@
 
 export CX_AWS_ACCESSKEYID=""
 export CX_AWS_ACCESSSECRET=""
+export CX_DOMAIN="http://localhost"
 export CX_CONTACT_ADDR="Site <site@site.com>"
 export CX_CONTACT_FROM="Site <site@site.com>"
 export CX_CONTACT_SUBJ="Contact from site (Name: {name} Email: {email})"
+export CX_FORGOTPW_FROM=$CX_CONTACT_FROM
+export CX_FORGOTPW_SUBJ="Forgot password request"
 export CX_RECAPTCHA_SITEKEY=""
 export CX_RECAPTCHA_SECRET=""
 export CX_DEBUG="1"

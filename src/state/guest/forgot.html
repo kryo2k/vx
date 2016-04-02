@@ -3,7 +3,7 @@
     <div class="col-sm-12">
       <div class="form-group has-feedback" form-input="form.email">
         <label class="control-label">E-mail address</label>
-        <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$forgot.model.email" required>
+        <input class="form-control" name="email" type="email" placeholder="joe@smith.com" ng-model="$forgot.model.email" validation-input required>
         <span class="help-block" ng-show="form.email.$dirty && form.email.$error.email">E-mail address is not valid.</span>
         <validation-feedback></validation-feedback>
         <validation-error></validation-error>
@@ -15,6 +15,7 @@
       <p>If you have forgotten the e-mail address you used, or no longer have access to it, please <a ui-sref="app.guest.contact">contact our support</a> to assist you in recovering your account.</p>
     </div>
   </div>
+  <div recaptcha-init ng-model="$forgot.model.recaptcha" ng-if="$forgot.model" required></div>
   <dl class="text-right">
     <div class="btn-group">
       <button type="button" class="btn btn-lg btn-default" ng-click="$forgot.quickFill(form)">Quick Fill</button>

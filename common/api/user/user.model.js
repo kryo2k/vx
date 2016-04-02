@@ -159,6 +159,15 @@ UserSchema.virtual('profile')
     return o;
   });
 
+UserSchema.virtual('mailContact')
+  .get(function () {
+    if(this.name) {
+      return this.name + ' <' + this.email + '>';
+    }
+
+    return this.email;
+  });
+
 UserSchema.virtual('profileMinimal')
   .get(function () {
     return {

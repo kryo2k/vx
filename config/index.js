@@ -9,6 +9,7 @@ var debugging = (parseInt(envVar.CX_DEBUG) === 1);
 
 module.exports = {
   debugging: debugging,
+  domain: envVar.CX_DOMAIN || 'http://localhost',
   database: {
     uri: envVar.CX_MONGO_URI || 'mongodb://localhost:27017/test',
     options: {
@@ -36,6 +37,10 @@ module.exports = {
     sendTo:   envVar.CX_CONTACT_ADDR || false,
     sendFrom: envVar.CX_CONTACT_FROM || 'System <system@site.com>',
     subject:  envVar.CX_CONTACT_SUBJ || 'New contact message'
+  },
+  forgotPw: {
+    sendFrom: envVar.CX_FORGOTPW_FROM || envVar.CX_CONTACT_FROM || 'System <system@site.com>',
+    subject:  envVar.CX_FORGOTPW_SUBJ || 'Request to reset your password.'
   },
   server: {
     api: {

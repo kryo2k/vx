@@ -3,18 +3,13 @@
 var
 _ = require('lodash'),
 format = require('util').format,
-Recaptcha = require('recaptcha-verify'),
 validator = require('validator'),
 ValidationError = require('../../components/error-validation'),
+recapchaValidator = require('../../components/recaptcha-verifier'),
 InputError = require('../../components/error-input'),
 mailer = require('../../components/mailer'),
 config = require('../../../config');
 
-var
-recapchaValidator = new Recaptcha({
-  secret: config.recaptcha.secretKey,
-  verbose: !!config.recaptcha.verbose
-});
 
 exports.submit = function (req, res, next) {
 
