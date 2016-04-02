@@ -2,7 +2,10 @@
 
 var
 _ = require('lodash'),
+format = require('util').format,
 validator = require('validator'),
+ValidationError = require('../../../components/error-validation'),
+InputError = require('../../../components/error-input'),
 recapchaValidator = require('../../../components/recaptcha-verifier'),
 model = require('./reset-pw.model');
 
@@ -66,20 +69,19 @@ exports.changePassword = function (req, res, next) {
       if(err) {
         return next(err);
       }
-
-        console.log('Received body:', body);
+      else if(!doc) {
+        return next(new InputError(format('Unable to locate the password change request provided (%s).', req.params.id)));
+      }
 
       doc.user.password        = body.password;
       doc.user.passwordConfirm = body.passwordConfirm;
 
       doc.user.save(function (err) {
-        console.log('user SAVED');
         if(err) {
           return next(new ValidationError(err));
         }
 
         doc.remove(function () {
-          console.log('Doc REMOVED');
           res.respondOk(true);
         });
       });
