@@ -15,10 +15,8 @@ if(!server) {
   return;
 }
 
-var mongoUri = String(config.database.uri).replace(/\"/g, '');
-
 // connect to mongo server
-mongoose.connect(mongoUri, config.database.options);
+mongoose.connect(config.database.uri, config.database.options);
 
 // boostrap this server
 server();
