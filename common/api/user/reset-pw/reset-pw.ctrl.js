@@ -82,7 +82,7 @@ exports.changePassword = function (req, res, next) {
         }
 
         doc.remove(function () {
-          res.respondOk(true);
+          res.respondOk({ message: 'Your password has been successfully changed. You can now log-in with your new password.' });
         });
       });
     });
