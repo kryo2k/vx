@@ -19,7 +19,7 @@ angular.module('vx')
     return !!this.get();
   };
   this.clear = function() {
-    $cookies.remove(KEY_TOKEN);
+    $cookies.remove(KEY_TOKEN, cookieOpts());
     return this;
   };
   this.get = function() {
