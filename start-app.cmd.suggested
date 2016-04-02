@@ -1,0 +1,18 @@
+@SETLOCAL
+@SET CX_AWS_ACCESSKEYID=""
+@SET CX_AWS_ACCESSSECRET=""
+@SET CX_DOMAIN="http://localhost"
+@SET CX_CONTACT_ADDR="Site <site@site.com>"
+@SET CX_CONTACT_FROM="Site <site@site.com>"
+@SET CX_CONTACT_SUBJ="Contact from site (Name: {name} Email: {email})"
+@SET CX_FORGOTPW_FROM=$CX_CONTACT_FROM
+@SET CX_FORGOTPW_SUBJ="Forgot password request"
+@SET CX_RECAPTCHA_SITEKEY=""
+@SET CX_RECAPTCHA_SECRET=""
+@SET CX_DEBUG="1"
+@SET CX_SECRET_TOKEN=""
+@SET CX_MONGO_URI="mongodb://localhost:27017/vx"
+
+crossbar start
+@ENDLOCAL
+@EXIT
