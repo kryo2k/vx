@@ -1,23 +1,19 @@
 <div ng-if="$forgotFollowUp.valid">
-  <pre ng-bind="$forgotFollowUp.id|json"></pre>
-  <pre ng-bind="$forgotFollowUp.user|json"></pre>
-  <pre ng-bind="$forgotFollowUp.model|json"></pre>
 
-  <div class="row">
-    <div class="col-sm-6">
+  <page-header ph-title="'Reset Password'" ph-description="'Select a new password for your account.'"></page-header>
+
+  <div class="well">
+    <div>
       <label>Your Name</label>
       <span>{{$forgotFollowUp.user.name}}</span>
     </div>
-    <div class="col-sm-6">
+    <div>
       <label>Your Email</label>
       <span>{{$forgotFollowUp.user.email}}</span>
     </div>
   </div>
 
-  <h3>Reset Password</h3>
-
   <form class="form" name="form" ng-submit="$forgotFollowUp.submit($event, form)" form-reset="$forgotFollowUp.reset($event, $form)">
-
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group has-feedback" form-input="form.password">
@@ -45,11 +41,10 @@
         <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
       </div>
     </dl>
-
   </form>
 </div>
 
 <div ng-if="!$forgotFollowUp.valid">
-  <h3>Invalid link</h3>
+  <page-header ph-title="'Invalid recovery link'"></page-header>
   <p>The unique ID you are using does not exist, it has been expired, or has already been used.</p>
 </div>
