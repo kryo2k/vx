@@ -1,5 +1,1 @@
-*.js   eol=lf
-*.scss eol=lf
-*.jade eol=lf
-*.css  eol=lf
-*.html eol=lf
+* text=auto
