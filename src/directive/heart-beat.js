@@ -5,7 +5,7 @@ angular.module('vx')
     controller: 'HeartBeatCtrl as $heartBeat'
   };
 })
-.controller('HeartBeatCtrl', function ($scope, $heartBeat, DURATION_SHORT) {
+.controller('HeartBeatCtrl', function ($scope, $heartBeat, $realTime, DURATION_SHORT) {
   this.service = $heartBeat;
 
   $scope.durationOpts = angular.extend({}, DURATION_SHORT, {
@@ -13,6 +13,9 @@ angular.module('vx')
   });
 
   Object.defineProperties(this, {
+    lastPushDate: {
+      get: function () { return $realTime.lastPushDate; }
+    },
     isActive: {
       get: function () { return $heartBeat.running && $heartBeat.ttl > 0; }
     },

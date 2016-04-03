@@ -2,6 +2,7 @@
   <label>Heart-beat</label> <span class="text-muted" ng-if="$heartBeat.isIdle">Idle</span> <span class="text-danger" ng-if="$heartBeat.isWarning">Warning</span> <span class="text-success" ng-if="$heartBeat.service.checking">Updating</span>
 <pre>
 lastCheck: {{$heartBeat.service.lastCheck | date:'short'}} (next check in {{$heartBeat.service.nextCheckInSec|duration:durationOpts}})
+lastPush:  {{$heartBeat.lastPushDate | date:'longDate'}} {{$heartBeat.lastPushDate | date:'mediumTime'}}
 ttl:       {{$heartBeat.service.expireAt  | date:'short'}} (expires in {{$heartBeat.service.ttlSec | duration:durationOpts}})
 idle:      {{$heartBeat.service.lastTouch | date:'short'}} (last touched {{$heartBeat.service.idleSec | duration:durationOpts}} ago)
 </pre>
