@@ -148,24 +148,3 @@ exports.parseObj = function (string, publicKey) {
 
   return safeJsonParse(parse(string, publicKey));
 };
-
-/////// TEST CODE
-
-// console.log('site token secret:', config.secret.token);
-
-// var
-// tmpECDH = createPrivateKey(),
-// tmpPriv = tmpECDH.getPrivateKey(),
-// tmpPub  = tmpECDH.getPublicKey();
-
-// console.log('temp user\n-- private: %j\n-- public:  %j', tmpPriv.toString(keySerializeAs), tmpPub.toString(keySerializeAs));
-
-// var
-// siteSignMsg     = exports.sign('My site encrypted secret'),
-// siteUserSignMsg = exports.sign('My site user encrypted secret', tmpPub);
-
-// console.log('site message (encrypted):', siteSignMsg);
-// console.log('site message (decrypted):', exports.parse(siteSignMsg));
-
-// console.log('user message (encrypted):', siteUserSignMsg);
-// console.log('user message (decrypted):', exports.parse(siteUserSignMsg, tmpPub));

@@ -89,7 +89,6 @@ gulp.task('replace-constants', function () {
 gulp.task('build-sass', ['inject-app-scss'], function() {
   return gulp.src([path.join(pathSrc, 'app.scss')])
     .pipe(sass())
-    // .pipe(gulp.dest(pathBuild))
     .pipe(minifyCss({ keepSpecialComments: 0 }))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest(pathBuild));
@@ -106,10 +105,8 @@ gulp.task('build-templates', function() {
     }))
     .pipe(ngHtml2Js({
       moduleName: 'vx.tpl'
-      // prefix: '/vx'
     }))
     .pipe(concat(fileTpl))
-    // .pipe(gulp.dest(pathBuild))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest(pathBuild));
@@ -123,12 +120,9 @@ gulp.task('build-core', ['replace-constants'], function() {
     ])
     .pipe(concat(fileCore))
     .pipe(ngAnnotate())
-    // .pipe(gulp.dest(pathBuild))
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
-    .pipe(gulp.dest(pathBuild))
-    // .pipe(gulp.src(['.tmp'], { read: false }))
-    // .pipe(clean({ force: true }));
+    .pipe(gulp.dest(pathBuild));
 });
 
 gulp.task('watch', function() {

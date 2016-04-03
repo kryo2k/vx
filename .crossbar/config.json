@@ -97,6 +97,13 @@
                             "name": "user",
                             "permissions": [
                                 {
+                                    "uri": "vx.time",
+                                    "match": "exact",
+                                    "allow": {
+                                        "subscribe": true
+                                    }
+                                },
+                                {
                                     "uri": "vx.user",
                                     "match": "prefix",
                                     "allow": {

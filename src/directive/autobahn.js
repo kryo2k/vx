@@ -10,6 +10,9 @@ angular.module('vx')
   this.realTime = $realTime;
 
   Object.defineProperties(this, {
+    lastPushDate: {
+      get: function () { return $realTime.lastPushDate; }
+    },
     connection: {
       get: function () {
         return $wamp.connection;

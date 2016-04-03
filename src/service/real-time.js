@@ -25,6 +25,7 @@ angular.module('vx')
   var
   filterEllipsis = $filter('ellipsis'),
   running = false,
+  lPushDate = null,
   log = new RealTimeLog([], 5, true),
   logWrapFn = (function (message, cls, fn) {
     return function () {
@@ -42,8 +43,17 @@ angular.module('vx')
     };
   }).bind(this);
 
-  Object.defineProperty(this, 'log', {
-    get: function () { return log.records; }
+  Object.defineProperties(this, {
+    log: {
+      get: function () {
+        return log.records;
+      }
+    },
+    lastPushDate: {
+      get: function () {
+        return lPushDate;
+      }
+    }
   });
 
   // locally bind these functions
@@ -123,9 +133,15 @@ angular.module('vx')
     if(!running) return this;
     log.add({ m: 'Stopping real-time wamp socket.', c: 'danger' });
     running = false;
+    lPushDate = null;
     $wamp.close();
     return this;
   };
+
+  // received push timestamp from server:
+  this.subscribe('vx.time', function (args) {
+    lPushDate = new Date(args[0]);
+  });
 
   $rootScope.$on("$wamp.open", function (z) {
     log.add({ m: 'Connection opened.', c: 'success' });
