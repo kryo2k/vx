@@ -33,6 +33,14 @@ angular.module('vx')
     },
     connected: {
       get: function () { return $realTime.connected; }
+    },
+    stateClasses: {
+      get: function () {
+        return {
+          'text-success': this.connected,
+          'text-danger': !this.connected
+        };
+      }
     }
   });
 });
