@@ -26,8 +26,7 @@ fileCore  = 'app.js';
 
 gulp.task('inject-app-scss', function () {
   var
-  srcApp  = path.join(pathSrc, 'app'),
-  srcFile = path.join(srcApp, 'app.scss'),
+  srcFile = path.join(pathSrc, 'app.scss'),
   files   = gulp.src([
     path.join(pathSrc, '**/*.scss'),
     '!' + srcFile
@@ -35,14 +34,14 @@ gulp.task('inject-app-scss', function () {
 
   return gulp.src(srcFile)
     .pipe(inject(files, {
-      transform: function(filePath) {
-        filePath = filePath.replace('/src', './');
+      transform: function(filePath, file, i, length) {
+        filePath = filePath.replace('/src/', './');
         return '@import \'' + filePath + '\';';
       },
       starttag: '// injector',
       endtag: '// endinjector'
     }))
-    .pipe(gulp.dest(srcApp)); // overwrites source file
+    .pipe(gulp.dest(pathSrc)); // overwrites source file
 });
 
 gulp.task('inject-app-html', function () {
@@ -65,7 +64,7 @@ gulp.task('inject-app-html', function () {
       ignorePath: '/build/',
       addRootSlash: false
     }))
-    .pipe(gulp.dest(pathBuild))
+    .pipe(gulp.dest(pathBuild));
 });
 
 gulp.task('replace-constants', function () {
