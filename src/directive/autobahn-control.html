@@ -14,8 +14,8 @@ connected: {{$autobahn.connected|json}}
 
   <div class="btn-group">
     <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="notificationTest()">Notification Test</button>
-    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="$autobahn.realTime.close()">Close</button>
-    <button class="btn btn-default" ng-if="!$autobahn.connected" ng-click="$autobahn.realTime.open()">Open</button>
+    <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="$autobahn.realTime.stop()">Close</button>
+    <button class="btn btn-default" ng-if="!$autobahn.connected" ng-click="$autobahn.realTime.start()">Open</button>
   </div>
 
   <table class="table table-condensed small">
