@@ -34,7 +34,9 @@ exports.updateProfile = function (req, res, next) {
 
     res.userNotify('update-profile', {}, function (err) {
       if(err) return next(err);
+
       res.respondOk();
+      res.pushTopicUser('vx.user.update', ['profile', req.user.profile]);
     });
   });
 };
@@ -80,6 +82,7 @@ exports.changePassword = function (req, res, next) {
     res.userNotify('change-password', {}, function (err) {
       if(err) return next(err);
       res.respondOk();
+      res.pushTopicUser('vx.user.logout'); // logout all user sessions
     });
   });
 };

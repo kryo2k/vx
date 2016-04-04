@@ -53,14 +53,25 @@ angular.module('vx')
       }).bind(this));
   };
 
+  this.setProfile = function (profile) {
+    if(angular.isObject(profile)) {
+      lastProfile = profile;
+    }
+    else {
+      lastProfile = false;
+    }
+
+    return this;
+  };
+
   this.reloadProfileSoft = function () {
     return User.getProfile().$promise
-      .then(function (profile) {
-        lastProfile = profile;
+      .then((function (profile) {
+        this.setProfile(profile);
         return lastProfile;
-      })
+      }).bind(this))
       .catch(function (err) { // clean up on any errors here.
-        lastProfile = false;
+        this.setProfile(null);
         $authPersist.clear();
         return false;
       });
@@ -103,4 +114,15 @@ angular.module('vx')
   if($authPersist.authenticated) { // load the profile
     this.reloadProfile();
   }
+})
+.run(function ($auth, $realTime) {
+  $realTime.subscribe('vx.user.update', function (args, meta) {
+    switch(args[0]) {
+      case 'profile': $auth.setProfile(args[1]); break;
+    }
+  });
+
+  $realTime.subscribe('vx.user.logout', function (args, meta) {
+    $auth.logout();
+  });
 });
