@@ -24,8 +24,6 @@ angular.module('vx')
 })
 .controller('AppUserSettingsProfileCtrl', function ($scope, $auth, User, currentProfile) {
 
-  var self = this;
-
   this.reset = (function (event, form) {
     this.model = angular.copy(currentProfile);
     if(form) form.$setPristine(true);
