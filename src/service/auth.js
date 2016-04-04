@@ -54,8 +54,8 @@ angular.module('vx')
   };
 
   this.reloadProfile = function () {
-    return markLoading(
-      User.getProfile().$promise
+    //return markLoading(
+    return User.getProfile().$promise
         .then(function (profile) {
           lastProfile = profile;
           return lastProfile;
@@ -64,8 +64,8 @@ angular.module('vx')
           lastProfile = false;
           $authPersist.clear();
           return false;
-        })
-    );
+        });
+    //);
   };
 
   this.loadUserProfile = function (token) {
