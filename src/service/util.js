@@ -201,4 +201,23 @@ angular.module('vx')
   return function () {
     return nonce++;
   };
+})
+.service('$chunkString', function () {
+  return function (str, len) {
+    if(!angular.isString(str)) {
+      return [];
+    }
+
+    var
+    size = Math.ceil(str.length/len),
+    ret  = new Array(size),
+    os;
+
+    for (var _i=0; _i<size; _i++) {
+      os = _i * len;
+      ret[_i] = str.substring(os, os + len);
+    }
+
+    return ret;
+  };
 });

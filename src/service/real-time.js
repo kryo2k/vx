@@ -20,7 +20,7 @@ angular.module('vx')
 
   return RealTimeLog;
 })
-.service('$realTime', function ($wamp, $auth, $authPersist, $rootScope, $filter, RealTimeLog) {
+.service('$realTime', function ($q, $wamp, $auth, $authPersist, $rootScope, $filter, RealTimeLog) {
 
   var
   filterEllipsis = $filter('ellipsis'),
@@ -86,6 +86,9 @@ angular.module('vx')
   };
 
   this.unsubscribe = function (subscription) {
+    if(!subscription) {
+      return $q.when(false);
+    }
     var
     channel = subscription.topic,
     id = subscription.id,
