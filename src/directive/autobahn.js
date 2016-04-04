@@ -10,45 +10,29 @@ angular.module('vx')
   this.realTime = $realTime;
 
   Object.defineProperties(this, {
+    starting: {
+      get: function () { return $realTime.starting; }
+    },
+    stopping: {
+      get: function () { return $realTime.stopping; }
+    },
     lastPushDate: {
       get: function () { return $realTime.lastPushDate; }
     },
     connection: {
-      get: function () {
-        return $wamp.connection;
-      }
+      get: function () { return $realTime.connection; }
     },
     connectionInfo: {
-      get: function () {
-        var sess = this.session;
-
-        if(!sess || !sess._socket || !sess._socket.info) {
-          return false;
-        }
-
-        return sess._socket.info;
-      }
+      get: function () { return $realTime.connectionInfo; }
     },
     log: {
-      get: function () {
-        return $realTime.log;
-      }
+      get: function () { return $realTime.log; }
     },
     session: {
-      get: function () {
-        var connection = this.connection;
-
-        if(!connection || !connection.session) {
-          return false;
-        }
-
-        return connection.session;
-      }
+      get: function () { return $realTime.session; }
     },
     connected: {
-      get: function () {
-        return !!this.session;
-      }
+      get: function () { return $realTime.connected; }
     }
   });
 });

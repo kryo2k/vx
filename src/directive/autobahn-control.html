@@ -4,13 +4,16 @@
     <span class="text-success" ng-if="$autobahn.connected">Online</span>
     <span class="text-danger" ng-if="!$autobahn.connected">Offline</span>
   </div>
-
-  <pre ng-if="$autobahn.connected" ng-bind="$autobahn.connectionInfo|json"></pre>
-  <pre>lastPush: <i ng-if="!$autobahn.lastPushDate">waiting..</i><b ng-if="$autobahn.lastPushDate">{{$autobahn.lastPushDate | date:'longDate'}} {{$autobahn.lastPushDate | date:'mediumTime'}}</b></pre>
+<pre>
+last push: <i ng-if="!$autobahn.lastPushDate">waiting..</i><b ng-if="$autobahn.lastPushDate">{{$autobahn.lastPushDate | date:'longDate'}} {{$autobahn.lastPushDate | date:'mediumTime'}}</b>
+starting: {{$autobahn.starting|json}}
+stopping: {{$autobahn.stopping|json}}
+connected: {{$autobahn.connected|json}}
+<span ng-if="$autobahn.connected">Connection info: {{$autobahn.connectionInfo|json}}</span>
+</pre>
 
   <div class="btn-group">
     <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="notificationTest()">Notification Test</button>
-
     <button class="btn btn-default" ng-if="$autobahn.connected" ng-click="$autobahn.realTime.close()">Close</button>
     <button class="btn btn-default" ng-if="!$autobahn.connected" ng-click="$autobahn.realTime.open()">Open</button>
   </div>
