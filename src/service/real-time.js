@@ -25,6 +25,8 @@ angular.module('vx')
   var
   filterEllipsis = $filter('ellipsis'),
   running = false,
+  starting = false,
+  stopping = false,
   lPushDate = null,
   log = new RealTimeLog([], 5, true),
   logWrapFn = (function (message, cls, fn) {
@@ -52,6 +54,48 @@ angular.module('vx')
     lastPushDate: {
       get: function () {
         return lPushDate;
+      }
+    },
+    starting: {
+      get: function () {
+        return starting;
+      }
+    },
+    stopping: {
+      get: function () {
+        return stopping;
+      }
+    },
+    connection: {
+      get: function () {
+        return $wamp.connection;
+      }
+    },
+    connectionInfo: {
+      get: function () {
+        var sess = this.session;
+
+        if(!sess || !sess._socket || !sess._socket.info) {
+          return false;
+        }
+
+        return sess._socket.info;
+      }
+    },
+    session: {
+      get: function () {
+        var connection = this.connection;
+
+        if(!connection || !connection.session) {
+          return false;
+        }
+
+        return connection.session;
+      }
+    },
+    connected: {
+      get: function () {
+        return !!this.session;
       }
     }
   });
@@ -124,8 +168,7 @@ angular.module('vx')
   };
 
   var
-  starting = false, startPromise,
-  stopping = false, stopPromise,
+  startPromise, stopPromise,
   scopeOnce = function (scope, event, callback) {
     var dereg = scope.$on(event, function () {
       callback.apply(this, arguments);
