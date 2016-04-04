@@ -1,5 +1,5 @@
-<div>
-  <p>New message from <a ui-sref="app.user.messages.conversations(options)">{{options.sender}}</a>.</p>
+<div class="notification-message-container">
+  <p class="message-head">New message from <a ui-sref="app.user.messages.conversations(options)">{{options.sender}}</a>.</p>
 
-  <a ui-sref="app.user.messages.view(options)">{{options.messagePreview}}</p>
+  <a class="message-link" ui-sref="app.user.messages.view(options)">{{options.messagePreview}}</p>
 </div>
