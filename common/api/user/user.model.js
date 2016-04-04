@@ -149,14 +149,15 @@ UserSchema.virtual('publicKey')
 
 UserSchema.virtual('profile')
   .get(function () {
-    var o = this.toObject();
-
-    // never expose these in profile
-    delete o._privateKey;
-    delete o._encryptedPassword;
-
-    // return clean object
-    return o;
+    return { // return clean object
+      _id: this._id,
+      name: this.name,
+      bio: this.bio,
+      email: this.email,
+      phone: this.phone,
+      publicKey: this.publicKey.toString(keySerializeAs),
+      created: this.created
+    };
   });
 
 UserSchema.virtual('mailContact')
