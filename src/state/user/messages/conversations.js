@@ -7,7 +7,7 @@ angular.module('vx')
       controller: 'AppUserMessagesConversationsCtrl',
       data: {
         title: 'Conversations',
-        description: false
+        description: 'Your messages between users'
       },
       views: {
         messageView: {
