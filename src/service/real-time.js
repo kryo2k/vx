@@ -123,22 +123,67 @@ angular.module('vx')
     });
   };
 
+  var
+  starting = false, startPromise,
+  stopping = false, stopPromise,
+  scopeOnce = function (scope, event, callback) {
+    var dereg = scope.$on(event, function () {
+      callback.apply(this, arguments);
+      dereg();
+    });
+
+    return scope;
+  };
+
   this.start = function () {
-    if(running) return this;
+    if(running) return $q.resolve(true);
+    else if(starting) return $q.when(startPromise);
+    else if(stopping) return $q.when(stopPromise).then(this.start.bind(this));
+
+    var defer = $q.defer();
     log.add({ m: 'Starting real-time wamp socket.', c: 'success' });
-    running = true;
+
+    starting = true;
+
+
+    startPromise = defer.promise;
+
+    scopeOnce($rootScope, '$wamp.open', function (z) {
+      running = true;
+      starting = false;
+      startPromise = null;
+      defer.resolve(true);
+    });
+
     $wamp.setAuthId($authPersist.token); // token is our auth id
     $wamp.open();
-    return this;
+
+    return startPromise;
   };
 
   this.stop = function () {
-    if(!running) return this;
+    if(!running) return $q.resolve(true);
+    else if(stopping) return $q.when(stopPromise);
+    else if(starting) return $q.when(startPromise).then(this.stop.bind(this));
+
+    var defer = $q.defer();
     log.add({ m: 'Stopping real-time wamp socket.', c: 'danger' });
-    running = false;
-    lPushDate = null;
+
+    stopping = true;
+
+    stopPromise = defer.promise;
+
+    scopeOnce($rootScope, '$wamp.close', function (z) {
+      running = false;
+      stopping = false;
+      lPushDate = null;
+      stopPromise = null;
+      defer.resolve(true);
+    });
+
     $wamp.close();
-    return this;
+
+    return stopPromise;
   };
 
   // received push timestamp from server:
