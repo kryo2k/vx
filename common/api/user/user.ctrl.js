@@ -45,20 +45,32 @@ exports.changePassword = function (req, res, next) {
 
   var
   existingPw = req.user.password,
-  data = req.body;
+  data = req.body,
+  errorMsg = 'Problems encountered while changing your password.',
+  errors = [];
 
   if(data.oldPassword !== existingPw) {
-    return next(new AuthenticationError('Invalid original password. Password change unsuccessful.', { attempted: data.oldPassword }));
+    errorMsg = 'Invalid original password. Password change unsuccessful.';
+    errors.push({ path: 'oldPassword', value: data.oldPassword, message: 'Password supplied does not match current password.' });
   }
-  if(!data.newPassword) {
-    return next(new InputError('New password was not provided.'));
+  if(!data.password) {
+    errors.push({ path: 'password', value: data.password, message: 'New password was not provided.' });
   }
-  if(!data.newPasswordConfirm) {
-    return next(new InputError('New password confirmation was not provided.'));
+  if(!data.passwordConfirm) {
+    errors.push({ path: 'passwordConfirm', value: data.passwordConfirm, message: 'New password confirmation was not provided.' });
   }
 
-  req.user.password        = data.newPassword;
-  req.user.passwordConfirm = data.newPasswordConfirm;
+  if(data.oldPassword === data.password) {
+    errorMsg = 'New password is the same as original password.';
+    errors.push({ path: 'password', value: data.password, message: 'Please use a different password.' });
+  }
+
+  if(errors.length > 0) {
+    return next(new ValidationError({ message: errorMsg, errors: errors }));
+  }
+
+  req.user.password        = data.password;
+  req.user.passwordConfirm = data.passwordConfirm;
 
   req.user.save(function (err) {
     if(err) {
