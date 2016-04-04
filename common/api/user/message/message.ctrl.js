@@ -231,16 +231,6 @@ exports.send = function (req, res, next) {
       if(err) return next(new ValidationError(err));
       res.respondOk(message._id);
     }, uRecv);
-
-    // uRecv.addNotification('message', {
-    //   sender: uSend.name,
-    //   senderId: mongoUtil.getObjectId(uSend),
-    //   message: message._id,
-    //   messagePreview: message.preview()
-    // }, function (err) {
-    //   if(err) return next(new ValidationError(err));
-    //   res.respondOk(message._id);
-    // });
   });
 };
 
