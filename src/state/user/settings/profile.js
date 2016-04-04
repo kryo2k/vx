@@ -39,7 +39,7 @@ angular.module('vx')
     return User.updateProfile(this.model).$promise
       .then(function () {
         form.$setPristine(true);
-        return $auth.reloadProfile();
+        return $auth.reloadProfileSoft();
       })
       .catch(function (err) {
         if(ErrorValidation.is(err)) {

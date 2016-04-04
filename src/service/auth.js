@@ -53,19 +53,21 @@ angular.module('vx')
       }).bind(this));
   };
 
-  this.reloadProfile = function () {
-    //return markLoading(
+  this.reloadProfileSoft = function () {
     return User.getProfile().$promise
-        .then(function (profile) {
-          lastProfile = profile;
-          return lastProfile;
-        })
-        .catch(function (err) { // clean up on any errors here.
-          lastProfile = false;
-          $authPersist.clear();
-          return false;
-        });
-    //);
+      .then(function (profile) {
+        lastProfile = profile;
+        return lastProfile;
+      })
+      .catch(function (err) { // clean up on any errors here.
+        lastProfile = false;
+        $authPersist.clear();
+        return false;
+      });
+  };
+
+  this.reloadProfile = function () {
+    return markLoading(this.reloadProfileSoft());
   };
 
   this.loadUserProfile = function (token) {
