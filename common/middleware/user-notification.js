@@ -10,8 +10,8 @@ module.exports = function () {
   return compose()
     .use(function (req, res, next) {
 
-      res.userNotify = function (type, typeData, cb) {
-        var user = req.user;
+      res.userNotify = function (type, typeData, cb, user) {
+        user = user||req.user;
 
         if(!user) {
           return cb(new InputError('User to notify was not part of request.'));
@@ -34,7 +34,7 @@ module.exports = function () {
               notifyObj.publishedTo = publishedTo;
               promise.complete(notifyObj);
 
-              res.fetchAndPushNotificationCount('newNotification', metaPayload);
+              res.fetchAndPushNotificationCount('newNotification', metaPayload, user);
 
               return notifyObj;
             })
@@ -45,11 +45,12 @@ module.exports = function () {
       };
 
       res.fetchAndPushNotificationCount = function (invoker, invokerParams, user) {
-        return Notification.fetchCounts(user||req.user, function (err, counts) {
+        user = user||req.user;
+        return Notification.fetchCounts(user, function (err, counts) {
           if(err) return console.error('Unsent error while fetching counts:', err);
 
           // push count change using sockets
-          res.pushNotificationCount(counts, invoker, invokerParams);
+          res.pushNotificationCount(counts, invoker, invokerParams, user);
           return counts;
         });
       };

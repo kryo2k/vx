@@ -2,7 +2,7 @@ angular.module('vx')
 .config(function ($stateProvider) {
   $stateProvider
     .state('app.user.messages.conversations', {
-      url: '/conversations',
+      url: '/conversations/:senderId',
       templateUrl: 'state/user/messages/conversations.html',
       controller: 'AppUserMessagesConversationsCtrl',
       data: {
@@ -17,5 +17,5 @@ angular.module('vx')
       }
     });
 })
-.controller('AppUserMessagesConversationsCtrl', function ($scope) {
+.controller('AppUserMessagesConversationsCtrl', function ($scope, UserMessage) {
 });

@@ -215,21 +215,32 @@ exports.send = function (req, res, next) {
   message = new model({
     sender: uSend,
     receiver: uRecv,
-    message: uSend.encrypt(uRecv.publicKey, messageBody, 'utf8')
+    message: model.encrypt(messageBody, uSend, uRecv)
   });
 
   message.save(function (err) {
     if(err) return next(new ValidationError(err));
 
     // add a notifcation for user that message was sent to them.
-    uRecv.addNotification('message', {
-      from: mongoUtil.getObjectId(uSend),
-      message: message._id
+    res.userNotify('message', {
+      sender: uSend.name,
+      senderId: mongoUtil.getObjectId(uSend),
+      message: message._id,
+      messagePreview: message.preview()
     }, function (err) {
       if(err) return next(new ValidationError(err));
       res.respondOk(message._id);
+    }, uRecv);
 
-    });
+    // uRecv.addNotification('message', {
+    //   sender: uSend.name,
+    //   senderId: mongoUtil.getObjectId(uSend),
+    //   message: message._id,
+    //   messagePreview: message.preview()
+    // }, function (err) {
+    //   if(err) return next(new ValidationError(err));
+    //   res.respondOk(message._id);
+    // });
   });
 };
 

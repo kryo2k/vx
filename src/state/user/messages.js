@@ -11,5 +11,5 @@ angular.module('vx')
       }
     });
 })
-.controller('AppUserMessagesCtrl', function ($scope) {
+.controller('AppUserMessagesCtrl', function ($scope, UserMessage) {
 });

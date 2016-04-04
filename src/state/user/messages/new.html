@@ -1,2 +1,23 @@
 <hr />
-<h3 class="text-center">Placeholder: New</h3>
+<form class="form" name="form" ng-submit="$msgNew.submit($event, form)" form-reset="$msgNew.reset($event, $form)">
+  <div class="form-group has-feedback" form-input="form.to">
+    <label class="control-label">To User:</label>
+    <input class="form-control" name="to" type="text" ng-model="$msgNew.model.to" validation-input required>
+    <validation-feedback></validation-feedback>
+    <validation-error></validation-error>
+  </div>
+
+  <div class="form-group has-feedback" form-input="form.message">
+    <label class="control-label">Message Body:</label>
+    <textarea class="form-control" name="message" ng-model="$msgNew.model.message" rows="3" validation-input required></textarea>
+    <validation-feedback></validation-feedback>
+    <validation-error></validation-error>
+  </div>
+
+  <dl class="text-right">
+    <div class="btn-group">
+      <button type="submit" class="btn btn-lg btn-primary" ng-disabled="form.$invalid">Submit</button>
+      <button type="reset" class="btn btn-lg btn-default" ng-disabled="!form.$dirty">Reset</button>
+    </div>
+  </dl>
+</form>
