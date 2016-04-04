@@ -10,7 +10,7 @@ ellipsis = require('../../common/components/ellipsis');
 
 var
 TAG = 'Backend:',
-heartbeatInterval = 5000,
+heartbeatInterval = 15000,
 logSub = function (args, b, c) {
   if(arguments.length < 3) return;
 
