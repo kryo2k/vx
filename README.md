@@ -1,3 +1,56 @@
+## Installation
+
+### Linux pre-req:
+
+#### Redhat:
+
+```bash
+sudo yum install python-devel "@Development tools" libffi-devel openssl-devel
+```
+
+#### Ubuntu:
+
+```bash
+sudo apt-get install build-essential libssl-dev libffi-dev \
+    libreadline-dev libbz2-dev libsqlite3-dev libncurses5-dev
+```
+
+#### Install nvm and nodejs 5.x (non-root user)
+```bash
+# install nvm
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+# download and use node 5x
+nvm install 5
+# OR, to use existing install
+nvm use 5
+```
+
+#### Install python and python-pip
+Using root or virtualenv. I believe it works on either Python 3.x or 2.x.
+
+```bash
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+```
+
+#### Install crossbar (root)
+```bash
+pip install crossbar[all]
+```
+
+#### Copy and customize configuration file
+```bash
+cp start-app.sh.suggested start-app.sh
+```
+More on this later..
+
+#### Generate a new server secret
+```bash
+node scripts/new-private-key.js
+# New private key [KEEP SECRET]: ff6b3374efa465cdf18c8f5db7b51e80dfd949b30ef77aa37057e1838616fc44
+```
+
+
 ## Noteworthy Features
 
 ### Cryptographically secure token auth system
@@ -60,4 +113,4 @@ This includes a login, sign-up and a password recovery system which uses the use
 
 Fully functional contact page. Currently able to be configured per-environment.
 
-... and LOTS of other angular directives, filters, controllers, services for interacting with key pieces of the system. Mostly sandboxing at this point.
+... and LOTS of other express middle-ware, nodejs components, services, angular directives, filters, controllers, services for interacting with key pieces of the system. Mostly sandboxing at this point.
