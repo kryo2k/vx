@@ -244,7 +244,7 @@ exports.read = function (req, res, next) {
     var
     decrypter,
     publicKey,
-    decryptedMsg;
+    payload = false;
 
     if(result.isSender) {
       decrypter = result.sender.decrypt.bind(result.sender);
@@ -255,16 +255,19 @@ exports.read = function (req, res, next) {
       publicKey = result.sender.publicKey;
     }
 
-    // attempt to decrypt message
-    decryptedMsg = decrypter(publicKey, doc.message);
+    payload = {
+      // attempt to decrypt message
+      content: decrypter(publicKey, doc.message),
+      sent: doc.created
+    };
 
     if(result.isReceiver && doc.unread) { // mark as read if unread and requesting user is receiver.
       doc.unread = false;
 
-      return Q.nfcall(doc.save.bind(doc)).then(function () { return decryptedMsg; });
+      return Q.nfcall(doc.save.bind(doc)).then(function () { return payload; });
     }
 
-    return decryptedMsg;
+    return payload;
   })
   .then(res.respondOk.bind(res))
   .catch(next);

@@ -1,0 +1,20 @@
+.conversation {
+  .conversation-message {
+    margin-top: 5px;
+    padding: 5px 8px;
+
+    &.message-unread {
+      background-color: #fff;
+    }
+  }
+  .message-author {
+  }
+  .message-date {
+  }
+
+  .message-unread {
+    .message-author {
+      font-weight: bold;
+    }
+  }
+}

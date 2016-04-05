@@ -18,12 +18,16 @@ angular.module('vx')
     qpage       = opts.queryPage       || 'page',
     qlimit      = opts.queryLimit      || 'limit',
 
+    // last query parameters
+    lparams     = null,
+
     // last values grabbed from result
     rdocs       = null,
     rtotalrec   = null,
     rtotalpage  = null,
     rcurrpage   = null,
-    rcurrlimit  = null;
+    rcurrlimit  = null,
+    rdata       = null;
 
     function isPaginated(data) {
       return angular.isObject(data)
@@ -53,6 +57,8 @@ angular.module('vx')
       rtotalpage = null;
       rcurrpage = null;
       rcurrlimit = null;
+      rdata = null;
+      lparams = null;
       if(load) this.load();
       return this;
     };
@@ -76,7 +82,7 @@ angular.module('vx')
 
     this.load = function (page, limit, params) {
       var
-      nopts = angular.merge({}, queryOpts, params),
+      nopts = lparams = angular.merge({}, queryOpts, params),
       setData = this.setData.bind(this);
 
       if(loading) return lastPromise;
@@ -98,6 +104,8 @@ angular.module('vx')
 
       loading = true;
       promise = lastPromise = promise.then(function (data) {
+        rdata = data;
+
         if(!isPaginated(data)) { // pass thru data
           $log.warn('Data received does not appear to be paginated.', data);
           return data;
@@ -121,6 +129,8 @@ angular.module('vx')
       length:       { get: function () { return !!rdocs ? rdocs.length : 0; } },
       loading:      { get: function () { return loading; } },
       records:      { get: function () { return rdocs; } },
+      data:         { get: function () { return rdata; } },
+      params:       { get: function () { return lparams; } },
       totalRecords: { get: function () { return rtotalrec; } },
       totalPages:   { get: function () { return rtotalpage; } },
       currentPage:  { get: function () { return rcurrpage; } },

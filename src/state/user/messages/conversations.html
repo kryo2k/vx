@@ -1,15 +1,53 @@
 <hr />
 
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="msg in messages" ng-class="{'list-group-item-warning': msg.unread > 0}">
-    <span ng-if="msg.unread > 0" class="badge">{{msg.unread|number}}</span>
-    <h4 class="list-group-item-heading"><a ui-sref="app.user.messages.conversations({ senderId: msg.from._id })" ng-bind="msg.from.name"></a></h4>
-    <div class="list-group-item-text small">
-      <span><b>Total:</b>&nbsp;{{msg.total|number}}</span>
+<p class="text-muted text-center" ng-if="!$msgConversations.length && !$msgConversations.lastQueryData">Loading, please wait..</p>
+<p class="text-muted text-center" ng-if="!$msgConversations.length && $msgConversations.lastQueryData">You have no conversations.</p>
+
+<div class="list-group" ng-if="$msgConversations.length > 0">
+  <div class="list-group-item" ng-repeat="conv in $msgConversations.conversations" ng-class="{'list-group-item-warning': conv.unread > 0}">
+    <span ng-if="conv.unread > 0" class="badge">{{conv.unread|number}}</span>
+    <h4 class="list-group-item-heading">
+
+
+      <a ng-if="!$msgConversations.isFocused(conv)" ui-sref="app.user.messages.conversations({ senderId: conv.from._id })" ng-bind="conv.from.name"></a>
+      <a ng-if="$msgConversations.isFocused(conv)" ui-sref="app.user.messages.conversations({ senderId: null, messageId: null })" ng-bind="conv.from.name"></a>
+
+      <small ng-if="$msgConversations.isFocused(conv)"> &amp; {{$msgConversations.conversationSelf.name}}</small>
+    </h4>
+
+
+    <div class="list-group-item-text small" ng-if="!$msgConversations.isFocused(conv)">
+      <span><b>Total:</b>&nbsp;{{conv.total|number}}</span>
       <span class="inline-separator">|</span>
-      <span>{{msg.first|date:'short'}} <b>to</b> {{msg.last|date:'short'}}</span>
+      <span>{{conv.first|date:'short'}} <b>to</b> {{conv.last|date:'short'}}</span>
     </div>
+
+    <div class="list-group-item-text conversation" ng-if="$msgConversations.isFocused(conv)">
+      <div class="conversation-message" ng-repeat="msg in $msgConversations.conversationRecords" ng-class="{'message-unread': msg.unread}">
+        <div> <!--  ng-class="{'pull-left text-left': msg.isReceiver, 'pull-right text-right': msg.isSender }" -->
+          <span class="message-author">
+            <span ng-if="msg.isSender" ng-bind="$msgConversations.conversationSelf.name"></span>
+            <span ng-if="msg.isReceiver" ng-bind="$msgConversations.conversationPartner.name"></span>
+          </span>
+          <span class="message-date" ng-bind="msg.created|date:'short'"></span>
+          <div class="message-body" ng-bind="$msgConversations.read(msg._id)"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+
+<!-- <pre>
+conversation: {{$msgConversations.conversation|json}}
+  .length: {{$msgConversations.conversation.length|number}}
+  .totalPages: {{$msgConversations.conversation.totalPages|number}}
+  .totalRecords: {{$msgConversations.conversation.totalRecords|number}}
+  .records: {{$msgConversations.conversation.Xrecords|json}}
+  .lastParams: {{$msgConversations.conversation.XlastParams|json}}
+  .lastData: {{$msgConversations.conversation.XlastData|json}}
+</pre> -->
+    </div>
+
   </div>
 </div>
 
-<pre ng-bind="focusConvo|json"></pre>
+<!-- <pre ng-bind="$msgConversations.conversations|json"></pre> -->
+<!-- <pre ng-bind="$msgConversations.message|json"></pre> -->

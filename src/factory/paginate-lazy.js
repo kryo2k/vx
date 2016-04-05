@@ -5,11 +5,17 @@ angular.module('vx')
     var
     query = new PaginateQuery(queryFn, queryOpts, opts),
     records = [],
+    totalPages = null,
+    totalRecords = null,
     lastPromise = $q.when(null),
     maxPageLoaded = null,
     appendRecords = function (rows) {
       Array.prototype.push.apply(records, rows);
       maxPageLoaded = Math.max(maxPageLoaded, query.currentPage);
+
+      totalRecords = query.totalRecords||null;
+      totalPages = query.totalPages||null;
+
       return records;
     };
 
@@ -43,7 +49,12 @@ angular.module('vx')
     Object.defineProperties(this, {
       '$promise': { get: function () { return lastPromise; } },
       length: { get: function () { return records.length; } },
-      records: { get: function () { return records; } }
+      totalPages: { get: function () { return totalPages; } },
+      totalRecords: { get: function () { return totalRecords; } },
+      records: { get: function () { return records; } },
+      rawQuery: { get: function () { return query; } },
+      lastParams: { get: function () { return !query ? null : query.params; } },
+      lastData: { get: function () { return !query ? null : query.data; } }
     });
 
     return this;
