@@ -14,6 +14,7 @@ ngHtml2Js = require("gulp-ng-html2js"),
 ngAnnotate = require('gulp-ng-annotate'),
 minifyHtml = require('gulp-minify-html'),
 minifyCss = require('gulp-minify-css'),
+angularFilesort = require('gulp-angular-filesort'),
 objectDot = require('./common/components/object-dot'),
 config = require('./config');
 
@@ -64,6 +65,7 @@ gulp.task('inject-app-html', function () {
       ignorePath: '/build/',
       addRootSlash: false
     }))
+    .pipe(angularFilesort())
     .pipe(gulp.dest(pathBuild));
 });
 
