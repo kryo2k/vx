@@ -54,7 +54,8 @@ angular.module('vx')
       records: { get: function () { return records; } },
       rawQuery: { get: function () { return query; } },
       lastParams: { get: function () { return !query ? null : query.params; } },
-      lastData: { get: function () { return !query ? null : query.data; } }
+      lastData: { get: function () { return !query ? null : query.data; } },
+      canLoadMore: { get: function () { return totalPages > maxPageLoaded; }}
     });
 
     return this;

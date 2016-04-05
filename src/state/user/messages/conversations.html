@@ -25,15 +25,24 @@
     <div class="list-group-item-text conversation" ng-if="$msgConversations.isFocused(conv)">
       <div class="conversation-message" ng-repeat="msg in $msgConversations.conversationRecords" ng-class="{'message-unread': msg.unread}">
         <div> <!--  ng-class="{'pull-left text-left': msg.isReceiver, 'pull-right text-right': msg.isSender }" -->
+          <span class="message-date small pull-right" ng-bind="msg.created|date:'short'"></span>
           <span class="message-author">
             <span ng-if="msg.isSender" ng-bind="$msgConversations.conversationSelf.name"></span>
             <span ng-if="msg.isReceiver" ng-bind="$msgConversations.conversationPartner.name"></span>
           </span>
-          <span class="message-date" ng-bind="msg.created|date:'short'"></span>
           <div class="message-body" ng-bind="$msgConversations.read(msg._id)"></div>
         </div>
         <div class="clearfix"></div>
       </div>
+    </div>
+
+    <div ng-if="$msgConversations.conversation.canLoadMore">
+      <hr />
+
+      <button class="btn btn-default" ng-click="$msgConversations.conversation.loadMore()">Load more</button>
+    </div>
+  </div>
+</div>
 
 <!-- <pre>
 conversation: {{$msgConversations.conversation|json}}
@@ -44,11 +53,6 @@ conversation: {{$msgConversations.conversation|json}}
   .lastParams: {{$msgConversations.conversation.XlastParams|json}}
   .lastData: {{$msgConversations.conversation.XlastData|json}}
 </pre> -->
-    </div>
-    <button ng-if="$msgConversations.isFocused(conv)" class="btn btn-default" ng-click="$msgConversations.conversation.loadMore()">Load more</button>
-
-  </div>
-</div>
 
 <!-- <pre ng-bind="$msgConversations.conversations|json"></pre> -->
 <!-- <pre ng-bind="$msgConversations.message|json"></pre> -->
