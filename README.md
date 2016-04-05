@@ -49,6 +49,24 @@ More on this later..
 node scripts/new-private-key.js
 # New private key [KEEP SECRET]: ff6b3374efa465cdf18c8f5db7b51e80dfd949b30ef77aa37057e1838616fc44
 ```
+Install this new secret into the copied configuration file, or set the environment variable `CX_SECRET_TOKEN`. Never check in your secret.
+
+## 3rd Party Service Keys
+
+#### MongoDB
+`CX_MONGO_URI` Default: `mongodb://localhost:27017/test`
+
+#### ReCAPTCHA
+
+`CX_RECAPTCHA_SITEKEY` Default: `INVALIDSITEKEY`
+
+`CX_RECAPTCHA_SECRET` Default: `INVALIDSECRETKEY`
+
+#### Amazon SES
+
+`CX_AWS_ACCESSKEYID` Default: `AWSACCESSKEY`
+
+`CX_AWS_ACCESSSECRET` Default: `AWS/Secret/key`
 
 
 ## Noteworthy Features

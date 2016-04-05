@@ -57,8 +57,7 @@ module.exports = {
     // node scripts/new-private-key.js
     //
 
-    token: envVar.CX_SECRET_TOKEN || 'an invalid key error will occur',
-    ws: envVar.CX_SECRET_WS || 'some random string here'
+    token: envVar.CX_SECRET_TOKEN || 'an invalid key error will occur'
   },
   session: {
     durationShortLived: 120000,    // 1 hr
