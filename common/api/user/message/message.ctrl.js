@@ -139,7 +139,8 @@ exports.inbox = function (req, res, next) {
       _id: { sender: '$sender'},
       total: { $sum: 1 },
       unread: { $sum: { $cond: [ { $eq: [ '$unread', true ] }, 1, 0 ] } },
-      last: { $max: '$created' }
+      last: { $max: '$created' },
+      first: { $min: '$created' }
     } },
     { $sort: { 'last': -1 } }
   ], function (err, result) {

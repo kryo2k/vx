@@ -9,6 +9,11 @@
   word-wrap: break-word;      /* IE */
 }
 
+.inline-separator {
+  color: #ddd;
+  margin: 0 5px;
+}
+
 // injector
 @import './directive/user-notifications.scss';
 @import './directive/notification/message.scss';

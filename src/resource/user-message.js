@@ -6,35 +6,40 @@ angular.module('vx')
   }, {
     inbox: {
       method: 'GET',
+      isArray: true,
       params: {
         controller: 'inbox'
       }
     },
     inboxFrom: {
       method: 'GET',
+      isArray: true,
       params: {
         controller: 'inbox',
-        id: '=' // senderId (userId)
+        // id: '=' // senderId (userId)
       }
     },
     sent: {
       method: 'GET',
+      isArray: true,
       params: {
         controller: 'sent'
       }
     },
     sentTo: {
       method: 'GET',
+      isArray: true,
       params: {
         controller: 'sent',
-        id: '=' // receiverId (userId)
+        // id: '=' // receiverId (userId)
       }
     },
     conversation: {
       method: 'GET',
+      // isArray: true,
       params: {
         controller: 'convo',
-        id: '=' // userId
+        id: '@id' // userId
       }
     },
     read: {
